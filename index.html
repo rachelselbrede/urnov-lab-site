@@ -209,6 +209,21 @@ button{font:inherit;color:inherit}
 .news-grid h3 a:hover{color:var(--link);text-decoration:underline}
 .news-grid p{font-size:15.5px;color:var(--ink-2);margin:0}
 
+/* Watch: small click-to-play video cards that stay on the page */
+.video-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2.5vw,28px)}
+@media (max-width:960px){.video-grid{grid-template-columns:repeat(2,1fr)}}
+.video h3{font-size:17px;line-height:1.3;margin:12px 0 4px}
+.video p{font-size:14px;color:var(--muted);margin:0}
+.video-poster{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;border-radius:12px;overflow:hidden;background:var(--ink);cursor:pointer}
+.video-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease}
+.video-poster:hover img{transform:scale(1.03)}
+.video-poster .play{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:rgba(15,27,51,.85);box-shadow:0 4px 16px rgba(0,0,0,.3);transition:background .2s}
+.video-poster .play::after{content:"";position:absolute;left:19px;top:14px;border-style:solid;border-width:10px 0 10px 16px;border-color:transparent transparent transparent #fff}
+.video-poster:hover .play{background:var(--base-c)}
+.video-poster .duration{position:absolute;right:8px;bottom:8px;font-family:var(--font-mono);font-size:12px;color:#fff;background:rgba(15,27,51,.8);padding:3px 7px;border-radius:6px}
+.video-frame{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
 /* Partners strip, a slow seamless marquee of wordmarks (swap in logo images later) */
 .partners{padding:clamp(40px,5vw,64px) 0 clamp(44px,5vw,72px);border-top:1px solid var(--rule)}
 .partners-label{font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
@@ -216,8 +231,8 @@ button{font:inherit;color:inherit}
 .marquee-track{display:flex;width:max-content;animation:marquee var(--marquee-duration,40s) linear infinite;will-change:transform}
 .marquee:hover .marquee-track,.marquee:focus-within .marquee-track{animation-play-state:paused}
 .marquee-set{display:flex;align-items:center;gap:clamp(44px,6vw,96px);padding-right:clamp(44px,6vw,96px);list-style:none;margin:0;padding-left:0}
-.marquee-set li{font-family:var(--font-display);font-size:clamp(19px,2vw,24px);font-weight:600;color:var(--ink-2);white-space:nowrap;opacity:.78;line-height:1}
-.marquee-set li img{display:block;height:36px;width:auto}
+.marquee-set li{font-family:var(--font-display);font-size:clamp(19px,2vw,24px);font-weight:600;color:var(--ink-2);white-space:nowrap;line-height:1}
+.marquee-set li img{display:block;height:var(--h,36px);width:auto}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){
   .marquee{-webkit-mask-image:none;mask-image:none}
@@ -241,6 +256,7 @@ footer a{color:var(--muted)}
 @media (prefers-reduced-motion:reduce){
   .seq .b,.status .dot,.pipe button,.scan .bases span{transition:none}
   .scan .cursor svg{animation:none}
+  .video-poster img,.video-poster .play{transition:none}
 }
 </style>
 </head>
@@ -436,6 +452,53 @@ footer a{color:var(--muted)}
   </div>
 </section>
 
+<section class="section band" id="watch">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Watch</h2>
+      <p>Talks and short films about the lab's work. Each one plays right here on the page.</p>
+    </div>
+    <div class="video-grid" id="videos">
+      <article class="video">
+        <button type="button" class="video-poster" data-id="eql8XUxM6Ss" data-title="Imagining CRISPR Cures, Fyodor Urnov at TEDxBerkeley" aria-label="Play: Imagining CRISPR Cures, Fyodor Urnov at TEDxBerkeley">
+          <img src="https://i.ytimg.com/vi/eql8XUxM6Ss/maxresdefault.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"></span>
+          <span class="duration" aria-hidden="true">15 min</span>
+        </button>
+        <h3>Imagining CRISPR Cures</h3>
+        <p>Fyodor Urnov at TEDxBerkeley</p>
+      </article>
+      <article class="video">
+        <button type="button" class="video-poster" data-id="mUQWWLErLaY" data-title="A Breakthrough in Medicine: Personalized Gene Editing to Save KJ" aria-label="Play: A Breakthrough in Medicine: Personalized Gene Editing to Save KJ">
+          <img src="https://i.ytimg.com/vi/mUQWWLErLaY/maxresdefault.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"></span>
+          <span class="duration" aria-hidden="true">8 min</span>
+        </button>
+        <h3>Personalized gene editing to save KJ</h3>
+        <p>Children's Hospital of Philadelphia</p>
+      </article>
+      <article class="video">
+        <button type="button" class="video-poster" data-id="UQj8Vi6D4s4" data-title="Interventional Genomics: Building a Future of On-Demand CRISPR for All" aria-label="Play: Interventional Genomics: Building a Future of On-Demand CRISPR for All">
+          <img src="https://i.ytimg.com/vi/UQj8Vi6D4s4/maxresdefault.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"></span>
+          <span class="duration" aria-hidden="true">2 min</span>
+        </button>
+        <h3>On-demand CRISPR for all</h3>
+        <p>Innovative Genomics Institute</p>
+      </article>
+      <article class="video">
+        <button type="button" class="video-poster" data-id="qlzhcYh7cLM" data-title="CRISPR Cures On-Demand at Nationwide Scale, Fyodor Urnov" aria-label="Play: CRISPR Cures On-Demand at Nationwide Scale, Fyodor Urnov">
+          <img src="https://i.ytimg.com/vi/qlzhcYh7cLM/maxresdefault.jpg" alt="" loading="lazy" width="1280" height="720">
+          <span class="play" aria-hidden="true"></span>
+          <span class="duration" aria-hidden="true">36 min</span>
+        </button>
+        <h3>CRISPR cures on demand at nationwide scale</h3>
+        <p>Fyodor Urnov at the Oxford-Harrington Rare Disease Centre</p>
+      </article>
+    </div>
+  </div>
+</section>
+
 <section class="partners" id="partners" aria-label="Partners and supporters">
   <div class="wrap">
     <p class="partners-label">Partners and supporters</p>
@@ -443,13 +506,13 @@ footer a{color:var(--muted)}
   <div class="marquee">
     <div class="marquee-track">
       <ul class="marquee-set">
-        <li>Innovative Genomics Institute</li>
-        <li>UC Berkeley</li>
-        <li>UCSF</li>
-        <li>Chan Zuckerberg Initiative</li>
-        <li>Danaher</li>
-        <li>Children's Hospital of Philadelphia</li>
-        <li>Penn Medicine</li>
+        <li style="--h:40px"><img src="logos/igi.svg" alt="Innovative Genomics Institute" width="178" height="77" loading="lazy"></li>
+        <li style="--h:30px"><img src="logos/uc-berkeley.svg" alt="UC Berkeley" width="225" height="42" loading="lazy"></li>
+        <li style="--h:38px"><img src="logos/ucsf.svg" alt="UCSF" width="80" height="39" loading="lazy"></li>
+        <li style="--h:44px"><img src="logos/czi.svg" alt="Chan Zuckerberg Initiative" width="112" height="62" loading="lazy"></li>
+        <li style="--h:26px"><img src="logos/danaher.svg" alt="Danaher" width="298" height="45" loading="lazy"></li>
+        <li style="--h:34px"><img src="logos/chop.png" alt="Children's Hospital of Philadelphia" width="620" height="130" loading="lazy"></li>
+        <li style="--h:30px"><img src="logos/penn-medicine.svg" alt="Penn Medicine" width="500" height="80" loading="lazy"></li>
       </ul>
     </div>
   </div>
@@ -677,6 +740,33 @@ footer a{color:var(--muted)}
     if (btn) showStep(parseInt(btn.getAttribute('data-step'), 10));
   });
   showStep(0);
+
+  /* Watch: swap a poster for the YouTube player on click, one at a time */
+  (function(){
+    var grid = document.getElementById('videos');
+    if (!grid) return;
+    var playing = null;
+    function stop(){
+      if (!playing) return;
+      playing.frame.parentNode.replaceChild(playing.poster, playing.frame);
+      playing = null;
+    }
+    grid.addEventListener('click', function(e){
+      var btn = e.target.closest('.video-poster');
+      if (!btn) return;
+      stop();
+      var frame = document.createElement('div');
+      frame.className = 'video-frame';
+      var iframe = document.createElement('iframe');
+      iframe.src = 'https://www.youtube-nocookie.com/embed/' + btn.getAttribute('data-id') + '?autoplay=1&rel=0';
+      iframe.title = btn.getAttribute('data-title');
+      iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+      iframe.setAttribute('allowfullscreen', '');
+      frame.appendChild(iframe);
+      btn.parentNode.replaceChild(frame, btn);
+      playing = { poster: btn, frame: frame };
+    });
+  })();
 
   /* Partners strip: clone the set for a seamless loop and pace the scroll by its width */
   (function(){
