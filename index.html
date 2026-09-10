@@ -66,8 +66,15 @@ button{font:inherit;color:inherit}
 /* Nav */
 .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
-.brand{font-family:var(--font-display);font-weight:600;font-size:21px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
-.brand .mark{width:26px;height:26px;border-radius:7px;background:var(--ink);color:var(--base-c);font-family:var(--font-mono);font-weight:500;font-size:16px;display:grid;place-items:center}
+.brand-group{display:flex;align-items:center;gap:16px}
+.brand{font-family:var(--font-display);font-weight:600;font-size:21px;line-height:1;color:var(--ink);text-decoration:none;display:inline-flex;flex-direction:column;gap:5px}
+/* A sequence underline: faint ticks with one base out of place, corrected on hover */
+.seqline{position:relative;display:block;height:7px;background:repeating-linear-gradient(90deg,#B9C3D8 0 2.4px,transparent 2.4px 5.4px) left bottom/100% 4px no-repeat}
+.seqline::after{content:"";position:absolute;left:64.8px;bottom:0;width:2.4px;height:7px;border-radius:1px;background:var(--base-t);transition:background .25s ease,height .25s ease}
+.brand:hover .seqline::after,.brand:focus-visible .seqline::after{background:var(--base-c);height:4px}
+.affiliation{display:flex;align-items:center;padding-left:16px;border-left:1px solid var(--rule);height:30px}
+.affiliation img{display:block;height:40px;width:auto}
+@media (max-width:480px){.affiliation{display:none}}
 .nav-links{display:flex;gap:26px;list-style:none;margin:0;padding:0}
 .nav-links a{color:var(--ink);text-decoration:none;font-size:15px;font-weight:500}
 .nav-links a:hover{color:var(--link)}
@@ -254,7 +261,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 footer a{color:var(--muted)}
 
 @media (prefers-reduced-motion:reduce){
-  .seq .b,.status .dot,.pipe button,.scan .bases span{transition:none}
+  .seq .b,.status .dot,.pipe button,.scan .bases span,.seqline::after{transition:none}
   .scan .cursor svg{animation:none}
   .video-poster img,.video-poster .play{transition:none}
 }
@@ -265,7 +272,10 @@ footer a{color:var(--muted)}
 
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="#top" aria-label="Urnov Lab home"><span class="mark" aria-hidden="true">C</span>Urnov Lab</a>
+    <div class="brand-group">
+      <a class="brand" href="#top" aria-label="Urnov Lab home"><span class="wordmark">Urnov Lab</span><span class="seqline" aria-hidden="true"></span></a>
+      <a class="affiliation" href="https://innovativegenomics.org/"><img src="logos/igi.svg" alt="Innovative Genomics Institute" width="178" height="77"></a>
+    </div>
     <button class="nav-toggle" aria-expanded="false" aria-controls="navlinks">Menu</button>
     <ul class="nav-links" id="navlinks">
       <li><a href="#research">Research</a></li>
