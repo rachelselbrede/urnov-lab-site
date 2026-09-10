@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Urnov Lab | Innovative Genomics Institute, UC Berkeley</title>
+<meta name="description" content="The Urnov Lab at the Innovative Genomics Institute designs and safety-tests personalized CRISPR therapies for children born with severe genetic diseases.">
+<meta property="og:title" content="Urnov Lab | Innovative Genomics Institute">
+<meta property="og:description" content="CRISPR cures for children, on demand. Cure design and safety testing at UC Berkeley, clinical care at UCSF.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230F1B33'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Menlo,Consolas,monospace' font-size='36' font-weight='700' fill='%232B6FEA'%3EC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F1B33;
+  --ink-2:#2A3A5C;
+  --paper:#FFFFFF;
+  --mist:#F1F3F7;
+  --rule:#D8DEE9;
+  --muted:#5B6884;
+  --seq:#8F9BB5;
+  --base-a:#2F9E5B;
+  --base-c:#2B6FEA;
+  --base-g:#D99A00;
+  --base-t:#E04A3A;
+  --link:#2B6FEA;
+  --font-display:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;
+  --font-body:'IBM Plex Sans','Segoe UI',Helvetica,Arial,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --max:1120px;
+  --gutter:clamp(20px,4vw,48px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;
+  font-family:var(--font-body);
+  font-size:17px;
+  line-height:1.6;
+  color:var(--ink);
+  background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:var(--font-display);line-height:1.08;margin:0;font-weight:700;letter-spacing:-0.01em}
+h1{font-size:clamp(40px,6vw,68px);font-variation-settings:'opsz' 96}
+h2{font-size:clamp(30px,3.6vw,44px);font-variation-settings:'opsz' 72}
+h3{font-size:22px;font-variation-settings:'opsz' 24;font-weight:600}
+p{margin:0 0 1em}
+a{color:var(--link);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:3px solid var(--base-c);outline-offset:3px;border-radius:2px}
+button{font:inherit;color:inherit}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:#fff;padding:8px 12px;z-index:100}
+.skip:focus{left:8px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+.section{padding:clamp(64px,9vw,120px) 0}
+.section.band{background:var(--mist)}
+.section-head{max-width:64ch;margin-bottom:clamp(32px,4vw,56px)}
+.section-head p{font-size:19px;color:var(--ink-2);margin-top:18px}
+.lead{font-size:clamp(18px,1.6vw,21px);line-height:1.55;color:var(--ink-2)}
+.measure{max-width:64ch}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{font-family:var(--font-display);font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand .mark{width:26px;height:26px;border-radius:7px;background:var(--ink);color:var(--base-c);font-family:var(--font-mono);font-weight:500;font-size:16px;display:grid;place-items:center}
+.nav-links{display:flex;gap:26px;list-style:none;margin:0;padding:0}
+.nav-links a{color:var(--ink);text-decoration:none;font-size:15px;font-weight:500}
+.nav-links a:hover{color:var(--link)}
+.nav-toggle{display:none;background:none;border:1px solid var(--rule);border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
+@media (max-width:860px){
+  .nav-toggle{display:inline-block}
+  .nav-links{display:none;position:absolute;left:0;right:0;top:64px;background:var(--paper);border-bottom:1px solid var(--rule);flex-direction:column;gap:0;padding:8px var(--gutter) 16px}
+  .nav-links.open{display:flex}
+  .nav-links a{display:block;padding:12px 0;border-top:1px solid var(--rule)}
+}
+
+/* Hero */
+.hero{padding:clamp(56px,8vw,104px) 0 clamp(48px,6vw,80px)}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(32px,5vw,72px);align-items:center}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr}}
+.hero h1{max-width:12ch}
+.hero .lead{margin:24px 0 32px;max-width:52ch}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;padding:13px 20px;border-radius:10px;font-weight:600;text-decoration:none;font-size:16px;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
+.btn.primary{background:var(--ink);color:#fff}
+.btn:hover{border-color:var(--link)}
+.btn.primary:hover{background:var(--ink-2);border-color:var(--ink-2)}
+
+/* Sequence panel, the one loud element on the page */
+.seqpanel{background:var(--ink);border-radius:16px;padding:22px 24px 20px;color:#fff;box-shadow:0 30px 60px -30px rgba(15,27,51,.55)}
+.seqpanel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
+.seqpanel-head strong{font-family:var(--font-display);font-weight:600;font-size:17px}
+.seqpanel-head span{font-size:13px;color:var(--seq)}
+.seq{font-family:var(--font-mono);font-size:clamp(13px,1.15vw,15px);line-height:1.9;letter-spacing:.08em;color:var(--seq);overflow:hidden;white-space:nowrap}
+.seq .row{display:block;line-height:2}
+.seq .b{display:inline-block;position:relative;line-height:1.25;padding-bottom:3px;transition:color .25s ease,transform .25s ease}
+.seq .proto{box-shadow:inset 0 -2px 0 rgba(255,255,255,.28)}
+.seq .pam{box-shadow:inset 0 -2px 0 rgba(255,255,255,.62)}
+.seq .target{color:var(--base-t);font-weight:500}
+.seq .target.fixed{color:var(--base-c)}
+.seq .target.flip{transform:translateY(-3px) scale(1.25)}
+.seqpanel-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);font-size:14px}
+.status{display:inline-flex;align-items:center;gap:8px}
+.status .dot{width:8px;height:8px;border-radius:50%;background:var(--base-t);transition:background .3s}
+.status.fixed .dot{background:var(--base-c)}
+.seqpanel-foot .legend{color:var(--seq);font-size:13px}
+@media (max-width:480px){.seq{font-size:11px;letter-spacing:.05em}}
+
+/* Facts row */
+.facts{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.facts .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.facts p{padding:22px 28px 22px 0;margin:0;font-size:15.5px;line-height:1.5;color:var(--ink-2)}
+.facts p+p{border-left:1px solid var(--rule);padding-left:28px}
+.facts strong{color:var(--ink);font-weight:600}
+@media (max-width:780px){
+  .facts .wrap{grid-template-columns:1fr}
+  .facts p{padding:16px 0}
+  .facts p+p{border-left:0;padding-left:0;border-top:1px solid var(--rule)}
+}
+
+/* Research */
+.research-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,40px)}
+@media (max-width:860px){.research-grid{grid-template-columns:1fr}}
+.research-grid article{border-top:2px solid var(--ink);padding-top:20px}
+.research-grid h3{margin-bottom:10px}
+.research-grid p{color:var(--ink-2);font-size:16px;margin:0}
+
+/* Pipeline */
+.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:0;padding:0;list-style:none}
+@media (max-width:900px){.pipe{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:560px){.pipe{grid-template-columns:1fr 1fr}}
+.pipe button{
+  width:100%;text-align:left;background:var(--paper);border:1.5px solid var(--rule);border-radius:12px;
+  padding:16px 16px 14px;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-height:112px;
+  transition:border-color .15s,background .15s
+}
+.pipe button:hover{border-color:var(--ink-2)}
+.pipe button[aria-expanded="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.pipe .num{font-family:var(--font-mono);font-size:13px;color:var(--muted)}
+.pipe button[aria-expanded="true"] .num{color:var(--seq)}
+.pipe .name{font-family:var(--font-display);font-weight:600;font-size:18px;line-height:1.2}
+.pipe-detail{margin-top:20px;background:var(--paper);border:1.5px solid var(--rule);border-radius:14px;padding:clamp(22px,3vw,36px);display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(24px,4vw,48px)}
+@media (max-width:760px){.pipe-detail{grid-template-columns:1fr}}
+.pipe-detail h3{margin-bottom:10px}
+.pipe-detail p{color:var(--ink-2);margin:0}
+.pipe-detail .measure-box{border-left:2px solid var(--base-c);padding-left:18px}
+.pipe-detail .measure-box small{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
+.pipe-detail .measure-box p{color:var(--ink);font-weight:500}
+
+/* People */
+.people-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+@media (max-width:1000px){.people-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:640px){.people-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
+.person{display:flex;flex-direction:column;gap:10px}
+.person.pi{grid-column:span 2}
+@media (max-width:640px){.person.pi{grid-column:span 2}}
+.portrait{aspect-ratio:4/5;background:var(--mist);border-radius:12px;overflow:hidden;display:grid;place-items:center}
+.person.pi .portrait{aspect-ratio:8/5}
+.portrait img{width:100%;height:100%;object-fit:cover;display:block}
+.portrait .initials{font-family:var(--font-display);font-weight:700;font-size:44px;color:var(--rule)}
+.person .name{font-family:var(--font-display);font-weight:600;font-size:18px;line-height:1.25}
+.person .role{font-size:14.5px;color:var(--muted);margin:0}
+.person .bio{font-size:15.5px;color:var(--ink-2);margin:6px 0 0;max-width:56ch}
+
+/* Publications */
+.pubs{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.pubs li{display:grid;grid-template-columns:72px 1fr;gap:16px;padding:20px 0;border-bottom:1px solid var(--rule)}
+@media (max-width:560px){.pubs li{grid-template-columns:1fr;gap:4px}}
+.pubs .year{font-family:var(--font-mono);font-size:14px;color:var(--muted);padding-top:3px}
+.pubs .title{font-weight:600;font-size:17px;line-height:1.35;color:var(--ink);text-decoration:none}
+.pubs .title:hover{color:var(--link);text-decoration:underline}
+.pubs .meta{font-size:14.5px;color:var(--muted);margin:6px 0 0}
+.pubs-note{font-size:14.5px;color:var(--muted);margin:14px 0 0}
+.pubs-status{padding:28px 0;color:var(--muted);font-size:15px}
+.pub-more{margin-top:24px}
+
+/* News */
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,40px)}
+@media (max-width:860px){.news-grid{grid-template-columns:1fr}}
+.news-grid article{border-top:1px solid var(--rule);padding-top:18px}
+.news-grid time{font-family:var(--font-mono);font-size:13.5px;color:var(--muted);display:block;margin-bottom:8px}
+.news-grid h3{font-size:19px;margin-bottom:8px}
+.news-grid h3 a{color:var(--ink);text-decoration:none}
+.news-grid h3 a:hover{color:var(--link);text-decoration:underline}
+.news-grid p{font-size:15.5px;color:var(--ink-2);margin:0}
+
+/* Join and contact */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px)}
+@media (max-width:760px){.two-col{grid-template-columns:1fr}}
+.two-col h2{margin-bottom:16px}
+.two-col p{color:var(--ink-2)}
+address{font-style:normal;color:var(--ink-2);line-height:1.7}
+
+/* Footer */
+footer{border-top:1px solid var(--rule);padding:32px 0 40px;font-size:14px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer a{color:var(--muted)}
+
+@media (prefers-reduced-motion:reduce){
+  .seq .b,.status .dot,.pipe button{transition:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Urnov Lab home"><span class="mark" aria-hidden="true">C</span>Urnov Lab</a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="navlinks">Menu</button>
+    <ul class="nav-links" id="navlinks">
+      <li><a href="#research">Research</a></li>
+      <li><a href="#how">How we make a cure</a></li>
+      <li><a href="#people">People</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#news">News</a></li>
+      <li><a href="#join">Join us</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <h1>CRISPR cures for children, on demand.</h1>
+      <p class="lead">The Urnov Lab at the Innovative Genomics Institute designs and safety-tests personalized genome-editing therapies for children born with severe genetic diseases, then turns each one into a process that can be repeated for the next child.</p>
+      <div class="actions">
+        <a class="btn primary" href="#how">See how we make a cure</a>
+        <a class="btn" href="#publications">Read our papers</a>
+      </div>
+    </div>
+    <div class="seqpanel" role="figure" aria-label="Illustration of a single-base correction at a target site">
+      <div class="seqpanel-head"><strong>Target site</strong><span>Guide RNA and PAM underlined</span></div>
+      <div class="seq" id="seq" aria-hidden="true"></div>
+      <div class="seqpanel-foot">
+        <span class="status" id="seqstatus"><span class="dot"></span><span id="seqtext">Disease-causing variant</span></span>
+        <span class="legend">One base out of three billion</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="facts">
+  <div class="wrap">
+    <p><strong>Home of the Center for Pediatric CRISPR Cures,</strong> funded by a $20 million grant from the Chan Zuckerberg Initiative.</p>
+    <p><strong>Co-developed the first personalized in vivo CRISPR therapy,</strong> designed, made, and delivered to a newborn in six months.</p>
+    <p><strong>Part of the Innovative Genomics Institute,</strong> a joint effort of UC Berkeley, UCSF, and UC Davis founded by Jennifer Doudna.</p>
+  </div>
+</div>
+
+<section class="section" id="research">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>What we work on</h2>
+      <p>Most children with a rare genetic disease will never have a drug developed for them. Their conditions are too rare for the usual model. We are building a different one, where the tools, the tests, and the regulatory path are ready before the next patient arrives.</p>
+    </div>
+    <div class="research-grid">
+      <article>
+        <h3>Personalized cures</h3>
+        <p>The Center for Pediatric CRISPR Cures pairs cure design and safety testing at UC Berkeley with clinical care at UCSF. Its first goal is to treat eight children with severe inborn errors of immunity and metabolic diseases, and to share everything it learns with other academic centers.</p>
+      </article>
+      <article>
+        <h3>Platform therapies</h3>
+        <p>Through the Danaher-IGI Beacon for CRISPR Cures, we develop editing approaches that can treat a whole class of diseases at once, starting with severe Mendelian diseases of the immune system such as Artemis-deficient SCID.</p>
+      </article>
+      <article>
+        <h3>Technology core</h3>
+        <p>The CRISPR Cures Technology Core builds the readouts every program depends on, from guide RNA screening to deep sequencing of editing outcomes and genome-wide safety assessment.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section band" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>How we make a cure</h2>
+      <p>A cure for one child is a sequence of decisions, each backed by data. Select a step to see what happens and what we measure.</p>
+    </div>
+    <ol class="pipe" id="pipe">
+      <li><button type="button" aria-expanded="true" aria-controls="pipe-detail" data-step="0"><span class="num">1</span><span class="name">Diagnose</span></button></li>
+      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="1"><span class="num">2</span><span class="name">Design</span></button></li>
+      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="2"><span class="num">3</span><span class="name">Test in cells</span></button></li>
+      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="3"><span class="num">4</span><span class="name">Assess safety</span></button></li>
+      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="4"><span class="num">5</span><span class="name">Manufacture</span></button></li>
+      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="5"><span class="num">6</span><span class="name">Treat and share</span></button></li>
+    </ol>
+    <div class="pipe-detail" id="pipe-detail" aria-live="polite">
+      <div>
+        <h3 id="pd-title">Diagnose</h3>
+        <p id="pd-text"></p>
+      </div>
+      <div class="measure-box">
+        <small>What we measure</small>
+        <p id="pd-measure"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="people">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>People</h2>
+      <p>Bench scientists, clinicians, and program staff across UC Berkeley and UCSF, working on the same patients.</p>
+    </div>
+    <div class="people-grid">
+      <div class="person pi">
+        <div class="portrait"><span class="initials" aria-hidden="true">FU</span></div>
+        <div class="name">Fyodor Urnov</div>
+        <p class="role">Principal Investigator. Director of Therapeutic R&amp;D at the IGI and Professor of Molecular Therapeutics at UC Berkeley</p>
+        <p class="bio">A genome-editing pioneer who helped build the human genome-editing toolbox and bring its first applications to the clinic. He directs the Center for Pediatric CRISPR Cures and the Danaher-IGI Beacon for CRISPR Cures, and was the IGI lead on the first personalized in vivo CRISPR therapy.</p>
+      </div>
+      <div class="person">
+        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
+        <div class="name">Team member</div>
+        <p class="role">Staff scientist</p>
+      </div>
+      <div class="person">
+        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
+        <div class="name">Team member</div>
+        <p class="role">Postdoctoral scholar</p>
+      </div>
+      <div class="person">
+        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
+        <div class="name">Team member</div>
+        <p class="role">Research associate</p>
+      </div>
+      <div class="person">
+        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
+        <div class="name">Team member</div>
+        <p class="role">Research associate</p>
+      </div>
+      <div class="person">
+        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
+        <div class="name">Team member</div>
+        <p class="role">Project manager</p>
+      </div>
+      <div class="person">
+        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
+        <div class="name">Team member</div>
+        <p class="role">Graduate student</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section band" id="publications">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Publications</h2>
+      <p>Recent papers, pulled automatically from Europe PMC so this list never goes stale.</p>
+    </div>
+    <ul class="pubs" id="pubs"><li class="pubs-status" id="pubs-status">Loading recent papers.</li></ul>
+    <p class="pub-more"><a href="https://pubmed.ncbi.nlm.nih.gov/?term=Urnov+FD%5BAuthor%5D&amp;sort=date">See all publications on PubMed</a></p>
+  </div>
+</section>
+
+<section class="section" id="news">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>News</h2>
+    </div>
+    <div class="news-grid">
+      <article>
+        <time datetime="2025-05">May 2025</time>
+        <h3><a href="https://innovativegenomics.org/news/first-patient-treated-with-on-demand-crispr-therapy/">First patient treated with a personalized CRISPR therapy, developed in six months</a></h3>
+        <p>An IGI team including Fyodor Urnov co-developed the therapy with Children's Hospital of Philadelphia, Penn Medicine, and Danaher.</p>
+      </article>
+      <article>
+        <time datetime="2025-07">July 2025</time>
+        <h3><a href="https://innovativegenomics.org/news/czi-igi-new-center-pediatric-crispr-cures/">CZI and IGI launch the Center for Pediatric CRISPR Cures</a></h3>
+        <p>A $20 million grant funds on-demand cures for children with severe immune and metabolic diseases, with Fyodor Urnov as director.</p>
+      </article>
+      <article>
+        <time datetime="2026">2026</time>
+        <h3><a href="https://innovativegenomics.org/news/crispr-clinical-trials-2026/">CRISPR clinical trials, a 2026 update</a></h3>
+        <p>The IGI's yearly review of where CRISPR medicines stand, including the platform trials that grew out of the first on-demand therapy.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section band" id="join">
+  <div class="wrap two-col">
+    <div>
+      <h2>Join us</h2>
+      <p>We hire bench scientists, computational biologists, clinicians, and program staff who want their work to reach a patient. Openings are posted through the Innovative Genomics Institute and UC Berkeley.</p>
+      <p><a class="btn" href="https://innovativegenomics.org/">Openings at the IGI</a></p>
+    </div>
+    <div id="contact">
+      <h2>Contact</h2>
+      <address>
+        Urnov Lab<br>
+        Innovative Genomics Institute<br>
+        2151 Berkeley Way<br>
+        Berkeley, CA 94720<br>
+        <a href="mailto:lab@example.edu">lab@example.edu</a>
+      </address>
+      <p style="margin-top:14px;font-size:15px">For press and media, contact IGI communications.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Urnov Lab, Innovative Genomics Institute, University of California, Berkeley</span>
+    <span><a href="https://innovativegenomics.org/">innovativegenomics.org</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Mobile nav */
+  var toggle = document.querySelector('.nav-toggle');
+  var links = document.getElementById('navlinks');
+  toggle.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  links.addEventListener('click', function(e){
+    if (e.target.tagName === 'A') { links.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+  });
+
+  /* Sequence panel: a single base correction at a base-editor target site */
+  var ROWS = 6, COLS = 32;
+  var TROW = 2, PROTO_START = 3, PROTO_LEN = 20;
+  var TCOL = PROTO_START + 5;                 /* protospacer position 6, inside the editing window */
+  var PAM_START = PROTO_START + PROTO_LEN;    /* NGG immediately 3' of the protospacer */
+  var VARIANT = 'A', CORRECT = 'G';
+
+  function rng(seed){ return function(){ seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }; }
+  var rand = rng(2015);
+  var bases = 'ACGT';
+  var grid = [];
+  for (var r = 0; r < ROWS; r++){
+    var row = [];
+    for (var c = 0; c < COLS; c++) row.push(bases.charAt(Math.floor(rand() * 4)));
+    grid.push(row);
+  }
+  grid[TROW][TCOL] = VARIANT;
+  grid[TROW][PAM_START + 1] = 'G';
+  grid[TROW][PAM_START + 2] = 'G';
+
+  var seqEl = document.getElementById('seq');
+  var targetEl = null;
+  for (var i = 0; i < ROWS; i++){
+    var line = document.createElement('span');
+    line.className = 'row';
+    for (var j = 0; j < COLS; j++){
+      var b = document.createElement('span');
+      b.className = 'b';
+      b.textContent = grid[i][j];
+      if (i === TROW){
+        if (j >= PROTO_START && j < PROTO_START + PROTO_LEN) b.classList.add('proto');
+        if (j >= PAM_START && j < PAM_START + 3) b.classList.add('pam');
+        if (j === TCOL){ b.classList.add('target'); targetEl = b; }
+      }
+      line.appendChild(b);
+    }
+    seqEl.appendChild(line);
+  }
+
+  var status = document.getElementById('seqstatus');
+  var statusText = document.getElementById('seqtext');
+  var timers = [];
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+  function showVariant(){
+    targetEl.textContent = VARIANT;
+    targetEl.classList.remove('fixed','flip');
+    status.classList.remove('fixed');
+    statusText.textContent = 'Disease-causing variant';
+  }
+  function showFixed(){
+    targetEl.textContent = CORRECT;
+    targetEl.classList.add('fixed');
+    targetEl.classList.remove('flip');
+    status.classList.add('fixed');
+    statusText.textContent = 'Corrected';
+  }
+  function play(){
+    clearTimers();
+    if (reduce){ showFixed(); return; }
+    showVariant();
+    timers.push(setTimeout(function(){ targetEl.classList.add('flip'); }, 1400));
+    timers.push(setTimeout(function(){ targetEl.textContent = CORRECT; targetEl.classList.add('fixed'); }, 1650));
+    timers.push(setTimeout(function(){ targetEl.classList.remove('flip'); status.classList.add('fixed'); statusText.textContent = 'Corrected'; }, 1900));
+  }
+  var panel = document.querySelector('.seqpanel');
+  panel.title = 'Click to replay';
+  panel.style.cursor = 'pointer';
+  panel.addEventListener('click', play);
+  play();
+
+  /* Pipeline */
+  var steps = [
+    { name:'Diagnose',
+      text:'A child is diagnosed with a severe genetic disease and the disease-causing variant is identified. Clinicians and scientists decide together whether a CRISPR approach could work, and how quickly it is needed.',
+      measure:'Variant confirmed by sequencing. Editing strategy chosen.' },
+    { name:'Design',
+      text:'We choose the editing tool, a nuclease, a base editor, or another editor, and design guide RNAs that target the variant precisely. Dozens of candidates are made and compared.',
+      measure:'Candidate guides ranked by predicted activity and specificity.' },
+    { name:'Test in cells',
+      text:'Each candidate is tested in patient-relevant cells. We measure how much of the target is edited, exactly what the edits look like, and whether the correction restores function.',
+      measure:'Editing efficiency and outcomes by amplicon sequencing.' },
+    { name:'Assess safety',
+      text:'We search the genome for unintended edits, look for large deletions and rearrangements at the target, and confirm that edited cells are healthy.',
+      measure:'Off-target sequencing. Structural variant assays.' },
+    { name:'Manufacture',
+      text:'With partners, we produce clinical-grade editor and guide and formulate them for delivery, either into cells outside the body or directly into the patient.',
+      measure:'Clinical-grade materials with release testing.' },
+    { name:'Treat and share',
+      text:'After regulatory review, the child is treated at UCSF and followed closely. The full data package is shared with other academic centers so the next cure takes less time.',
+      measure:'Clinical follow-up. Data shared with other centers.' }
+  ];
+  var pipe = document.getElementById('pipe');
+  var pdTitle = document.getElementById('pd-title');
+  var pdText = document.getElementById('pd-text');
+  var pdMeasure = document.getElementById('pd-measure');
+  function showStep(n){
+    var s = steps[n];
+    pdTitle.textContent = s.name;
+    pdText.textContent = s.text;
+    pdMeasure.textContent = s.measure;
+    var buttons = pipe.querySelectorAll('button');
+    for (var k = 0; k < buttons.length; k++) buttons[k].setAttribute('aria-expanded', k === n ? 'true' : 'false');
+  }
+  pipe.addEventListener('click', function(e){
+    var btn = e.target.closest('button');
+    if (btn) showStep(parseInt(btn.getAttribute('data-step'), 10));
+  });
+  showStep(0);
+
+  /* Publications, live from Europe PMC */
+  var pubsEl = document.getElementById('pubs');
+  var pubsStatus = document.getElementById('pubs-status');
+  var query = '(AUTH:"Urnov F" OR AUTH:"Urnov FD") AND FIRST_PDATE:[2020-01-01 TO 2035-12-31] AND SRC:MED';
+  var url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=' + encodeURIComponent(query) + '&format=json&pageSize=40&resultType=lite';
+
+  function authorLine(str){
+    if (!str) return '';
+    var parts = str.split(', ');
+    if (parts.length > 6) parts = parts.slice(0, 5).concat(['et al']);
+    return parts.join(', ') + '.';
+  }
+  function addAuthors(el, str){
+    var text = authorLine(str);
+    var re = /(Urnov FD?)/;
+    var pieces = text.split(re);
+    pieces.forEach(function(p){
+      if (re.test(p)){ var s = document.createElement('strong'); s.textContent = p; el.appendChild(s); }
+      else el.appendChild(document.createTextNode(p));
+    });
+  }
+  function render(items){
+    pubsEl.innerHTML = '';
+    items.forEach(function(it){
+      var li = document.createElement('li');
+      var year = document.createElement('span');
+      year.className = 'year';
+      year.textContent = it.pubYear || (it.firstPublicationDate || '').slice(0, 4);
+      var body = document.createElement('div');
+      var a = document.createElement('a');
+      a.className = 'title';
+      a.textContent = it.title ? it.title.replace(/\.$/, '') : 'Untitled';
+      a.href = it.doi ? 'https://doi.org/' + it.doi : (it.pmid ? 'https://pubmed.ncbi.nlm.nih.gov/' + it.pmid + '/' : '#');
+      var meta = document.createElement('p');
+      meta.className = 'meta';
+      addAuthors(meta, it.authorString);
+      if (it.journalTitle) meta.appendChild(document.createTextNode(' ' + it.journalTitle + '.'));
+      body.appendChild(a);
+      body.appendChild(meta);
+      li.appendChild(year);
+      li.appendChild(body);
+      pubsEl.appendChild(li);
+    });
+  }
+  function fail(){
+    pubsStatus.textContent = 'The live list could not load. The full list is on PubMed below.';
+  }
+  if (window.fetch){
+    fetch(url).then(function(r){ return r.json(); }).then(function(data){
+      var list = (data.resultList && data.resultList.result) || [];
+      list = list.filter(function(it){
+        var t = (it.pubType || '').toLowerCase();
+        return t.indexOf('erratum') === -1 && t.indexOf('correction') === -1 && t.indexOf('retract') === -1;
+      });
+      list.sort(function(a, b){ return (b.firstPublicationDate || '').localeCompare(a.firstPublicationDate || ''); });
+      if (!list.length){ fail(); return; }
+      render(list.slice(0, 8));
+    }).catch(fail);
+  } else { fail(); }
+})();
+</script>
+</body>
+</html>
