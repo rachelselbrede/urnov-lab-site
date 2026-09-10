@@ -101,6 +101,11 @@ button{font:inherit;color:inherit}
 .btn:hover{border-color:var(--link)}
 .btn.primary:hover{background:var(--ink-2);border-color:var(--ink-2)}
 
+/* Hero photo: shown when photos/lab-group.jpg exists, otherwise the sequence panel stands in */
+.hero-photo{margin:0;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:var(--mist);box-shadow:0 30px 60px -30px rgba(41,45,57,.55)}
+.hero-photo img{display:block;width:100%;height:100%;object-fit:cover}
+[hidden]{display:none!important}
+
 /* Sequence panel, the one loud element on the page */
 .seqpanel{background:var(--ink);border-radius:16px;padding:22px 24px 20px;color:#fff;box-shadow:0 30px 60px -30px rgba(41,45,57,.55)}
 .seqpanel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
@@ -313,6 +318,9 @@ footer a{color:var(--muted)}
         <a class="btn" href="#publications">Read our papers</a>
       </div>
     </div>
+    <figure class="hero-photo" hidden>
+      <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="1600" height="1200">
+    </figure>
     <div class="seqpanel" role="figure" aria-label="Illustration of a single-base correction at a target site">
       <div class="seqpanel-head"><strong>Target site</strong><span>Guide RNA and PAM underlined</span></div>
       <div class="seq" id="seq" aria-hidden="true"></div>
@@ -573,6 +581,17 @@ footer a{color:var(--muted)}
   links.addEventListener('click', function(e){
     if (e.target.tagName === 'A') { links.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
   });
+
+  /* Hero photo: use it when the file exists, keep the sequence panel otherwise */
+  (function(){
+    var fig = document.querySelector('.hero-photo');
+    var photo = fig && fig.querySelector('img');
+    var panel = document.querySelector('.seqpanel');
+    if (!photo || !panel) return;
+    function usePhoto(){ panel.hidden = true; fig.hidden = false; }
+    if (photo.complete && photo.naturalWidth > 0) usePhoto();
+    else photo.addEventListener('load', usePhoto);
+  })();
 
   /* Sequence panel: a single base correction at a base-editor target site */
   var ROWS = 6, COLS = 32;

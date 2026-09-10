@@ -14,6 +14,7 @@ Every later change is an edit to `index.html` and a commit. Pages redeploys on i
 ## Fill in before you show it
 
 - Lab email in the Contact section (currently `lab@example.edu`).
+- Lab group photo. Save it as `photos/lab-group.jpg` (landscape, at least 1600 px wide, JPEG) and commit. The hero swaps the sequence panel for the photo automatically when the file exists.
 - Team names, roles, and photos. Replace the `<span class="initials">` placeholder inside each `.portrait` with `<img src="photos/name.jpg" alt="Name">`. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
 - Confirm the mailing address and zip.
 - The research section lists only programs already public in IGI, CZI, and Danaher announcements. Add or remove programs with Fyodor.
