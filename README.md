@@ -19,6 +19,7 @@ Every later change is an edit to `index.html` and a commit. Pages redeploys on i
 - The research section lists only programs already public in IGI, CZI, and Danaher announcements. Add or remove programs with Fyodor.
 - The "Openings at the IGI" button links to the IGI homepage. Swap in the real jobs page.
 - Add a social preview image (`og:image` in the head) once IGI comms can share one.
+- Partner logos. The "Partners and supporters" strip near the bottom currently shows typeset names. To use official logos, put SVG or PNG files in a `logos/` folder and replace the text inside each `<li>` in the `.marquee-set` list with `<img src="logos/name.svg" alt="Organization name">`. Get approved files from each organization's communications office, and prune the list to the partners the lab wants named.
 
 ## What updates itself
 
