@@ -8,24 +8,27 @@
 <meta property="og:title" content="Urnov Lab | Innovative Genomics Institute">
 <meta property="og:description" content="CRISPR cures for children, on demand. Cure design and safety testing at UC Berkeley, clinical care at UCSF.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230F1B33'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Menlo,Consolas,monospace' font-size='36' font-weight='700' fill='%232B6FEA'%3EC%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23292D39'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Menlo,Consolas,monospace' font-size='36' font-weight='700' fill='%235857FF'%3EC%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0F1B33;
-  --ink-2:#2A3A5C;
+  /* IGI brand palette, from innovativegenomics.org/resources/member-resources/brand-guidelines/ */
+  --ink:#292D39;        /* IGI Deep Blue */
+  --ink-2:#4A4E5A;      /* Deep Blue, lightened for secondary text */
   --paper:#FFFFFF;
-  --mist:#F1F3F7;
-  --rule:#D8DEE9;
-  --muted:#5B6884;
-  --seq:#8F9BB5;
-  --base-a:#2F9E5B;
-  --base-c:#2B6FEA;
-  --base-g:#D99A00;
-  --base-t:#E04A3A;
-  --link:#2B6FEA;
+  --mist:#F4F4F4;       /* IGI light grey */
+  --rule:#D8D8D8;       /* IGI Slate Grey */
+  --muted:#696C73;      /* Deep Blue tint */
+  --seq:#AAABAF;        /* Deep Blue tint, sequence text on dark panels */
+  --seq-seen:#BCBEFB;   /* IGI Blue tint */
+  --base-c-dark:#898DF9; /* IGI Blue tint, the corrected base on dark panels */
+  --base-a:#96C04B;     /* Sustainable Green */
+  --base-c:#5857FF;     /* IGI Blue, the corrected base and links */
+  --base-g:#FFAC0F;     /* Genome Gold */
+  --base-t:#EC5121;     /* Human Health Red, the disease-causing variant */
+  --link:#5857FF;
   --font-display:'Source Serif 4',Georgia,'Times New Roman',serif;
   --font-body:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
   --font-mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
@@ -69,7 +72,7 @@ button{font:inherit;color:inherit}
 .brand-group{display:flex;align-items:center;gap:16px}
 .brand{font-family:var(--font-display);font-weight:600;font-size:21px;line-height:1;color:var(--ink);text-decoration:none;display:inline-flex;flex-direction:column;gap:5px}
 /* A sequence underline: faint ticks with one base out of place, corrected on hover */
-.seqline{position:relative;display:block;height:7px;background:repeating-linear-gradient(90deg,#B9C3D8 0 2.4px,transparent 2.4px 5.4px) left bottom/100% 4px no-repeat}
+.seqline{position:relative;display:block;height:7px;background:repeating-linear-gradient(90deg,#AAABAF 0 2.4px,transparent 2.4px 5.4px) left bottom/100% 4px no-repeat}
 .seqline::after{content:"";position:absolute;left:64.8px;bottom:0;width:2.4px;height:7px;border-radius:1px;background:var(--base-t);transition:background .25s ease,height .25s ease}
 .brand:hover .seqline::after,.brand:focus-visible .seqline::after{background:var(--base-c);height:4px}
 .affiliation{display:flex;align-items:center;padding-left:16px;border-left:1px solid var(--rule);height:30px}
@@ -99,7 +102,7 @@ button{font:inherit;color:inherit}
 .btn.primary:hover{background:var(--ink-2);border-color:var(--ink-2)}
 
 /* Sequence panel, the one loud element on the page */
-.seqpanel{background:var(--ink);border-radius:16px;padding:22px 24px 20px;color:#fff;box-shadow:0 30px 60px -30px rgba(15,27,51,.55)}
+.seqpanel{background:var(--ink);border-radius:16px;padding:22px 24px 20px;color:#fff;box-shadow:0 30px 60px -30px rgba(41,45,57,.55)}
 .seqpanel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
 .seqpanel-head strong{font-family:var(--font-body);font-weight:600;font-size:16px}
 .seqpanel-head span{font-size:13px;color:var(--seq)}
@@ -109,12 +112,12 @@ button{font:inherit;color:inherit}
 .seq .proto{box-shadow:inset 0 -2px 0 rgba(255,255,255,.28)}
 .seq .pam{box-shadow:inset 0 -2px 0 rgba(255,255,255,.62)}
 .seq .target{color:var(--base-t);font-weight:500}
-.seq .target.fixed{color:var(--base-c)}
+.seq .target.fixed{color:var(--base-c-dark)}
 .seq .target.flip{transform:translateY(-3px) scale(1.25)}
 .seqpanel-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);font-size:14px}
 .status{display:inline-flex;align-items:center;gap:8px}
 .status .dot{width:8px;height:8px;border-radius:50%;background:var(--base-t);transition:background .3s}
-.status.fixed .dot{background:var(--base-c)}
+.status.fixed .dot{background:var(--base-c-dark)}
 .seqpanel-foot .legend{color:var(--seq);font-size:13px}
 @media (max-width:480px){.seq{font-size:11px;letter-spacing:.05em}}
 
@@ -124,18 +127,18 @@ button{font:inherit;color:inherit}
 .scan .lane{position:relative;flex:1;min-width:0;align-self:stretch;display:flex;align-items:center;font-size:13px}
 .scan .bases{font-family:var(--font-mono);letter-spacing:.14em;white-space:nowrap;line-height:1;width:100%;overflow:hidden}
 .scan .bases span{display:inline-block;width:1.05em;text-align:center;transition:color .2s}
-.scan .bases span.seen{color:#C9D2E6}
+.scan .bases span.seen{color:var(--seq-seen)}
 .scan .bases span.target{color:var(--base-t);font-weight:500}
-.scan .bases span.target.fixed{color:var(--base-c)}
+.scan .bases span.target.fixed{color:var(--base-c-dark)}
 .scan .cursor{position:absolute;top:0;bottom:0;left:0;width:1.05em;pointer-events:none;will-change:transform}
-.scan .cursor::before{content:"";position:absolute;left:-2px;right:-2px;top:6px;bottom:6px;border:1.5px solid var(--base-c);border-radius:3px;background:rgba(43,111,234,.18)}
+.scan .cursor::before{content:"";position:absolute;left:-2px;right:-2px;top:6px;bottom:6px;border:1.5px solid var(--base-c-dark);border-radius:3px;background:rgba(137,141,249,.2)}
 .scan .cursor svg{position:absolute;left:50%;top:-1px;width:14px;height:14px;transform:translateX(-50%) rotate(90deg);transform-origin:50% 50%;color:#fff}
 .scan.found .cursor svg{animation:snip .45s ease-in-out 1}
 @keyframes snip{0%,100%{transform:translateX(-50%) rotate(90deg) scale(1)}50%{transform:translateX(-50%) rotate(90deg) scale(.7)}}
 .scan .readout{flex:none;padding-left:18px;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em;white-space:nowrap}
 .scan .readout .count{display:inline-block;min-width:13ch;text-align:right;font-variant-numeric:tabular-nums}
 .scan .readout strong{color:#fff;font-weight:500}
-.scan.found .readout strong{color:var(--base-c)}
+.scan.found .readout strong{color:var(--base-c-dark)}
 @media (max-width:640px){.scan .readout{display:none}.scan .lane{font-size:11px}.scan .bases{letter-spacing:.1em}}
 
 /* Facts row */
@@ -224,10 +227,10 @@ button{font:inherit;color:inherit}
 .video-poster{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;border-radius:12px;overflow:hidden;background:var(--ink);cursor:pointer}
 .video-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease}
 .video-poster:hover img{transform:scale(1.03)}
-.video-poster .play{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:rgba(15,27,51,.85);box-shadow:0 4px 16px rgba(0,0,0,.3);transition:background .2s}
+.video-poster .play{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:rgba(41,45,57,.85);box-shadow:0 4px 16px rgba(0,0,0,.3);transition:background .2s}
 .video-poster .play::after{content:"";position:absolute;left:19px;top:14px;border-style:solid;border-width:10px 0 10px 16px;border-color:transparent transparent transparent #fff}
 .video-poster:hover .play{background:var(--base-c)}
-.video-poster .duration{position:absolute;right:8px;bottom:8px;font-family:var(--font-mono);font-size:12px;color:#fff;background:rgba(15,27,51,.8);padding:3px 7px;border-radius:6px}
+.video-poster .duration{position:absolute;right:8px;bottom:8px;font-family:var(--font-mono);font-size:12px;color:#fff;background:rgba(41,45,57,.8);padding:3px 7px;border-radius:6px}
 .video-frame{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
 .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 

@@ -30,5 +30,5 @@ The Publications section pulls recent papers from Europe PMC in the browser ever
 
 - Move the repo to a GitHub organization owned by the lab so it does not depend on one person's account.
 - Decide on the address. Options are a `berkeley.edu` subdomain through campus IT, an IGI subdomain through IGI comms, or a purchased domain (about $10 to $20 a year) pointed at GitHub Pages.
-- Ask IGI comms for brand colors, the logo, and headshots. The color and font tokens are at the top of the CSS in `:root`, so restyling is a handful of lines.
+- The palette follows the IGI brand guidelines (innovativegenomics.org/resources/member-resources/brand-guidelines/): IGI Deep Blue for text and dark panels, IGI Blue for links and the corrected base, Slate Grey for rules, Human Health Red for the disease-causing variant. Official tints are used where the true colors would fail contrast on dark panels. Fonts are Source Serif 4 and Inter, the pairing UC Berkeley's own site uses. All tokens are at the top of the CSS in `:root`. Ask IGI comms for headshots and to confirm logo and color usage before launch.
 - Check accessibility once real content is in (UC expects WCAG AA). The page already has a skip link, visible focus states, reduced-motion support, and readable contrast.
