@@ -111,6 +111,27 @@ button{font:inherit;color:inherit}
 .seqpanel-foot .legend{color:var(--seq);font-size:13px}
 @media (max-width:480px){.seq{font-size:11px;letter-spacing:.05em}}
 
+/* Genome scan strip, rides under the nav and tracks scroll progress */
+.scan{position:sticky;top:65px;z-index:49;background:var(--ink);color:var(--seq);height:38px;overflow:hidden;user-select:none}
+.scan .track{position:relative;height:100%;display:flex;align-items:center}
+.scan .lane{position:relative;flex:1;min-width:0;align-self:stretch;display:flex;align-items:center;font-size:13px}
+.scan .bases{font-family:var(--font-mono);letter-spacing:.14em;white-space:nowrap;line-height:1;width:100%;overflow:hidden}
+.scan .bases span{display:inline-block;width:1.05em;text-align:center;transition:color .2s}
+.scan .bases span.seen{color:#C9D2E6}
+.scan .bases span.pam{box-shadow:inset 0 -2px 0 rgba(255,255,255,.62)}
+.scan .bases span.target{color:var(--base-t);font-weight:500}
+.scan .bases span.target.fixed{color:var(--base-c)}
+.scan .cursor{position:absolute;top:0;bottom:0;left:0;width:1.05em;pointer-events:none;will-change:transform}
+.scan .cursor::before{content:"";position:absolute;left:-2px;right:-2px;top:6px;bottom:6px;border:1.5px solid var(--base-c);border-radius:3px;background:rgba(43,111,234,.18)}
+.scan .cursor svg{position:absolute;left:50%;top:-1px;width:14px;height:14px;transform:translateX(-50%) rotate(90deg);transform-origin:50% 50%;color:#fff}
+.scan.found .cursor svg{animation:snip .45s ease-in-out 1}
+@keyframes snip{0%,100%{transform:translateX(-50%) rotate(90deg) scale(1)}50%{transform:translateX(-50%) rotate(90deg) scale(.7)}}
+.scan .readout{flex:none;padding-left:18px;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em;white-space:nowrap}
+.scan .readout .count{display:inline-block;min-width:13ch;text-align:right;font-variant-numeric:tabular-nums}
+.scan .readout strong{color:#fff;font-weight:500}
+.scan.found .readout strong{color:var(--base-c)}
+@media (max-width:640px){.scan .readout{display:none}.scan .lane{font-size:11px}.scan .bases{letter-spacing:.1em}}
+
 /* Facts row */
 .facts{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .facts .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
@@ -202,7 +223,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 footer a{color:var(--muted)}
 
 @media (prefers-reduced-motion:reduce){
-  .seq .b,.status .dot,.pipe button{transition:none}
+  .seq .b,.status .dot,.pipe button,.scan .bases span{transition:none}
+  .scan .cursor svg{animation:none}
 }
 </style>
 </head>
@@ -224,6 +246,16 @@ footer a{color:var(--muted)}
     </ul>
   </div>
 </header>
+
+<div class="scan" id="scan" aria-hidden="true">
+  <div class="wrap track">
+    <div class="lane">
+      <div class="bases" id="scan-bases"></div>
+      <div class="cursor" id="scan-cursor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div>
+    </div>
+    <div class="readout"><span class="count" id="scan-count">0</span> of 3,000,000,000 bp <strong id="scan-state">Scanning</strong></div>
+  </div>
+</div>
 
 <main id="main">
 <section class="hero" id="top">
@@ -501,6 +533,77 @@ footer a{color:var(--muted)}
   panel.style.cursor = 'pointer';
   panel.addEventListener('click', play);
   play();
+
+  /* Genome scan strip: a reader travels the strip as the page scrolls */
+  (function(){
+    var strip = document.getElementById('scan');
+    var basesEl = document.getElementById('scan-bases');
+    var cursor = document.getElementById('scan-cursor');
+    var countEl = document.getElementById('scan-count');
+    var stateEl = document.getElementById('scan-state');
+    if (!strip || !basesEl) return;
+    var spans = [], targetIdx = 0, targetX = 0, stepX = 14, found = null, ticking = false;
+
+    function build(){
+      basesEl.textContent = '';
+      var probe = document.createElement('span');
+      probe.textContent = 'A';
+      basesEl.appendChild(probe);
+      stepX = probe.getBoundingClientRect().width || 14;
+      basesEl.textContent = '';
+      var n = Math.max(16, Math.floor(basesEl.clientWidth / stepX) - 1);
+      targetIdx = n - 8;                        /* target base, with an NGG PAM three bases downstream */
+      var r = rng(7), letters = 'ACGT';
+      spans = [];
+      for (var i = 0; i < n; i++){
+        var s = document.createElement('span');
+        var ch = letters.charAt(Math.floor(r() * 4));
+        if (i === targetIdx){ ch = 'A'; s.className = 'target'; }
+        else if (i === targetIdx + 3){ s.className = 'pam'; }
+        else if (i === targetIdx + 4 || i === targetIdx + 5){ ch = 'G'; s.className = 'pam'; }
+        s.textContent = ch;
+        spans.push(s);
+        basesEl.appendChild(s);
+      }
+      targetX = targetIdx * stepX;
+      found = null;
+      strip.classList.remove('found');
+      update();
+    }
+    function progress(){
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      return max > 0 ? Math.min(1, Math.max(0, window.pageYOffset / max)) : 1;
+    }
+    function update(){
+      ticking = false;
+      var p = progress();
+      var x = p * targetX;
+      cursor.style.transform = 'translateX(' + x + 'px)';
+      var seenUpTo = Math.floor(x / stepX);
+      for (var i = 0; i < spans.length; i++) spans[i].classList.toggle('seen', i < seenUpTo);
+      countEl.textContent = Math.round(p * 3e9).toLocaleString('en-US');
+      var nowFound = p >= 0.995;
+      if (nowFound !== found){
+        found = nowFound;
+        strip.classList.toggle('found', found);
+        stateEl.textContent = found ? 'Corrected' : 'Scanning';
+        var t = spans[targetIdx];
+        if (found){
+          if (reduce){ t.textContent = 'G'; t.classList.add('fixed'); }
+          else setTimeout(function(){ if (found){ t.textContent = 'G'; t.classList.add('fixed'); } }, 220);
+        } else {
+          t.textContent = 'A';
+          t.classList.remove('fixed');
+        }
+      }
+    }
+    window.addEventListener('scroll', function(){
+      if (!ticking){ ticking = true; requestAnimationFrame(update); }
+    }, {passive:true});
+    window.addEventListener('resize', build);
+    build();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+  })();
 
   /* Pipeline */
   var steps = [
