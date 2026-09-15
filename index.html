@@ -517,9 +517,14 @@ footer a{color:var(--muted)}
          once the file actually loads, so a typo in the filename leaves the initials rather than
          a broken image. An <img> written into .portrait by hand overrides all of this.
 
-         Twenty slots are set out below as placeholders. There is nothing special about twenty:
-         the grid just keeps adding rows, so add or delete <li> elements freely. To break the
-         roster into groups, close the <ul>, add an <h3>, and open another one. -->
+         The twenty slots below have no <h3 class="name"> yet, which is what makes them read as
+         empty: initials come from the name, so no name means an empty portrait. Adding the
+         name line fills the slot and the initials appear on their own, with nothing to
+         remember to take back out.
+
+         There is nothing special about twenty: the grid just keeps adding rows, so add or
+         delete <li> elements freely. To break the roster into groups, close the <ul>, add an
+         <h3>, and open another one. -->
     <div class="person pi">
       <div class="portrait"></div>
       <div class="person-text">
@@ -531,102 +536,82 @@ footer a{color:var(--muted)}
     <ul class="people-grid">
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Staff scientist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Staff scientist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Staff scientist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Postdoctoral scholar</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Postdoctoral scholar</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Postdoctoral scholar</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Postdoctoral scholar</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Postdoctoral scholar</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Graduate student</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Graduate student</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Graduate student</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Graduate student</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Computational biologist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Computational biologist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Project manager</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
-        <h3 class="name">Team member</h3>
         <p class="role">Lab manager</p>
       </li>
     </ul>
@@ -1072,7 +1057,8 @@ footer a{color:var(--muted)}
       initials.setAttribute('aria-hidden', 'true');
       initials.textContent = nameEl ? initialsFor(nameEl.textContent) : '';
       portrait.textContent = '';
-      portrait.appendChild(initials);
+      /* A slot with no name yet stays an empty frame rather than an empty span */
+      if (initials.textContent) portrait.appendChild(initials);
 
       var src = person.getAttribute('data-photo');
       if (!src) return;

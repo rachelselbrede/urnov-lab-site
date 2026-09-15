@@ -26,7 +26,7 @@ Every later change is an edit to `index.html` and a commit. Pages redeploys on i
 
 - Lab email in the Contact section (currently `lab@example.edu`). It is deliberately left out of the structured data until it is real.
 - Lab group photo. Save it as `photos/lab-group.jpg` (landscape, at least 1600 px wide, JPEG) and commit. The hero swaps the sequence panel for the photo automatically when the file exists. Until then the page asks for that file and gets a 404, which is how it knows the photo is not there yet.
-- Team names, roles, and photos. See "Adding people" below. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
+- Team names, roles, and photos. Twenty empty slots are waiting; see "Adding people" below. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
 - Confirm the mailing address and zip. It appears twice: in the Contact section and in the JSON-LD block in the `<head>`. Both have to change together.
 - The research section lists only programs already public in IGI, CZI, and Danaher announcements. Add or remove programs with Fyodor.
 - The "Openings at the IGI" button links to the IGI homepage. Swap in the real jobs page.
@@ -47,7 +47,18 @@ The PI card sits on its own above the roster, because it carries a bio and a wid
 
 Copy it, change the two lines of text, done. The initials shown in the empty portrait are worked out from the name, so there is nothing to keep in sync and no way for them to end up wrong. Add a `<p class="bio">` if someone needs a paragraph, the way the PI card has one. The order on the page is the order of the `<li>` elements.
 
-Twenty slots are laid out as placeholders, all reading "Team member" with a spread of roles. There is nothing special about twenty. The grid keeps adding rows as you add `<li>` elements, so take it well past twenty or cut it back without touching any CSS. The roles on the placeholders are a guess at the shape of the lab and are meant to be overwritten.
+Twenty empty slots are laid out below the PI, each one a blank frame with a role under it and no `<h3 class="name">` line yet:
+
+```html
+<li class="person">
+  <div class="portrait"></div>
+  <p class="role">Staff scientist</p>
+</li>
+```
+
+That missing name line is exactly what makes a slot read as empty: the initials are worked out from the name, so no name means an empty frame. Filling a slot is adding the name line back, and the initials appear on their own. There is no placeholder flag to remember to take out, and so no way to end up with a real person whose portrait stays blank.
+
+There is nothing special about twenty. The grid keeps adding rows as you add `<li>` elements, so take it well past twenty or cut it back without touching any CSS. The roles on the slots are a guess at the shape of the lab and are meant to be overwritten.
 
 The grid runs five across on a wide screen, four from 1000px, three from 760px and two from 480px, so cards stay between about 130px and 215px wide at every size. To split the roster into groups, close the `<ul>`, add an `<h3>` heading, and open another one; the CSS does not care how many lists there are.
 
