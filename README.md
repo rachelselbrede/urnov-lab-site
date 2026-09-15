@@ -69,7 +69,15 @@ For a headshot, save it in `photos/` and name the file on the person's `<li>`:
 <li class="person" data-photo="photos/jane-doe.jpg">
 ```
 
-The photo replaces the initials only once it has actually loaded, so a misspelled filename leaves the initials in place rather than a broken image icon. Portraits are cropped to 4:5, the PI's included, so headshots should be portrait orientation and at least 600 px wide. Twenty headshots is a real amount of weight on the page, so they are lazy-loaded and only fetched as the section comes into view. Still save them around 600 px wide rather than straight off the camera.
+The photo replaces the initials only once it has actually loaded, so a misspelled filename leaves the initials in place rather than a broken image icon.
+
+Portraits are cropped to fill a 4:5 frame, the PI's included, so an upright headshot around 600 px wide drops straight in. A landscape photo, or one where the subject is off to one side, gets a slice taken out of its middle and the sides thrown away, which can cut the subject in half. Steer the crop instead of re-cropping the file:
+
+```html
+<li class="person" data-photo="photos/jane-doe.jpg" data-focus="69% 40%">
+```
+
+Raise the first percentage to move the crop right, lower it to move left; the second does the same vertically. Leave `data-focus` off and the crop comes from dead centre, which is right for most headshots. Twenty headshots is a real amount of weight on the page, so they are lazy-loaded and only fetched as the section comes into view. Still save them around 600 px wide rather than straight off the camera.
 
 The `alt` on these photos is set to empty on purpose. The person's name is on the very next line, and a screen reader announcing it twice in a row helps nobody.
 

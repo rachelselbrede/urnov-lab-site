@@ -525,7 +525,7 @@ footer a{color:var(--muted)}
          There is nothing special about twenty: the grid just keeps adding rows, so add or
          delete <li> elements freely. To break the roster into groups, close the <ul>, add an
          <h3>, and open another one. -->
-    <div class="person pi" data-photo="photos/fyodor-urnov.jpg">
+    <div class="person pi" data-photo="photos/fyodor-urnov.jpg" data-focus="69% 40%">
       <div class="portrait"></div>
       <div class="person-text">
         <h3 class="name">Fyodor Urnov</h3>
@@ -1066,6 +1066,11 @@ footer a{color:var(--muted)}
       img.alt = '';                    /* the name is the next line; reading it twice helps nobody */
       img.decoding = 'async';
       img.loading = 'lazy';            /* a full roster of headshots should not all load at once */
+      /* Portraits are cropped to fill a 4:5 frame, which cuts the sides off a landscape source
+         and the subject with them if they are not centred. data-focus steers that crop:
+         "69% 40%" keeps the point 69% across and 40% down in view. Default is dead centre. */
+      var focus = person.getAttribute('data-focus');
+      if (focus) img.style.objectPosition = focus;
       /* The initials go only once the photo is really there, and a missing or misspelled file
          takes the image back out, so nobody ever sees a broken image icon. Appending before
          setting src matters: a detached image ignores loading="lazy" and fetches immediately. */

@@ -17,8 +17,17 @@ The PI portrait on the UC Berkeley VC for Research faculty page is:
 
   https://vcresearch.berkeley.edu/sites/default/files/styles/faculty_photo_large/public/2024-08/Fyodor%20Urnov.7_0.jpg
 
-Save it as fyodor-urnov.jpg. It does not need cropping to exact proportions: the
-portrait frame crops to fill, so any reasonably upright photo sits correctly.
+Save it as fyodor-urnov.jpg.
+
+That photo is landscape, about 2:1, and he stands right of centre. The portrait
+frame is 4:5, so it keeps a tall slice and throws the sides away. Left to itself
+the slice comes from the middle of the frame and cuts him in half, so the PI card
+carries data-focus="69% 40%" to move the slice right and centre him instead.
+
+That number is an estimate made by eye and is meant to be nudged. Raise the first
+percentage to move the crop right, lower it to move left; the second does the same
+vertically. Reload and look. A photo that is already upright and centred needs no
+data-focus at all.
 
 Check with IGI communications before launch that the lab may reuse it, the same
 way the partner logos need confirming.
