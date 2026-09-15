@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Urnov Lab social preview card</title>
+<!--
+  Source for social/og-image.png, the link preview card.
+
+  It is a 1200x630 page rendered to PNG, kept here so the card can be changed
+  without redrawing it by hand. To regenerate, open this file at exactly
+  1200x630 and screenshot it, or run headless Chrome:
+
+    chrome --headless --screenshot=og-image.png --window-size=1200,630 \
+           --hide-scrollbars social/og-image.html
+
+  Everything is text, so there is no logo usage to clear before launch.
+  Colours are the IGI brand palette, the same tokens index.html uses.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#292D39;        /* IGI Deep Blue */
+  --seq:#AAABAF;        /* Deep Blue tint */
+  --base-c-dark:#898DF9;/* IGI Blue tint, the corrected base on dark panels */
+  --base-t:#EC5121;     /* Human Health Red */
+  --font-display:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --font-body:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1200px;height:630px;overflow:hidden}
+body{
+  background:var(--ink);color:#fff;font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:64px 72px;
+}
+
+/* Wordmark, with the sequence underline the site nav uses */
+.mark{font-family:var(--font-display);font-weight:600;font-size:30px;line-height:1;display:inline-flex;flex-direction:column;gap:9px;align-self:flex-start}
+.tick{position:relative;display:block;height:10px;background:repeating-linear-gradient(90deg,#6E7078 0 3.4px,transparent 3.4px 7.6px) left bottom/100% 6px no-repeat}
+.tick::after{content:"";position:absolute;left:91px;bottom:0;width:3.4px;height:10px;border-radius:1px;background:var(--base-t)}
+
+h1{font-family:var(--font-display);font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.005em}
+
+.seq{font-family:var(--font-mono);font-size:23px;letter-spacing:.17em;color:var(--seq);white-space:nowrap;margin-bottom:18px}
+.seq .proto{box-shadow:inset 0 -2px 0 rgba(255,255,255,.26)}
+.seq .pam{box-shadow:inset 0 -2px 0 rgba(255,255,255,.6)}
+.seq .fixed{color:var(--base-c-dark);font-weight:500}
+.caption{font-size:22px;line-height:1.4;color:var(--seq)}
+.caption strong{color:#fff;font-weight:500}
+</style>
+</head>
+<body>
+  <span class="mark">Urnov Lab<span class="tick"></span></span>
+
+  <div>
+    <!-- Broken by hand rather than by width: the card is a fixed size, so the line breaks should be too -->
+    <h1>CRISPR cures for children,<br>on demand.</h1>
+  </div>
+
+  <div>
+    <p class="seq"><span class="proto">GGGTTTCG</span><span class="proto fixed">G</span><span class="proto">TGGCGTCCGTTCA</span><span class="pam">TGG</span>AGGCGA</p>
+    <p class="caption">Cure design and safety testing at the <strong>Innovative Genomics Institute</strong>, UC Berkeley</p>
+  </div>
+</body>
+</html>
