@@ -111,6 +111,14 @@ button{font:inherit;color:inherit}
 .seqpanel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
 .seqpanel-head strong{font-family:var(--font-body);font-weight:600;font-size:16px}
 .seqpanel-head span{font-size:13px;color:var(--seq)}
+.seq-replay{
+  flex:none;background:transparent;border:1px solid rgba(255,255,255,.3);color:var(--seq);
+  font-family:var(--font-body);font-size:12.5px;line-height:1;padding:6px 11px;border-radius:999px;
+  cursor:pointer;transition:border-color .15s,color .15s
+}
+.seq-replay:hover{border-color:var(--base-c-dark);color:#fff}
+/* The page-wide focus ring uses IGI Blue, which is too dark against the Deep Blue panel */
+.seq-replay:focus-visible{outline:3px solid var(--base-c-dark);outline-offset:2px}
 .seq{font-family:var(--font-mono);font-size:clamp(13px,1.15vw,15px);line-height:1.9;letter-spacing:.08em;color:var(--seq);overflow:hidden;white-space:nowrap}
 .seq .row{display:block;line-height:2}
 .seq .b{display:inline-block;position:relative;line-height:1.25;padding-bottom:3px;transition:color .25s ease,transform .25s ease}
@@ -166,7 +174,7 @@ button{font:inherit;color:inherit}
 .research-grid p{color:var(--ink-2);font-size:16px;margin:0}
 
 /* Pipeline */
-.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:0;padding:0;list-style:none}
+.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:0;padding:0}
 @media (max-width:900px){.pipe{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:560px){.pipe{grid-template-columns:1fr 1fr}}
 .pipe button{
@@ -175,9 +183,9 @@ button{font:inherit;color:inherit}
   transition:border-color .15s,background .15s
 }
 .pipe button:hover{border-color:var(--ink-2)}
-.pipe button[aria-expanded="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.pipe button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 .pipe .num{font-family:var(--font-mono);font-size:13px;color:var(--muted)}
-.pipe button[aria-expanded="true"] .num{color:var(--seq)}
+.pipe button[aria-selected="true"] .num{color:var(--seq)}
 .pipe .name{font-family:var(--font-body);font-weight:600;font-size:17px;line-height:1.25}
 .pipe-detail{margin-top:20px;background:var(--paper);border:1.5px solid var(--rule);border-radius:14px;padding:clamp(22px,3vw,36px);display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(24px,4vw,48px)}
 @media (max-width:760px){.pipe-detail{grid-template-columns:1fr}}
@@ -239,6 +247,14 @@ button{font:inherit;color:inherit}
 .video-poster .duration{position:absolute;right:8px;bottom:8px;font-family:var(--font-mono);font-size:12px;color:#fff;background:rgba(41,45,57,.8);padding:3px 7px;border-radius:6px}
 .video-frame{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
 .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-close{
+  position:absolute;right:8px;top:8px;z-index:2;width:34px;height:34px;padding:0;border:0;border-radius:50%;
+  background:rgba(41,45,57,.85);color:#fff;font-size:20px;line-height:1;cursor:pointer;
+  display:grid;place-items:center;transition:background .2s
+}
+.video-close:hover{background:var(--base-c)}
+/* The page-wide focus ring disappears against the black player */
+.video-close:focus-visible{outline:3px solid #fff;outline-offset:2px}
 
 /* Partners strip, a slow seamless marquee of wordmarks (swap in logo images later) */
 .partners{padding:clamp(40px,5vw,64px) 0 clamp(44px,5vw,72px);border-top:1px solid var(--rule)}
@@ -272,7 +288,7 @@ footer a{color:var(--muted)}
 @media (prefers-reduced-motion:reduce){
   .seq .b,.status .dot,.pipe button,.scan .bases span,.seqline::after{transition:none}
   .scan .cursor svg{animation:none}
-  .video-poster img,.video-poster .play{transition:none}
+  .video-poster img,.video-poster .play,.video-close{transition:none}
 }
 </style>
 </head>
@@ -320,10 +336,11 @@ footer a{color:var(--muted)}
       </div>
     </div>
     <figure class="hero-photo" hidden>
-      <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="1600" height="1200">
+      <!-- Requesting this is how the page detects the photo, so a 404 here is expected until someone adds it -->
+      <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="1600" height="1200" decoding="async">
     </figure>
     <div class="seqpanel" role="figure" aria-label="Illustration of a single-base correction at a target site">
-      <div class="seqpanel-head"><strong>Target site</strong><span>Guide RNA and PAM underlined</span></div>
+      <div class="seqpanel-head"><strong>Target site</strong><span>Guide RNA and PAM underlined</span><button type="button" class="seq-replay" id="seq-replay" aria-label="Replay the base correction">Replay</button></div>
       <div class="seq" id="seq" aria-hidden="true"></div>
       <div class="seqpanel-foot">
         <span class="status" id="seqstatus"><span class="dot"></span><span id="seqtext">Disease-causing variant</span></span>
@@ -370,15 +387,15 @@ footer a{color:var(--muted)}
       <h2>How we make a cure</h2>
       <p>A cure for one child is a sequence of decisions, each backed by data. Select a step to see what happens and what we measure.</p>
     </div>
-    <ol class="pipe" id="pipe">
-      <li><button type="button" aria-expanded="true" aria-controls="pipe-detail" data-step="0"><span class="num">1</span><span class="name">Diagnose</span></button></li>
-      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="1"><span class="num">2</span><span class="name">Design</span></button></li>
-      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="2"><span class="num">3</span><span class="name">Test in cells</span></button></li>
-      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="3"><span class="num">4</span><span class="name">Assess safety</span></button></li>
-      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="4"><span class="num">5</span><span class="name">Manufacture</span></button></li>
-      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="5"><span class="num">6</span><span class="name">Treat and share</span></button></li>
-    </ol>
-    <div class="pipe-detail" id="pipe-detail" aria-live="polite">
+    <div class="pipe" id="pipe" role="tablist" aria-label="Steps in making a cure">
+      <button type="button" role="tab" id="pipe-tab-0" aria-selected="true" aria-controls="pipe-detail" tabindex="0"><span class="num">1</span><span class="name">Diagnose</span></button>
+      <button type="button" role="tab" id="pipe-tab-1" aria-selected="false" aria-controls="pipe-detail" tabindex="-1"><span class="num">2</span><span class="name">Design</span></button>
+      <button type="button" role="tab" id="pipe-tab-2" aria-selected="false" aria-controls="pipe-detail" tabindex="-1"><span class="num">3</span><span class="name">Test in cells</span></button>
+      <button type="button" role="tab" id="pipe-tab-3" aria-selected="false" aria-controls="pipe-detail" tabindex="-1"><span class="num">4</span><span class="name">Assess safety</span></button>
+      <button type="button" role="tab" id="pipe-tab-4" aria-selected="false" aria-controls="pipe-detail" tabindex="-1"><span class="num">5</span><span class="name">Manufacture</span></button>
+      <button type="button" role="tab" id="pipe-tab-5" aria-selected="false" aria-controls="pipe-detail" tabindex="-1"><span class="num">6</span><span class="name">Treat and share</span></button>
+    </div>
+    <div class="pipe-detail" id="pipe-detail" role="tabpanel" aria-labelledby="pipe-tab-0" tabindex="0">
       <div>
         <h3 id="pd-title">Diagnose</h3>
         <p id="pd-text"></p>
@@ -576,23 +593,33 @@ footer a{color:var(--muted)}
   /* Mobile nav */
   var toggle = document.querySelector('.nav-toggle');
   var links = document.getElementById('navlinks');
-  toggle.addEventListener('click', function(){
-    var open = links.classList.toggle('open');
+  function setMenu(open){
+    links.classList.toggle('open', open);
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
+  }
+  toggle.addEventListener('click', function(){ setMenu(!links.classList.contains('open')); });
   links.addEventListener('click', function(e){
-    if (e.target.tagName === 'A') { links.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+    if (e.target.tagName === 'A') setMenu(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape' || !links.classList.contains('open')) return;
+    setMenu(false);
+    toggle.focus();          /* without this, focus is left inside a menu that is now display:none */
   });
 
-  /* Hero photo: use it when the file exists, keep the sequence panel otherwise */
+  /* Hero photo: use it when the file exists, keep the sequence panel otherwise.
+     The src stays in the markup so the photo loads during parse and the hero does not
+     flash the panel first. Until the file is added the request 404s, which is the
+     detection mechanism rather than a fault; the panel simply stays. */
   (function(){
     var fig = document.querySelector('.hero-photo');
     var photo = fig && fig.querySelector('img');
     var panel = document.querySelector('.seqpanel');
     if (!photo || !panel) return;
     function usePhoto(){ panel.hidden = true; fig.hidden = false; }
-    if (photo.complete && photo.naturalWidth > 0) usePhoto();
-    else photo.addEventListener('load', usePhoto);
+    function keepPanel(){ fig.remove(); }
+    if (photo.complete) { if (photo.naturalWidth > 0) usePhoto(); else keepPanel(); }
+    else { photo.addEventListener('load', usePhoto); photo.addEventListener('error', keepPanel); }
   })();
 
   /* Sequence panel: a single base correction at a base-editor target site */
@@ -659,10 +686,7 @@ footer a{color:var(--muted)}
     timers.push(setTimeout(function(){ targetEl.textContent = CORRECT; targetEl.classList.add('fixed'); }, 1650));
     timers.push(setTimeout(function(){ targetEl.classList.remove('flip'); status.classList.add('fixed'); statusText.textContent = 'Corrected'; }, 1900));
   }
-  var panel = document.querySelector('.seqpanel');
-  panel.title = 'Click to replay';
-  panel.style.cursor = 'pointer';
-  panel.addEventListener('click', play);
+  document.getElementById('seq-replay').addEventListener('click', play);
   play();
 
   /* Genome scan strip: a reader travels the strip as the page scrolls */
@@ -757,37 +781,61 @@ footer a{color:var(--muted)}
       measure:'Clinical follow-up. Data shared with other centers.' }
   ];
   var pipe = document.getElementById('pipe');
+  var pipeDetail = document.getElementById('pipe-detail');
+  var pipeTabs = [].slice.call(pipe.querySelectorAll('[role="tab"]'));
   var pdTitle = document.getElementById('pd-title');
   var pdText = document.getElementById('pd-text');
   var pdMeasure = document.getElementById('pd-measure');
-  function showStep(n){
+  function showStep(n, moveFocus){
     var s = steps[n];
     pdTitle.textContent = s.name;
     pdText.textContent = s.text;
     pdMeasure.textContent = s.measure;
-    var buttons = pipe.querySelectorAll('button');
-    for (var k = 0; k < buttons.length; k++) buttons[k].setAttribute('aria-expanded', k === n ? 'true' : 'false');
+    pipeDetail.setAttribute('aria-labelledby', pipeTabs[n].id);
+    /* Roving tabindex: the whole set is one tab stop, arrows move within it */
+    pipeTabs.forEach(function(tab, k){
+      var on = k === n;
+      tab.setAttribute('aria-selected', on ? 'true' : 'false');
+      tab.tabIndex = on ? 0 : -1;
+      if (on && moveFocus) tab.focus();
+    });
   }
   pipe.addEventListener('click', function(e){
-    var btn = e.target.closest('button');
-    if (btn) showStep(parseInt(btn.getAttribute('data-step'), 10));
+    var btn = e.target.closest('[role="tab"]');
+    if (btn) showStep(pipeTabs.indexOf(btn), false);
   });
-  showStep(0);
+  pipe.addEventListener('keydown', function(e){
+    var i = pipeTabs.indexOf(document.activeElement);
+    if (i < 0) return;
+    var n = -1;
+    if (e.key === 'ArrowRight') n = (i + 1) % pipeTabs.length;
+    else if (e.key === 'ArrowLeft') n = (i - 1 + pipeTabs.length) % pipeTabs.length;
+    else if (e.key === 'Home') n = 0;
+    else if (e.key === 'End') n = pipeTabs.length - 1;
+    else return;                                  /* leave Up/Down alone so the page still scrolls */
+    e.preventDefault();
+    showStep(n, true);
+  });
+  showStep(0, false);
 
   /* Watch: swap a poster for the YouTube player on click, one at a time */
   (function(){
     var grid = document.getElementById('videos');
     if (!grid) return;
     var playing = null;
-    function stop(){
+    /* Swapping the poster out takes the focused element with it, so put focus somewhere deliberate */
+    function stop(restoreFocus){
       if (!playing) return;
-      playing.frame.parentNode.replaceChild(playing.poster, playing.frame);
+      var poster = playing.poster;
+      playing.frame.parentNode.replaceChild(poster, playing.frame);
       playing = null;
+      if (restoreFocus) poster.focus();
     }
     grid.addEventListener('click', function(e){
+      if (e.target.closest('.video-close')){ stop(true); return; }
       var btn = e.target.closest('.video-poster');
       if (!btn) return;
-      stop();
+      stop(false);
       var frame = document.createElement('div');
       frame.className = 'video-frame';
       var iframe = document.createElement('iframe');
@@ -795,9 +843,19 @@ footer a{color:var(--muted)}
       iframe.title = btn.getAttribute('data-title');
       iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
       iframe.setAttribute('allowfullscreen', '');
+      var close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'video-close';
+      close.textContent = '\u00D7';
+      close.setAttribute('aria-label', 'Close the video');
       frame.appendChild(iframe);
+      frame.appendChild(close);
       btn.parentNode.replaceChild(frame, btn);
       playing = { poster: btn, frame: frame };
+      close.focus();          /* the player is cross-origin, so focus the one control we own */
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && playing) stop(true);
     });
   })();
 
