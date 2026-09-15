@@ -24,6 +24,59 @@
 <meta name="twitter:image" content="https://rachelselbrede.github.io/urnov-lab-site/social/og-image.png">
 <meta name="theme-color" content="#292D39">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23292D39'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Menlo,Consolas,monospace' font-size='36' font-weight='700' fill='%235857FF'%3EC%3C/text%3E%3C/svg%3E">
+<!-- Structured data. Every claim here is also stated on the page; nothing is asserted that
+     the page does not say. The lab email is deliberately absent while it is a placeholder. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ResearchOrganization",
+  "name": "Urnov Lab",
+  "url": "https://rachelselbrede.github.io/urnov-lab-site/",
+  "description": "The Urnov Lab at the Innovative Genomics Institute designs and safety-tests personalized genome-editing therapies for children born with severe genetic diseases.",
+  "parentOrganization": {
+    "@type": "ResearchOrganization",
+    "name": "Innovative Genomics Institute",
+    "url": "https://innovativegenomics.org/",
+    "parentOrganization": {
+      "@type": "CollegeOrUniversity",
+      "name": "University of California, Berkeley",
+      "url": "https://www.berkeley.edu/"
+    }
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "2151 Berkeley Way",
+    "addressLocality": "Berkeley",
+    "addressRegion": "CA",
+    "postalCode": "94720",
+    "addressCountry": "US"
+  },
+  "employee": {
+    "@type": "Person",
+    "name": "Fyodor Urnov",
+    "jobTitle": "Principal Investigator",
+    "affiliation": [
+      {
+        "@type": "ResearchOrganization",
+        "name": "Innovative Genomics Institute",
+        "url": "https://innovativegenomics.org/"
+      },
+      {
+        "@type": "CollegeOrUniversity",
+        "name": "University of California, Berkeley",
+        "url": "https://www.berkeley.edu/"
+      }
+    ]
+  },
+  "knowsAbout": [
+    "Genome editing",
+    "CRISPR",
+    "Gene therapy",
+    "Rare disease",
+    "Pediatrics"
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">

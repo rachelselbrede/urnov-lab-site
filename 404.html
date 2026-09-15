@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found | Urnov Lab</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#292D39">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23292D39'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Menlo,Consolas,monospace' font-size='36' font-weight='700' fill='%235857FF'%3EC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+/* Same IGI tokens as index.html. Kept inline so this page stands alone. */
+:root{
+  --ink:#292D39;--ink-2:#4A4E5A;--paper:#FFFFFF;--rule:#D8D8D8;--muted:#696C73;
+  --base-c:#5857FF;--base-t:#EC5121;--link:#5857FF;
+  --font-display:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --font-body:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;display:flex;align-items:center;
+  font-family:var(--font-body);font-size:17px;line-height:1.6;color:var(--ink);background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:clamp(48px,8vw,96px) clamp(20px,4vw,48px);width:100%}
+.code{font-family:var(--font-mono);font-size:14px;letter-spacing:.12em;color:var(--muted);margin:0 0 20px}
+/* One base out of place, the same idea the home page opens with */
+.code .off{color:var(--base-t)}
+h1{font-family:var(--font-display);font-weight:600;font-size:clamp(34px,5vw,52px);line-height:1.08;margin:0 0 18px;max-width:18ch}
+p.lead{font-size:clamp(17px,1.6vw,20px);color:var(--ink-2);margin:0 0 32px;max-width:52ch}
+a{color:var(--link);text-decoration-thickness:1px;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--base-c);outline-offset:3px;border-radius:2px}
+.btn{display:inline-block;padding:13px 20px;border-radius:10px;font-weight:600;text-decoration:none;font-size:16px;border:1.5px solid var(--ink);color:#fff;background:var(--ink)}
+.btn:hover{background:var(--ink-2);border-color:var(--ink-2)}
+ul{list-style:none;margin:28px 0 0;padding:26px 0 0;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:12px 26px;font-size:15px}
+ul a{color:var(--ink);text-decoration:none;font-weight:500}
+ul a:hover{color:var(--link);text-decoration:underline}
+</style>
+</head>
+<body>
+  <!-- Absolute links on purpose: GitHub Pages serves this file for any unknown path, at any
+       depth, so relative links would resolve differently depending on how the visitor got here.
+       This is the same base URL as the meta tags in index.html and changes with them. -->
+  <main class="wrap">
+    <p class="code">G G T A C <span class="off">?</span> T C A G</p>
+    <h1>That page is not here.</h1>
+    <p class="lead">The link may be out of date, or the address may have a typo in it. Everything on this site lives on one page.</p>
+    <p><a class="btn" href="https://rachelselbrede.github.io/urnov-lab-site/">Go to the Urnov Lab home page</a></p>
+    <ul>
+      <li><a href="https://rachelselbrede.github.io/urnov-lab-site/#research">Research</a></li>
+      <li><a href="https://rachelselbrede.github.io/urnov-lab-site/#how">How we make a cure</a></li>
+      <li><a href="https://rachelselbrede.github.io/urnov-lab-site/#people">People</a></li>
+      <li><a href="https://rachelselbrede.github.io/urnov-lab-site/#publications">Publications</a></li>
+      <li><a href="https://rachelselbrede.github.io/urnov-lab-site/#news">News</a></li>
+      <li><a href="https://rachelselbrede.github.io/urnov-lab-site/#join">Join us</a></li>
+      <li><a href="https://rachelselbrede.github.io/urnov-lab-site/#contact">Contact</a></li>
+    </ul>
+  </main>
+</body>
+</html>

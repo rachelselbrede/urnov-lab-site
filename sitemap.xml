@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- One page, one entry. No <lastmod>: nobody would remember to update it, and a date
+     that is always wrong is worse for crawlers than no date at all. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://rachelselbrede.github.io/urnov-lab-site/</loc>
+  </url>
+</urlset>

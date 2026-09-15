@@ -1,0 +1,5 @@
+# The site is meant to be found. Nothing here is private.
+User-agent: *
+Allow: /
+
+Sitemap: https://rachelselbrede.github.io/urnov-lab-site/sitemap.xml
