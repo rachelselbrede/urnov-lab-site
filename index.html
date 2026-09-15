@@ -269,7 +269,7 @@ button{font:inherit;color:inherit}
 .pipe-detail .measure-box p{color:var(--ink);font-weight:500}
 
 /* People */
-.people-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.people-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;list-style:none;margin:0;padding:0}
 @media (max-width:1000px){.people-grid{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:640px){.people-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
 .person{display:flex;flex-direction:column;gap:10px}
@@ -487,44 +487,50 @@ footer a{color:var(--muted)}
       <h2>People</h2>
       <p>Bench scientists, clinicians, and program staff across UC Berkeley and UCSF, working on the same patients.</p>
     </div>
-    <div class="people-grid">
-      <div class="person pi">
-        <div class="portrait"><span class="initials" aria-hidden="true">FU</span></div>
-        <div class="name">Fyodor Urnov</div>
+    <!-- To add someone: copy one <li>, change the name and the role. Nothing else.
+         The initials in the portrait are worked out from the name, so there is nothing to
+         keep in sync. When you have a headshot, drop it in photos/ and add
+         data-photo="photos/their-name.jpg" to that person's <li>; it replaces the initials
+         once the file actually loads, so a typo in the filename leaves the initials rather
+         than a broken image. An <img> written into .portrait by hand overrides all of this. -->
+    <ul class="people-grid">
+      <li class="person pi">
+        <div class="portrait"></div>
+        <h3 class="name">Fyodor Urnov</h3>
         <p class="role">Principal Investigator. Director of Therapeutic R&amp;D at the IGI and Professor of Molecular Therapeutics at UC Berkeley</p>
         <p class="bio">A genome-editing pioneer who helped build the human genome-editing toolbox and bring its first applications to the clinic. He directs the Center for Pediatric CRISPR Cures and the Danaher-IGI Beacon for CRISPR Cures, and was the IGI lead on the first personalized in vivo CRISPR therapy.</p>
-      </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Staff scientist</p>
-      </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Postdoctoral scholar</p>
-      </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
-      </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
-      </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Project manager</p>
-      </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Graduate student</p>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </section>
 
@@ -933,6 +939,54 @@ footer a{color:var(--muted)}
     showStep(n, true);
   });
   showStep(0, false);
+
+  /* People: names and roles live in the markup so they are in the page source and survive
+     with scripting off. Only the portrait is built here, which is the part nobody should
+     have to hand-write: initials come from the name, and a headshot named in data-photo
+     takes over once it loads. */
+  (function(){
+    var grid = document.querySelector('.people-grid');
+    if (!grid) return;
+
+    /* Array.from rather than charAt so a name starting outside the basic plane keeps its letter */
+    function firstLetter(word){ return (Array.from(word)[0] || '').toUpperCase(); }
+    function initialsFor(name){
+      var parts = name.trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return '';
+      if (parts.length === 1) return firstLetter(parts[0]);
+      return firstLetter(parts[0]) + firstLetter(parts[parts.length - 1]);
+    }
+
+    [].forEach.call(grid.querySelectorAll('.person'), function(person){
+      var nameEl = person.querySelector('.name');
+      var portrait = person.querySelector('.portrait');
+      if (!portrait){                  /* backfill it, so a card copied without one still lines up */
+        portrait = document.createElement('div');
+        portrait.className = 'portrait';
+        person.insertBefore(portrait, person.firstChild);
+      }
+      if (portrait.querySelector('img')) return;     /* a photo placed by hand wins outright */
+
+      var initials = document.createElement('span');
+      initials.className = 'initials';
+      initials.setAttribute('aria-hidden', 'true');
+      initials.textContent = nameEl ? initialsFor(nameEl.textContent) : '';
+      portrait.textContent = '';
+      portrait.appendChild(initials);
+
+      var src = person.getAttribute('data-photo');
+      if (!src) return;
+      var img = document.createElement('img');
+      img.alt = '';                    /* the name is the next line; reading it twice helps nobody */
+      img.decoding = 'async';
+      /* Swap only on load: a missing or misspelled file leaves the initials, not a broken image */
+      img.addEventListener('load', function(){
+        portrait.textContent = '';
+        portrait.appendChild(img);
+      });
+      img.src = src;
+    });
+  })();
 
   /* Watch: swap a poster for the YouTube player on click, one at a time */
   (function(){

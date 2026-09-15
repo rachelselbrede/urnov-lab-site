@@ -26,12 +26,40 @@ Every later change is an edit to `index.html` and a commit. Pages redeploys on i
 
 - Lab email in the Contact section (currently `lab@example.edu`). It is deliberately left out of the structured data until it is real.
 - Lab group photo. Save it as `photos/lab-group.jpg` (landscape, at least 1600 px wide, JPEG) and commit. The hero swaps the sequence panel for the photo automatically when the file exists. Until then the page asks for that file and gets a 404, which is how it knows the photo is not there yet.
-- Team names, roles, and photos. Replace the `<span class="initials">` placeholder inside each `.portrait` with `<img src="photos/name.jpg" alt="Name">`. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
+- Team names, roles, and photos. See "Adding people" below. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
 - Confirm the mailing address and zip. It appears twice: in the Contact section and in the JSON-LD block in the `<head>`. Both have to change together.
 - The research section lists only programs already public in IGI, CZI, and Danaher announcements. Add or remove programs with Fyodor.
 - The "Openings at the IGI" button links to the IGI homepage. Swap in the real jobs page.
 - Partner logos. The "Partners and supporters" strip uses files in `logos/`, pulled from each organization's own website (IGI, UC Berkeley, UCSF, CZI) or from public-domain vector copies of the official marks on Wikimedia Commons (Danaher, Penn Medicine), plus CHOP's own PNG. Logos are trademarks of their owners: confirm usage with each organization's communications office before a public launch, and prune the list to the partners the lab wants named. To change a logo, replace the file and adjust the `--h` height on its `<li>` so it sits at a similar visual weight.
 - Videos. The Watch section embeds YouTube videos through youtube-nocookie.com and loads the player only when someone clicks a card. To add one, copy a `.video` card and change the video id, title, and duration.
+
+## Adding people
+
+Each person is one `<li>` in the People section of `index.html`:
+
+```html
+<li class="person">
+  <div class="portrait"></div>
+  <h3 class="name">Jane Doe</h3>
+  <p class="role">Staff scientist</p>
+</li>
+```
+
+Copy it, change the two lines of text, done. The initials shown in the empty portrait are worked out from the name, so there is nothing to keep in sync and no way for them to end up wrong. Add a `<p class="bio">` if someone needs a paragraph, the way the PI card has one. The order on the page is the order of the `<li>` elements.
+
+For a headshot, save it in `photos/` and name the file on the person's `<li>`:
+
+```html
+<li class="person" data-photo="photos/jane-doe.jpg">
+```
+
+The photo replaces the initials only once it has actually loaded, so a misspelled filename leaves the initials in place rather than a broken image icon. Portraits are cropped to 4:5 (the PI card is 8:5), so headshots should be portrait orientation, at least 600 px wide.
+
+The `alt` on these photos is set to empty on purpose. The person's name is on the very next line, and a screen reader announcing it twice in a row helps nobody.
+
+Two escape hatches, if you ever need them. Writing an `<img>` into `.portrait` by hand overrides everything above and is left alone. And if you forget the `<div class="portrait"></div>` line when copying a card, it gets added for you, so the card still lines up with the others.
+
+With scripting turned off the names, roles and portrait frames all still render; only the initials are missing. That is why the roster lives in the markup rather than in a list inside the script: it keeps the team in the page source, where search engines and anything that reads the HTML directly can see it.
 
 ## The link preview card
 
