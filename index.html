@@ -211,7 +211,8 @@ button{font:inherit;color:inherit}
 .pubs .title:hover{color:var(--link);text-decoration:underline}
 .pubs .meta{font-size:14.5px;color:var(--muted);margin:6px 0 0}
 .pubs-note{font-size:14.5px;color:var(--muted);margin:14px 0 0}
-.pubs-status{padding:28px 0;color:var(--muted);font-size:15px}
+/* The status line spans the whole row; without this it is squeezed into the 72px year column */
+.pubs li.pubs-status{display:block;padding:28px 0;color:var(--ink-2);font-size:15.5px}
 .pub-more{margin-top:24px}
 
 /* News */
@@ -442,7 +443,9 @@ footer a{color:var(--muted)}
     <div class="section-head">
       <h2>Publications</h2>
     </div>
-    <ul class="pubs" id="pubs"><li class="pubs-status" id="pubs-status">Loading recent papers.</li></ul>
+    <ul class="pubs" id="pubs"></ul>
+    <noscript><p class="pubs-note">This list is pulled live from Europe PMC and needs JavaScript. The full list is on PubMed below.</p></noscript>
+    <p class="pubs-note" id="pubs-note" hidden></p>
     <p class="pub-more"><a href="https://pubmed.ncbi.nlm.nih.gov/?term=Urnov+FD%5BAuthor%5D&amp;sort=date">See all publications on PubMed</a></p>
   </div>
 </section>
@@ -813,15 +816,19 @@ footer a{color:var(--muted)}
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(pace);
   })();
 
-  /* Publications, live from Europe PMC */
+  /* Publications, live from Europe PMC, with a cached copy so an outage never blanks the section */
   var pubsEl = document.getElementById('pubs');
-  var pubsStatus = document.getElementById('pubs-status');
+  var pubsNote = document.getElementById('pubs-note');
+  var PUBS_KEY = 'urnov-pubs-v1';
+  var PUBS_TTL = 86400000;                       /* re-check once a day, serve from cache in between */
+  var PUBS_TIMEOUT = 8000;
   var query = '(AUTH:"Urnov F" OR AUTH:"Urnov FD") AND FIRST_PDATE:[2020-01-01 TO 2035-12-31] AND SRC:MED';
   var url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=' + encodeURIComponent(query) + '&format=json&pageSize=40&resultType=lite';
 
   function authorLine(str){
     if (!str) return '';
-    var parts = str.split(', ');
+    /* Europe PMC already ends authorString with a period; drop it so we do not print two */
+    var parts = str.replace(/\.\s*$/, '').split(', ');
     if (parts.length > 6) parts = parts.slice(0, 5).concat(['et al']);
     return parts.join(', ') + '.';
   }
@@ -834,44 +841,104 @@ footer a{color:var(--muted)}
       else el.appendChild(document.createTextNode(p));
     });
   }
-  function render(items){
-    pubsEl.innerHTML = '';
+  /* Keep only the fields we render, so the cached copy stays small */
+  function slim(it){
+    return {
+      year: it.pubYear || (it.firstPublicationDate || '').slice(0, 4),
+      title: it.title ? it.title.replace(/\.$/, '') : 'Untitled',
+      href: it.doi ? 'https://doi.org/' + it.doi : (it.pmid ? 'https://pubmed.ncbi.nlm.nih.gov/' + it.pmid + '/' : ''),
+      authors: it.authorString || '',
+      journal: it.journalTitle || ''
+    };
+  }
+  function pubsSetNote(msg){
+    if (!pubsNote) return;
+    pubsNote.textContent = msg || '';
+    pubsNote.hidden = !msg;
+  }
+  /* The PubMed link directly below the list covers the failure cases, so this stays a plain line */
+  function pubsStatus(msg){
+    pubsEl.textContent = '';
+    var li = document.createElement('li');
+    li.className = 'pubs-status';
+    li.textContent = msg;
+    pubsEl.appendChild(li);
+  }
+  function renderPubs(items){
+    pubsEl.textContent = '';
     items.forEach(function(it){
       var li = document.createElement('li');
       var year = document.createElement('span');
       year.className = 'year';
-      year.textContent = it.pubYear || (it.firstPublicationDate || '').slice(0, 4);
+      year.textContent = it.year;
       var body = document.createElement('div');
-      var a = document.createElement('a');
-      a.className = 'title';
-      a.textContent = it.title ? it.title.replace(/\.$/, '') : 'Untitled';
-      a.href = it.doi ? 'https://doi.org/' + it.doi : (it.pmid ? 'https://pubmed.ncbi.nlm.nih.gov/' + it.pmid + '/' : '#');
+      /* A record with neither DOI nor PMID has nowhere to point, so it is not a link */
+      var titleEl = document.createElement(it.href ? 'a' : 'span');
+      titleEl.className = 'title';
+      titleEl.textContent = it.title;
+      if (it.href) titleEl.href = it.href;
       var meta = document.createElement('p');
       meta.className = 'meta';
-      addAuthors(meta, it.authorString);
-      if (it.journalTitle) meta.appendChild(document.createTextNode(' ' + it.journalTitle + '.'));
-      body.appendChild(a);
+      addAuthors(meta, it.authors);
+      if (it.journal) meta.appendChild(document.createTextNode(' ' + it.journal + '.'));
+      body.appendChild(titleEl);
       body.appendChild(meta);
       li.appendChild(year);
       li.appendChild(body);
       pubsEl.appendChild(li);
     });
   }
-  function fail(){
-    pubsStatus.textContent = 'The live list could not load. The full list is on PubMed below.';
+
+  function readCache(){
+    try {
+      var c = JSON.parse(localStorage.getItem(PUBS_KEY));
+      return (c && c.items && c.items.length) ? c : null;
+    } catch (e){ return null; }
   }
-  if (window.fetch){
-    fetch(url).then(function(r){ return r.json(); }).then(function(data){
-      var list = (data.resultList && data.resultList.result) || [];
-      list = list.filter(function(it){
-        var t = (it.pubType || '').toLowerCase();
-        return t.indexOf('erratum') === -1 && t.indexOf('correction') === -1 && t.indexOf('retract') === -1;
-      });
-      list.sort(function(a, b){ return (b.firstPublicationDate || '').localeCompare(a.firstPublicationDate || ''); });
-      if (!list.length){ fail(); return; }
-      render(list.slice(0, 8));
-    }).catch(fail);
-  } else { fail(); }
+  function writeCache(items){
+    try { localStorage.setItem(PUBS_KEY, JSON.stringify({ at: Date.now(), items: items })); } catch (e){}
+  }
+
+  function loadPubs(){
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function(){ if (ctrl) ctrl.abort(); }, PUBS_TIMEOUT);
+    return fetch(url, ctrl ? { signal: ctrl.signal } : undefined)
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(data){
+        clearTimeout(timer);
+        var list = (data.resultList && data.resultList.result) || [];
+        list = list.filter(function(it){
+          var t = (it.pubType || '').toLowerCase();
+          return t.indexOf('erratum') === -1 && t.indexOf('correction') === -1 && t.indexOf('retract') === -1;
+        });
+        list.sort(function(a, b){ return (b.firstPublicationDate || '').localeCompare(a.firstPublicationDate || ''); });
+        if (!list.length) throw new Error('no results');
+        return list.slice(0, 8).map(slim);
+      })
+      .catch(function(e){ clearTimeout(timer); throw e; });
+  }
+
+  (function(){
+    var cached = readCache();
+    if (cached) renderPubs(cached.items);
+    else pubsStatus('Loading recent papers.');
+
+    if (!window.fetch){
+      if (!cached) pubsStatus('This list loads from Europe PMC, which this browser cannot reach.');
+      return;
+    }
+    /* A cache younger than the TTL is good enough; skip the request entirely */
+    if (cached && (Date.now() - cached.at) < PUBS_TTL) return;
+
+    loadPubs().then(function(items){
+      renderPubs(items);
+      writeCache(items);
+      pubsSetNote('');
+    }).catch(function(){
+      if (cached) pubsSetNote('Europe PMC did not answer, so this is the last list we loaded.');
+      else pubsStatus('The live list from Europe PMC is not loading right now. The full list is on PubMed below.');
+    });
+  })();
 })();
 </script>
 </body>
