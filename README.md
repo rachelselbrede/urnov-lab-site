@@ -35,7 +35,7 @@ Every later change is an edit to `index.html` and a commit. Pages redeploys on i
 
 ## Adding people
 
-Each person is one `<li>` in the People section of `index.html`:
+The PI card sits on its own above the roster, because it carries a bio and a wider portrait. Everyone else is one `<li>` in the list below it:
 
 ```html
 <li class="person">
@@ -47,13 +47,17 @@ Each person is one `<li>` in the People section of `index.html`:
 
 Copy it, change the two lines of text, done. The initials shown in the empty portrait are worked out from the name, so there is nothing to keep in sync and no way for them to end up wrong. Add a `<p class="bio">` if someone needs a paragraph, the way the PI card has one. The order on the page is the order of the `<li>` elements.
 
+Twenty slots are laid out as placeholders, all reading "Team member" with a spread of roles. There is nothing special about twenty. The grid keeps adding rows as you add `<li>` elements, so take it well past twenty or cut it back without touching any CSS. The roles on the placeholders are a guess at the shape of the lab and are meant to be overwritten.
+
+The grid runs five across on a wide screen, four from 1000px, three from 760px and two from 480px, so cards stay between about 130px and 215px wide at every size. To split the roster into groups, close the `<ul>`, add an `<h3>` heading, and open another one; the CSS does not care how many lists there are.
+
 For a headshot, save it in `photos/` and name the file on the person's `<li>`:
 
 ```html
 <li class="person" data-photo="photos/jane-doe.jpg">
 ```
 
-The photo replaces the initials only once it has actually loaded, so a misspelled filename leaves the initials in place rather than a broken image icon. Portraits are cropped to 4:5 (the PI card is 8:5), so headshots should be portrait orientation, at least 600 px wide.
+The photo replaces the initials only once it has actually loaded, so a misspelled filename leaves the initials in place rather than a broken image icon. Portraits are cropped to 4:5, the PI's included, so headshots should be portrait orientation and at least 600 px wide. Twenty headshots is a real amount of weight on the page, so they are lazy-loaded and only fetched as the section comes into view. Still save them around 600 px wide rather than straight off the camera.
 
 The `alt` on these photos is set to empty on purpose. The person's name is on the very next line, and a screen reader announcing it twice in a row helps nobody.
 

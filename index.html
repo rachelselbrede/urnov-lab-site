@@ -268,19 +268,41 @@ button{font:inherit;color:inherit}
 .pipe-detail .measure-box small{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
 .pipe-detail .measure-box p{color:var(--ink);font-weight:500}
 
-/* People */
-.people-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;list-style:none;margin:0;padding:0}
-@media (max-width:1000px){.people-grid{grid-template-columns:repeat(3,1fr)}}
-@media (max-width:640px){.people-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
+/* People. Sized for a roster of twenty-odd and any number after that: the column count is
+   fixed per breakpoint, so rows simply keep coming as people are added. */
+.people-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:30px 24px;list-style:none;margin:0;padding:0}
+@media (max-width:1000px){.people-grid{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:760px){.people-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:480px){.people-grid{grid-template-columns:repeat(2,1fr);gap:22px 16px}}
 .person{display:flex;flex-direction:column;gap:10px}
-.person.pi{grid-column:span 2}
-@media (max-width:640px){.person.pi{grid-column:span 2}}
-.portrait{aspect-ratio:4/5;background:var(--mist);border-radius:12px;overflow:hidden;display:grid;place-items:center}
-.person.pi .portrait{aspect-ratio:8/5}
-.portrait img{width:100%;height:100%;object-fit:cover;display:block}
-.portrait .initials{font-family:var(--font-body);font-weight:700;font-size:44px;color:var(--rule)}
-.person .name{font-family:var(--font-display);font-weight:600;font-size:19px;line-height:1.25}
-.person .role{font-size:14.5px;color:var(--muted);margin:0}
+
+/* The PI sits above the roster rather than inside it. A card that spans two columns and
+   carries a bio leaves a hole in the grid beside it, which only gets more obvious the
+   longer the roster runs. */
+.person.pi{
+  display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);
+  gap:clamp(22px,3.5vw,44px);align-items:start;
+  /* Held to roughly the width the bio wants anyway, so the block reads as one unit rather
+     than a portrait with a column of loose space beside it. */
+  max-width:820px;margin-bottom:clamp(44px,6vw,72px)
+}
+.person-text{display:flex;flex-direction:column;gap:10px}
+@media (max-width:640px){
+  .person.pi{grid-template-columns:1fr;gap:18px}
+  .person.pi .portrait{max-width:260px}
+}
+
+.portrait{position:relative;aspect-ratio:4/5;background:var(--mist);border-radius:12px;overflow:hidden;display:grid;place-items:center}
+/* Taken out of flow so a lazy photo that has not loaded yet leaves the initials exactly where
+   they are, and swapping one in shifts nothing. */
+.portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+/* Scaled to the card, which is a good deal narrower now the grid runs five across */
+.portrait .initials{font-family:var(--font-body);font-weight:700;font-size:clamp(26px,2.6vw,38px);color:var(--rule)}
+.person.pi .portrait .initials{font-size:clamp(34px,4vw,52px)}
+.person .name{font-family:var(--font-display);font-weight:600;font-size:17.5px;line-height:1.25}
+.person .role{font-size:14px;color:var(--muted);margin:0}
+.person.pi .name{font-size:22px}
+.person.pi .role{font-size:15.5px}
 .person .bio{font-size:15.5px;color:var(--ink-2);margin:6px 0 0;max-width:56ch}
 
 /* Publications */
@@ -487,18 +509,35 @@ footer a{color:var(--muted)}
       <h2>People</h2>
       <p>Bench scientists, clinicians, and program staff across UC Berkeley and UCSF, working on the same patients.</p>
     </div>
-    <!-- To add someone: copy one <li>, change the name and the role. Nothing else.
-         The initials in the portrait are worked out from the name, so there is nothing to
-         keep in sync. When you have a headshot, drop it in photos/ and add
-         data-photo="photos/their-name.jpg" to that person's <li>; it replaces the initials
-         once the file actually loads, so a typo in the filename leaves the initials rather
-         than a broken image. An <img> written into .portrait by hand overrides all of this. -->
-    <ul class="people-grid">
-      <li class="person pi">
-        <div class="portrait"></div>
+    <!-- The PI sits on its own above the roster because it carries a bio and a wider portrait.
+         Everyone else is one <li> in the list below: copy one, change the name and the role,
+         and that is the whole job. The initials in an empty portrait are worked out from the
+         name, so there is nothing to keep in sync. For a headshot, put the file in photos/ and
+         add data-photo="photos/their-name.jpg" to that person's <li>; it replaces the initials
+         once the file actually loads, so a typo in the filename leaves the initials rather than
+         a broken image. An <img> written into .portrait by hand overrides all of this.
+
+         Twenty slots are set out below as placeholders. There is nothing special about twenty:
+         the grid just keeps adding rows, so add or delete <li> elements freely. To break the
+         roster into groups, close the <ul>, add an <h3>, and open another one. -->
+    <div class="person pi">
+      <div class="portrait"></div>
+      <div class="person-text">
         <h3 class="name">Fyodor Urnov</h3>
         <p class="role">Principal Investigator. Director of Therapeutic R&amp;D at the IGI and Professor of Molecular Therapeutics at UC Berkeley</p>
         <p class="bio">A genome-editing pioneer who helped build the human genome-editing toolbox and bring its first applications to the clinic. He directs the Center for Pediatric CRISPR Cures and the Danaher-IGI Beacon for CRISPR Cures, and was the IGI lead on the first personalized in vivo CRISPR therapy.</p>
+      </div>
+    </div>
+    <ul class="people-grid">
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Staff scientist</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Staff scientist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
@@ -513,12 +552,72 @@ footer a{color:var(--muted)}
       <li class="person">
         <div class="portrait"></div>
         <h3 class="name">Team member</h3>
+        <p class="role">Postdoctoral scholar</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Postdoctoral scholar</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Postdoctoral scholar</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Postdoctoral scholar</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Graduate student</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Graduate student</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Graduate student</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Graduate student</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
         <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Research associate</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Research associate</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Computational biologist</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Computational biologist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
@@ -528,7 +627,7 @@ footer a{color:var(--muted)}
       <li class="person">
         <div class="portrait"></div>
         <h3 class="name">Team member</h3>
-        <p class="role">Graduate student</p>
+        <p class="role">Lab manager</p>
       </li>
     </ul>
   </div>
@@ -945,8 +1044,9 @@ footer a{color:var(--muted)}
      have to hand-write: initials come from the name, and a headshot named in data-photo
      takes over once it loads. */
   (function(){
-    var grid = document.querySelector('.people-grid');
-    if (!grid) return;
+    /* Every .person on the page, not just the ones in the grid: the PI card sits outside it */
+    var people = document.querySelectorAll('.person');
+    if (!people.length) return;
 
     /* Array.from rather than charAt so a name starting outside the basic plane keeps its letter */
     function firstLetter(word){ return (Array.from(word)[0] || '').toUpperCase(); }
@@ -957,7 +1057,7 @@ footer a{color:var(--muted)}
       return firstLetter(parts[0]) + firstLetter(parts[parts.length - 1]);
     }
 
-    [].forEach.call(grid.querySelectorAll('.person'), function(person){
+    [].forEach.call(people, function(person){
       var nameEl = person.querySelector('.name');
       var portrait = person.querySelector('.portrait');
       if (!portrait){                  /* backfill it, so a card copied without one still lines up */
@@ -979,11 +1079,13 @@ footer a{color:var(--muted)}
       var img = document.createElement('img');
       img.alt = '';                    /* the name is the next line; reading it twice helps nobody */
       img.decoding = 'async';
-      /* Swap only on load: a missing or misspelled file leaves the initials, not a broken image */
-      img.addEventListener('load', function(){
-        portrait.textContent = '';
-        portrait.appendChild(img);
-      });
+      img.loading = 'lazy';            /* a full roster of headshots should not all load at once */
+      /* The initials go only once the photo is really there, and a missing or misspelled file
+         takes the image back out, so nobody ever sees a broken image icon. Appending before
+         setting src matters: a detached image ignores loading="lazy" and fetches immediately. */
+      img.addEventListener('load', function(){ initials.remove(); });
+      img.addEventListener('error', function(){ img.remove(); });
+      portrait.appendChild(img);
       img.src = src;
     });
   })();
