@@ -79,14 +79,18 @@ button{font:inherit;color:inherit}
 .affiliation img{display:block;height:40px;width:auto}
 @media (max-width:480px){.affiliation{display:none}}
 .nav-links{display:flex;gap:26px;list-style:none;margin:0;padding:0}
-.nav-links a{color:var(--ink);text-decoration:none;font-size:15px;font-weight:500}
+.nav-links a{position:relative;color:var(--ink);text-decoration:none;font-size:15px;font-weight:500}
 .nav-links a:hover{color:var(--link)}
+/* Marks the section you are reading. Drawn rather than bolded so nothing shifts as you scroll. */
+.nav-links a[aria-current]{color:var(--link)}
+.nav-links a[aria-current]::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;border-radius:1px;background:var(--base-c)}
 .nav-toggle{display:none;background:none;border:1px solid var(--rule);border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
 @media (max-width:860px){
   .nav-toggle{display:inline-block}
   .nav-links{display:none;position:absolute;left:0;right:0;top:64px;background:var(--paper);border-bottom:1px solid var(--rule);flex-direction:column;gap:0;padding:8px var(--gutter) 16px}
   .nav-links.open{display:flex}
   .nav-links a{display:block;padding:12px 0;border-top:1px solid var(--rule)}
+  .nav-links a[aria-current]::after{display:none}   /* stacked rows already read top to bottom */
 }
 
 /* Hero */
@@ -620,6 +624,49 @@ footer a{color:var(--muted)}
     function keepPanel(){ fig.remove(); }
     if (photo.complete) { if (photo.naturalWidth > 0) usePhoto(); else keepPanel(); }
     else { photo.addEventListener('load', usePhoto); photo.addEventListener('error', keepPanel); }
+  })();
+
+  /* Nav scroll-spy: mark whichever section is currently under the header */
+  (function(){
+    var nav = document.querySelector('.nav-links');
+    if (!nav) return;
+    var items = [].slice.call(nav.querySelectorAll('a[href^="#"]')).map(function(a){
+      return { link: a, el: document.getElementById(a.getAttribute('href').slice(1)) };
+    }).filter(function(x){ return x.el; });
+    if (!items.length) return;
+
+    var spots = [], current = null, ticking = false;
+
+    function measure(){
+      /* Contact is a column inside the Join section, so tracking both would leave the two
+         fighting over one band and Join never winning. Keep only the outermost targets. */
+      var outer = items.filter(function(x){
+        return !items.some(function(o){ return o.el !== x.el && o.el.contains(x.el); });
+      });
+      spots = outer.map(function(x){
+        return { link: x.link, top: x.el.getBoundingClientRect().top + window.pageYOffset };
+      }).sort(function(a, b){ return a.top - b.top; });
+      update();
+    }
+    function update(){
+      ticking = false;
+      var line = window.pageYOffset + 120;          /* just below the nav and the scan strip */
+      var found = null;
+      for (var i = 0; i < spots.length; i++){ if (spots[i].top <= line) found = spots[i].link; }
+      /* A short last section may never reach the line, but at the bottom it is the one you are on */
+      if (spots.length && window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight - 2)
+        found = spots[spots.length - 1].link;
+      if (found === current) return;
+      if (current) current.removeAttribute('aria-current');
+      if (found) found.setAttribute('aria-current', 'location');
+      current = found;
+    }
+    window.addEventListener('scroll', function(){
+      if (!ticking){ ticking = true; requestAnimationFrame(update); }
+    }, {passive:true});
+    window.addEventListener('resize', measure);
+    measure();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   })();
 
   /* Sequence panel: a single base correction at a base-editor target site */
