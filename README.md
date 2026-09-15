@@ -25,6 +25,7 @@ Every later change is an edit to `index.html` and a commit. Pages redeploys on i
 ## Fill in before you show it
 
 - Lab email in the Contact section (currently `lab@example.edu`). It is deliberately left out of the structured data until it is real.
+- The PI portrait. `index.html` already points at `photos/fyodor-urnov.jpg`, so saving the file under that name is the whole job. `photos/README.txt` has the URL of the portrait on the UC Berkeley VC for Research faculty page and a note to clear its reuse with IGI communications.
 - Lab group photo. Save it as `photos/lab-group.jpg` (landscape, at least 1600 px wide, JPEG) and commit. The hero swaps the sequence panel for the photo automatically when the file exists. Until then the page asks for that file and gets a 404, which is how it knows the photo is not there yet.
 - Team names, roles, and photos. Twenty empty slots are waiting; see "Adding people" below. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
 - Confirm the mailing address and zip. It appears twice: in the Contact section and in the JSON-LD block in the `<head>`. Both have to change together.
