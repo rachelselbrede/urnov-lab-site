@@ -101,7 +101,7 @@ The card is entirely type, with no IGI or partner marks on it, so it does not ne
 
 ## What updates itself
 
-The Publications section has two lists. "Selected" is three hand-picked papers written into `index.html`, so they never scroll away as new work is published; to change the selection, edit those three `<li>` entries and keep the `data-doi` on each. "Recent" pulls from Europe PMC in the browser (author query on Urnov F / Urnov FD, 2020 onward, PubMed records only, newest first, eight shown), skipping news pieces and interviews by publication type and skipping anything already in the Selected list by DOI. Nobody has to maintain it. Adjust the query or the skip list in the `<script>` block at the bottom for a different date range, count or filter. If you change the filter, also bump `PUBS_KEY`, or visitors keep the old cached list for a day.
+The Publications section pulls recent papers from Europe PMC in the browser (author query on Urnov F / Urnov FD, 2020 onward, PubMed records only, newest first, eight shown), skipping news pieces, interviews and errata by publication type. Nobody has to maintain it. Adjust the query or the skip list in the `<script>` block at the bottom for a different date range, count or filter. If you change the filter, also bump `PUBS_KEY`, or visitors keep the old cached list for a day.
 
 A successful result is kept in the visitor's browser and reused for a day, so most visits do not call the API at all, and a Europe PMC outage leaves the last known list on the page rather than an empty section. A first-time visitor during an outage gets one line pointing at the PubMed link below.
 
