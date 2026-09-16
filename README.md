@@ -27,7 +27,7 @@ Every later change is an edit to `index.html` and a commit. Pages redeploys on i
 - Lab email in the Contact section (currently `lab@example.edu`). It is deliberately left out of the structured data until it is real.
 - The PI portrait. `index.html` already points at `photos/fyodor-urnov.jpg`, so saving the file under that name is the whole job. `photos/README.txt` has the URL of the portrait on the UC Berkeley VC for Research faculty page and a note to clear its reuse with IGI communications.
 - Lab group photo. Save it as `photos/lab-group.jpg` (landscape, at least 1600 px wide, JPEG) and commit. The hero swaps the sequence panel for the photo automatically when the file exists. Until then the page asks for that file and gets a 404, which is how it knows the photo is not there yet.
-- Team names, roles, and photos. Twenty empty slots are waiting; see "Adding people" below. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
+- Team names, roles, and photos. Twenty placeholder cards are waiting, each a silhouette over "Team member" and a guessed role; see "Adding people" below. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
 - Confirm the mailing address and zip. It appears twice: in the Contact section and in the JSON-LD block in the `<head>`. Both have to change together.
 - The research section lists only programs already public in IGI, CZI, and Danaher announcements. Add or remove programs with Fyodor.
 - The "Openings at the IGI" button links to the IGI homepage. Swap in the real jobs page.
@@ -46,18 +46,19 @@ The PI card sits on its own above the roster, because it carries a bio and a wid
 </li>
 ```
 
-Copy it, change the two lines of text, done. The initials shown in the empty portrait are worked out from the name, so there is nothing to keep in sync and no way for them to end up wrong. Add a `<p class="bio">` if someone needs a paragraph, the way the PI card has one. The order on the page is the order of the `<li>` elements.
+Copy it, change the two lines of text, done. Until a photo is named, the frame shows a silhouette placeholder drawn by the CSS, so a card without its headshot yet still looks deliberate. Add a `<p class="bio">` if someone needs a paragraph, the way the PI card has one. The order on the page is the order of the `<li>` elements.
 
-Twenty empty slots are laid out below the PI, each one a blank frame with a role under it and no `<h3 class="name">` line yet:
+Twenty placeholder cards are laid out below the PI, each one a silhouette over "Team member" and a guessed role:
 
 ```html
 <li class="person">
   <div class="portrait"></div>
+  <h3 class="name">Team member</h3>
   <p class="role">Staff scientist</p>
 </li>
 ```
 
-That missing name line is exactly what makes a slot read as empty: the initials are worked out from the name, so no name means an empty frame. Filling a slot is adding the name line back, and the initials appear on their own. There is no placeholder flag to remember to take out, and so no way to end up with a real person whose portrait stays blank.
+Filling a slot is overwriting those two lines with the real name and role. Nothing else marks a card as a placeholder, so there is no flag to remember to take out.
 
 There is nothing special about twenty. The grid keeps adding rows as you add `<li>` elements, so take it well past twenty or cut it back without touching any CSS. The roles on the slots are a guess at the shape of the lab and are meant to be overwritten.
 
@@ -69,7 +70,7 @@ For a headshot, save it in `photos/` and name the file on the person's `<li>`:
 <li class="person" data-photo="photos/jane-doe.jpg">
 ```
 
-The photo replaces the initials only once it has actually loaded, so a misspelled filename leaves the initials in place rather than a broken image icon.
+The photo replaces the silhouette only once it has actually loaded, so a misspelled filename leaves the silhouette in place rather than a broken image icon.
 
 Portraits are cropped to fill a 4:5 frame, the PI's included, so an upright headshot around 600 px wide drops straight in. A landscape photo, or one where the subject is off to one side, gets a slice taken out of its middle and the sides thrown away, which can cut the subject in half. Steer the crop instead of re-cropping the file:
 
@@ -83,7 +84,7 @@ The `alt` on these photos is set to empty on purpose. The person's name is on th
 
 Two escape hatches, if you ever need them. Writing an `<img>` into `.portrait` by hand overrides everything above and is left alone. And if you forget the `<div class="portrait"></div>` line when copying a card, it gets added for you, so the card still lines up with the others.
 
-With scripting turned off the names, roles and portrait frames all still render; only the initials are missing. That is why the roster lives in the markup rather than in a list inside the script: it keeps the team in the page source, where search engines and anything that reads the HTML directly can see it.
+With scripting turned off the names, roles, portrait frames and silhouettes all still render; only the headshots are missing. That is why the roster lives in the markup rather than in a list inside the script: it keeps the team in the page source, where search engines and anything that reads the HTML directly can see it.
 
 ## The link preview card
 

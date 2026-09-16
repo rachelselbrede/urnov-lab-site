@@ -11,7 +11,7 @@ Photos for the site. Nothing here is committed yet except this note.
                       data-photo="photos/<first>-<last>.jpg" to that person's <li>.
 
 Until a file exists the page asks for it, gets a 404 and quietly keeps the
-initials. That is the detection mechanism, not a fault.
+placeholder silhouette. That is the detection mechanism, not a fault.
 
 Getting the files in, without a checkout: on github.com open this photos folder,
 pick "Add file", then "Upload files", drop the JPEGs in and commit. Names have

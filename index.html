@@ -292,13 +292,15 @@ button{font:inherit;color:inherit}
   .person.pi .portrait{max-width:260px}
 }
 
-.portrait{position:relative;aspect-ratio:4/5;background:var(--mist);border-radius:12px;overflow:hidden;display:grid;place-items:center}
-/* Taken out of flow so a lazy photo that has not loaded yet leaves the initials exactly where
-   they are, and swapping one in shifts nothing. */
+/* Every frame starts as a placeholder: a silhouette drawn by the CSS, in Slate Grey on the light
+   grey, so it is there with scripting off and needs nothing in the markup. A photo covers it once
+   loaded, and .has-photo then drops it so it cannot show through a transparent PNG. */
+.portrait{position:relative;aspect-ratio:4/5;border-radius:12px;overflow:hidden;
+  background:var(--mist) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='36' r='17' fill='%23D8D8D8'/%3E%3Cpath d='M13 100c0-23 16-37 37-37s37 14 37 37z' fill='%23D8D8D8'/%3E%3C/svg%3E") center bottom/60% auto no-repeat}
+.portrait.has-photo{background-image:none}
+/* Taken out of flow so a lazy photo that has not loaded yet leaves the placeholder exactly where
+   it is, and swapping one in shifts nothing. */
 .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-/* Scaled to the card, which is a good deal narrower now the grid runs five across */
-.portrait .initials{font-family:var(--font-body);font-weight:700;font-size:clamp(26px,2.6vw,38px);color:var(--rule)}
-.person.pi .portrait .initials{font-size:clamp(34px,4vw,52px)}
 .person .name{font-family:var(--font-display);font-weight:600;font-size:17.5px;line-height:1.25}
 .person .role{font-size:14px;color:var(--muted);margin:0}
 .person.pi .name{font-size:22px}
@@ -511,16 +513,14 @@ footer a{color:var(--muted)}
     </div>
     <!-- The PI sits on its own above the roster because it carries a bio and a wider portrait.
          Everyone else is one <li> in the list below: copy one, change the name and the role,
-         and that is the whole job. The initials in an empty portrait are worked out from the
-         name, so there is nothing to keep in sync. For a headshot, put the file in photos/ and
-         add data-photo="photos/their-name.jpg" to that person's <li>; it replaces the initials
-         once the file actually loads, so a typo in the filename leaves the initials rather than
-         a broken image. An <img> written into .portrait by hand overrides all of this.
+         and that is the whole job. Every portrait frame carries a silhouette placeholder,
+         drawn by the CSS, until a photo covers it. For a headshot, put the file in photos/ and
+         add data-photo="photos/their-name.jpg" to that person's <li>; the photo takes over
+         once the file actually loads, so a typo in the filename leaves the silhouette rather
+         than a broken image. An <img> written into .portrait by hand overrides all of this.
 
-         The twenty slots below have no <h3 class="name"> yet, which is what makes them read as
-         empty: initials come from the name, so no name means an empty portrait. Adding the
-         name line fills the slot and the initials appear on their own, with nothing to
-         remember to take back out.
+         The twenty slots below are placeholders until the lab sends names and photos: each
+         reads "Team member" over a guessed role. Filling one is overwriting those two lines.
 
          There is nothing special about twenty: the grid just keeps adding rows, so add or
          delete <li> elements freely. To break the roster into groups, close the <ul>, add an
@@ -536,82 +536,102 @@ footer a{color:var(--muted)}
     <ul class="people-grid">
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Staff scientist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Staff scientist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Staff scientist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Postdoctoral scholar</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Postdoctoral scholar</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Postdoctoral scholar</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Postdoctoral scholar</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Postdoctoral scholar</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Graduate student</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Graduate student</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Graduate student</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Graduate student</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Research associate</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Computational biologist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Computational biologist</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Project manager</p>
       </li>
       <li class="person">
         <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
         <p class="role">Lab manager</p>
       </li>
     </ul>
@@ -1025,41 +1045,21 @@ footer a{color:var(--muted)}
   showStep(0, false);
 
   /* People: names and roles live in the markup so they are in the page source and survive
-     with scripting off. Only the portrait is built here, which is the part nobody should
-     have to hand-write: initials come from the name, and a headshot named in data-photo
-     takes over once it loads. */
+     with scripting off, and so does the placeholder silhouette, which is CSS. All that is
+     built here is the headshot named in data-photo, which takes over once it loads. */
   (function(){
     /* Every .person on the page, not just the ones in the grid: the PI card sits outside it */
-    var people = document.querySelectorAll('.person');
-    if (!people.length) return;
-
-    /* Array.from rather than charAt so a name starting outside the basic plane keeps its letter */
-    function firstLetter(word){ return (Array.from(word)[0] || '').toUpperCase(); }
-    function initialsFor(name){
-      var parts = name.trim().split(/\s+/).filter(Boolean);
-      if (!parts.length) return '';
-      if (parts.length === 1) return firstLetter(parts[0]);
-      return firstLetter(parts[0]) + firstLetter(parts[parts.length - 1]);
-    }
-
-    [].forEach.call(people, function(person){
-      var nameEl = person.querySelector('.name');
+    [].forEach.call(document.querySelectorAll('.person'), function(person){
       var portrait = person.querySelector('.portrait');
       if (!portrait){                  /* backfill it, so a card copied without one still lines up */
         portrait = document.createElement('div');
         portrait.className = 'portrait';
         person.insertBefore(portrait, person.firstChild);
       }
-      if (portrait.querySelector('img')) return;     /* a photo placed by hand wins outright */
-
-      var initials = document.createElement('span');
-      initials.className = 'initials';
-      initials.setAttribute('aria-hidden', 'true');
-      initials.textContent = nameEl ? initialsFor(nameEl.textContent) : '';
-      portrait.textContent = '';
-      /* A slot with no name yet stays an empty frame rather than an empty span */
-      if (initials.textContent) portrait.appendChild(initials);
-
+      if (portrait.querySelector('img')){            /* a photo placed by hand wins outright */
+        portrait.classList.add('has-photo');
+        return;
+      }
       var src = person.getAttribute('data-photo');
       if (!src) return;
       var img = document.createElement('img');
@@ -1071,10 +1071,10 @@ footer a{color:var(--muted)}
          "69% 40%" keeps the point 69% across and 40% down in view. Default is dead centre. */
       var focus = person.getAttribute('data-focus');
       if (focus) img.style.objectPosition = focus;
-      /* The initials go only once the photo is really there, and a missing or misspelled file
-         takes the image back out, so nobody ever sees a broken image icon. Appending before
+      /* The silhouette goes only once the photo is really there, and a missing or misspelled
+         file takes the image back out, so nobody ever sees a broken image icon. Appending before
          setting src matters: a detached image ignores loading="lazy" and fetches immediately. */
-      img.addEventListener('load', function(){ initials.remove(); });
+      img.addEventListener('load', function(){ portrait.classList.add('has-photo'); });
       img.addEventListener('error', function(){ img.remove(); });
       portrait.appendChild(img);
       img.src = src;
