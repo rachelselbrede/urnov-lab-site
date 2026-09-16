@@ -308,6 +308,8 @@ button{font:inherit;color:inherit}
 .person .bio{font-size:15.5px;color:var(--ink-2);margin:6px 0 0;max-width:56ch}
 
 /* Publications */
+.pubs-label{font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.pubs+.pubs-label{margin-top:44px}
 .pubs{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
 .pubs li{display:grid;grid-template-columns:72px 1fr;gap:16px;padding:20px 0;border-bottom:1px solid var(--rule)}
 @media (max-width:560px){.pubs li{grid-template-columns:1fr;gap:4px}}
@@ -643,7 +645,36 @@ footer a{color:var(--muted)}
     <div class="section-head">
       <h2>Publications</h2>
     </div>
-    <ul class="pubs" id="pubs"></ul>
+    <!-- Selected papers are static and hand-picked, so they are in the page source, survive with
+         scripting off, and never scroll off the bottom of the live list as new items arrive.
+         Each carries its DOI in data-doi so the live list below can skip it rather than show it
+         twice. To change the selection, edit these three entries; the live list adjusts itself. -->
+    <h3 class="pubs-label" id="pubs-selected-label">Selected</h3>
+    <ul class="pubs" id="pubs-selected" aria-labelledby="pubs-selected-label">
+      <li data-doi="10.1056/nejmoa2504747">
+        <span class="year">2025</span>
+        <div>
+          <a class="title" href="https://doi.org/10.1056/NEJMoa2504747">Patient-specific in vivo gene editing to treat a rare genetic disease</a>
+          <p class="meta">Musunuru K, Grandinette SA, Wang X, et al., <strong>Urnov FD</strong>, Ahrens-Nicklas RC. N Engl J Med.</p>
+        </div>
+      </li>
+      <li data-doi="10.1038/s41587-025-02744-3">
+        <span class="year">2025</span>
+        <div>
+          <a class="title" href="https://doi.org/10.1038/s41587-025-02744-3">Platform solutions for commercial challenges to expanding patient access and making gene editing sustainable</a>
+          <p class="meta">Kassim SH, <strong>Urnov F</strong>, Musunuru K, Lee A, Barrera L, et al. Nat Biotechnol.</p>
+        </div>
+      </li>
+      <li data-doi="10.1038/s41586-024-07800-7">
+        <span class="year">2024</span>
+        <div>
+          <a class="title" href="https://doi.org/10.1038/s41586-024-07800-7">A roadmap for affordable genetic medicines</a>
+          <p class="meta">Kliegman M, Zaghlula M, Abrahamson S, Esensten JH, Wilson RC, <strong>Urnov FD</strong>, Doudna JA. Nature.</p>
+        </div>
+      </li>
+    </ul>
+    <h3 class="pubs-label" id="pubs-recent-label">Recent</h3>
+    <ul class="pubs" id="pubs" aria-labelledby="pubs-recent-label"></ul>
     <noscript><p class="pubs-note">This list is pulled live from Europe PMC and needs JavaScript. The full list is on PubMed below.</p></noscript>
     <p class="pubs-note" id="pubs-note" hidden></p>
     <p class="pub-more"><a href="https://pubmed.ncbi.nlm.nih.gov/?term=Urnov+FD%5BAuthor%5D&amp;sort=date">See all publications on PubMed</a></p>
@@ -1140,10 +1171,18 @@ footer a{color:var(--muted)}
   /* Publications, live from Europe PMC, with a cached copy so an outage never blanks the section */
   var pubsEl = document.getElementById('pubs');
   var pubsNote = document.getElementById('pubs-note');
-  var PUBS_KEY = 'urnov-pubs-v1';
+  var PUBS_KEY = 'urnov-pubs-v2';               /* bump when the filter changes, so a cached v1 list is not reused */
   var PUBS_TTL = 86400000;                       /* re-check once a day, serve from cache in between */
   var PUBS_TIMEOUT = 8000;
   var query = '(AUTH:"Urnov F" OR AUTH:"Urnov FD") AND FIRST_PDATE:[2020-01-01 TO 2035-12-31] AND SRC:MED';
+  /* The author query also matches news pieces and interviews he took part in, which Europe PMC
+     tags by type. Those are not papers, so they stay out of the list. Editorials, comments and
+     letters are his own writing and stay in. */
+  var PUBS_SKIP = ['erratum', 'correction', 'retract', 'news', 'interview'];
+  /* The hand-picked list above already shows these, so the live list skips them */
+  var selectedDois = [].map.call(document.querySelectorAll('#pubs-selected [data-doi]'), function(li){
+    return li.getAttribute('data-doi').toLowerCase();
+  });
   var url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=' + encodeURIComponent(query) + '&format=json&pageSize=40&resultType=lite';
 
   function authorLine(str){
@@ -1230,7 +1269,8 @@ footer a{color:var(--muted)}
         var list = (data.resultList && data.resultList.result) || [];
         list = list.filter(function(it){
           var t = (it.pubType || '').toLowerCase();
-          return t.indexOf('erratum') === -1 && t.indexOf('correction') === -1 && t.indexOf('retract') === -1;
+          if (PUBS_SKIP.some(function(w){ return t.indexOf(w) !== -1; })) return false;
+          return selectedDois.indexOf((it.doi || '').toLowerCase()) === -1;
         });
         list.sort(function(a, b){ return (b.firstPublicationDate || '').localeCompare(a.firstPublicationDate || ''); });
         if (!list.length) throw new Error('no results');
