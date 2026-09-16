@@ -5,10 +5,79 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Urnov Lab | Innovative Genomics Institute, UC Berkeley</title>
 <meta name="description" content="The Urnov Lab at the Innovative Genomics Institute designs and safety-tests personalized CRISPR therapies for children born with severe genetic diseases.">
+<!-- Absolute URLs below, and in the JSON-LD block: link scrapers do not resolve relative paths.
+     If the site moves to a berkeley.edu or IGI address, every copy of the base URL in the repo
+     changes together. See "If the site moves to another address" in the README. -->
+<link rel="canonical" href="https://rachelselbrede.github.io/urnov-lab-site/">
 <meta property="og:title" content="Urnov Lab | Innovative Genomics Institute">
 <meta property="og:description" content="CRISPR cures for children, on demand. Cure design and safety testing at UC Berkeley, clinical care at UCSF.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://rachelselbrede.github.io/urnov-lab-site/">
+<meta property="og:site_name" content="Urnov Lab">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://rachelselbrede.github.io/urnov-lab-site/social/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Urnov Lab. CRISPR cures for children, on demand. Cure design and safety testing at the Innovative Genomics Institute, UC Berkeley.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Urnov Lab | Innovative Genomics Institute">
+<meta name="twitter:description" content="CRISPR cures for children, on demand. Cure design and safety testing at UC Berkeley, clinical care at UCSF.">
+<meta name="twitter:image" content="https://rachelselbrede.github.io/urnov-lab-site/social/og-image.png">
+<meta name="theme-color" content="#292D39">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23292D39'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Menlo,Consolas,monospace' font-size='36' font-weight='700' fill='%235857FF'%3EC%3C/text%3E%3C/svg%3E">
+<!-- Structured data. Every claim here is also stated on the page; nothing is asserted that
+     the page does not say. The lab email is deliberately absent while it is a placeholder. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ResearchOrganization",
+  "name": "Urnov Lab",
+  "url": "https://rachelselbrede.github.io/urnov-lab-site/",
+  "description": "The Urnov Lab at the Innovative Genomics Institute designs and safety-tests personalized genome-editing therapies for children born with severe genetic diseases.",
+  "parentOrganization": {
+    "@type": "ResearchOrganization",
+    "name": "Innovative Genomics Institute",
+    "url": "https://innovativegenomics.org/",
+    "parentOrganization": {
+      "@type": "CollegeOrUniversity",
+      "name": "University of California, Berkeley",
+      "url": "https://www.berkeley.edu/"
+    }
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "2151 Berkeley Way",
+    "addressLocality": "Berkeley",
+    "addressRegion": "CA",
+    "postalCode": "94720",
+    "addressCountry": "US"
+  },
+  "employee": {
+    "@type": "Person",
+    "name": "Fyodor Urnov",
+    "jobTitle": "Principal Investigator",
+    "affiliation": [
+      {
+        "@type": "ResearchOrganization",
+        "name": "Innovative Genomics Institute",
+        "url": "https://innovativegenomics.org/"
+      },
+      {
+        "@type": "CollegeOrUniversity",
+        "name": "University of California, Berkeley",
+        "url": "https://www.berkeley.edu/"
+      }
+    ]
+  },
+  "knowsAbout": [
+    "Genome editing",
+    "CRISPR",
+    "Gene therapy",
+    "Rare disease",
+    "Pediatrics"
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -79,14 +148,18 @@ button{font:inherit;color:inherit}
 .affiliation img{display:block;height:40px;width:auto}
 @media (max-width:480px){.affiliation{display:none}}
 .nav-links{display:flex;gap:26px;list-style:none;margin:0;padding:0}
-.nav-links a{color:var(--ink);text-decoration:none;font-size:15px;font-weight:500}
+.nav-links a{position:relative;color:var(--ink);text-decoration:none;font-size:15px;font-weight:500}
 .nav-links a:hover{color:var(--link)}
+/* Marks the section you are reading. Drawn rather than bolded so nothing shifts as you scroll. */
+.nav-links a[aria-current]{color:var(--link)}
+.nav-links a[aria-current]::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;border-radius:1px;background:var(--base-c)}
 .nav-toggle{display:none;background:none;border:1px solid var(--rule);border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
 @media (max-width:860px){
   .nav-toggle{display:inline-block}
   .nav-links{display:none;position:absolute;left:0;right:0;top:64px;background:var(--paper);border-bottom:1px solid var(--rule);flex-direction:column;gap:0;padding:8px var(--gutter) 16px}
   .nav-links.open{display:flex}
   .nav-links a{display:block;padding:12px 0;border-top:1px solid var(--rule)}
+  .nav-links a[aria-current]::after{display:none}   /* stacked rows already read top to bottom */
 }
 
 /* Hero */
@@ -111,6 +184,14 @@ button{font:inherit;color:inherit}
 .seqpanel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
 .seqpanel-head strong{font-family:var(--font-body);font-weight:600;font-size:16px}
 .seqpanel-head span{font-size:13px;color:var(--seq)}
+.seq-replay{
+  flex:none;background:transparent;border:1px solid rgba(255,255,255,.3);color:var(--seq);
+  font-family:var(--font-body);font-size:12.5px;line-height:1;padding:6px 11px;border-radius:999px;
+  cursor:pointer;transition:border-color .15s,color .15s
+}
+.seq-replay:hover{border-color:var(--base-c-dark);color:#fff}
+/* The page-wide focus ring uses IGI Blue, which is too dark against the Deep Blue panel */
+.seq-replay:focus-visible{outline:3px solid var(--base-c-dark);outline-offset:2px}
 .seq{font-family:var(--font-mono);font-size:clamp(13px,1.15vw,15px);line-height:1.9;letter-spacing:.08em;color:var(--seq);overflow:hidden;white-space:nowrap}
 .seq .row{display:block;line-height:2}
 .seq .b{display:inline-block;position:relative;line-height:1.25;padding-bottom:3px;transition:color .25s ease,transform .25s ease}
@@ -166,7 +247,7 @@ button{font:inherit;color:inherit}
 .research-grid p{color:var(--ink-2);font-size:16px;margin:0}
 
 /* Pipeline */
-.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:0;padding:0;list-style:none}
+.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:0;padding:0}
 @media (max-width:900px){.pipe{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:560px){.pipe{grid-template-columns:1fr 1fr}}
 .pipe button{
@@ -175,9 +256,9 @@ button{font:inherit;color:inherit}
   transition:border-color .15s,background .15s
 }
 .pipe button:hover{border-color:var(--ink-2)}
-.pipe button[aria-expanded="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.pipe button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 .pipe .num{font-family:var(--font-mono);font-size:13px;color:var(--muted)}
-.pipe button[aria-expanded="true"] .num{color:var(--seq)}
+.pipe button[aria-selected="true"] .num{color:var(--seq)}
 .pipe .name{font-family:var(--font-body);font-weight:600;font-size:17px;line-height:1.25}
 .pipe-detail{margin-top:20px;background:var(--paper);border:1.5px solid var(--rule);border-radius:14px;padding:clamp(22px,3vw,36px);display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(24px,4vw,48px)}
 @media (max-width:760px){.pipe-detail{grid-template-columns:1fr}}
@@ -187,19 +268,43 @@ button{font:inherit;color:inherit}
 .pipe-detail .measure-box small{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
 .pipe-detail .measure-box p{color:var(--ink);font-weight:500}
 
-/* People */
-.people-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-@media (max-width:1000px){.people-grid{grid-template-columns:repeat(3,1fr)}}
-@media (max-width:640px){.people-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
+/* People. Sized for a roster of twenty-odd and any number after that: the column count is
+   fixed per breakpoint, so rows simply keep coming as people are added. */
+.people-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:30px 24px;list-style:none;margin:0;padding:0}
+@media (max-width:1000px){.people-grid{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:760px){.people-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:480px){.people-grid{grid-template-columns:repeat(2,1fr);gap:22px 16px}}
 .person{display:flex;flex-direction:column;gap:10px}
-.person.pi{grid-column:span 2}
-@media (max-width:640px){.person.pi{grid-column:span 2}}
-.portrait{aspect-ratio:4/5;background:var(--mist);border-radius:12px;overflow:hidden;display:grid;place-items:center}
-.person.pi .portrait{aspect-ratio:8/5}
-.portrait img{width:100%;height:100%;object-fit:cover;display:block}
-.portrait .initials{font-family:var(--font-body);font-weight:700;font-size:44px;color:var(--rule)}
-.person .name{font-family:var(--font-display);font-weight:600;font-size:19px;line-height:1.25}
-.person .role{font-size:14.5px;color:var(--muted);margin:0}
+
+/* The PI sits above the roster rather than inside it. A card that spans two columns and
+   carries a bio leaves a hole in the grid beside it, which only gets more obvious the
+   longer the roster runs. */
+.person.pi{
+  display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);
+  gap:clamp(22px,3.5vw,44px);align-items:start;
+  /* Held to roughly the width the bio wants anyway, so the block reads as one unit rather
+     than a portrait with a column of loose space beside it. */
+  max-width:820px;margin-bottom:clamp(44px,6vw,72px)
+}
+.person-text{display:flex;flex-direction:column;gap:10px}
+@media (max-width:640px){
+  .person.pi{grid-template-columns:1fr;gap:18px}
+  .person.pi .portrait{max-width:260px}
+}
+
+/* Every frame starts as a placeholder: a silhouette drawn by the CSS, in Slate Grey on the light
+   grey, so it is there with scripting off and needs nothing in the markup. A photo covers it once
+   loaded, and .has-photo then drops it so it cannot show through a transparent PNG. */
+.portrait{position:relative;aspect-ratio:4/5;border-radius:12px;overflow:hidden;
+  background:var(--mist) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='36' r='17' fill='%23D8D8D8'/%3E%3Cpath d='M13 100c0-23 16-37 37-37s37 14 37 37z' fill='%23D8D8D8'/%3E%3C/svg%3E") center bottom/60% auto no-repeat}
+.portrait.has-photo{background-image:none}
+/* Taken out of flow so a lazy photo that has not loaded yet leaves the placeholder exactly where
+   it is, and swapping one in shifts nothing. */
+.portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.person .name{font-family:var(--font-display);font-weight:600;font-size:17.5px;line-height:1.25}
+.person .role{font-size:14px;color:var(--muted);margin:0}
+.person.pi .name{font-size:22px}
+.person.pi .role{font-size:15.5px}
 .person .bio{font-size:15.5px;color:var(--ink-2);margin:6px 0 0;max-width:56ch}
 
 /* Publications */
@@ -211,7 +316,8 @@ button{font:inherit;color:inherit}
 .pubs .title:hover{color:var(--link);text-decoration:underline}
 .pubs .meta{font-size:14.5px;color:var(--muted);margin:6px 0 0}
 .pubs-note{font-size:14.5px;color:var(--muted);margin:14px 0 0}
-.pubs-status{padding:28px 0;color:var(--muted);font-size:15px}
+/* The status line spans the whole row; without this it is squeezed into the 72px year column */
+.pubs li.pubs-status{display:block;padding:28px 0;color:var(--ink-2);font-size:15.5px}
 .pub-more{margin-top:24px}
 
 /* News */
@@ -238,6 +344,14 @@ button{font:inherit;color:inherit}
 .video-poster .duration{position:absolute;right:8px;bottom:8px;font-family:var(--font-mono);font-size:12px;color:#fff;background:rgba(41,45,57,.8);padding:3px 7px;border-radius:6px}
 .video-frame{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
 .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-close{
+  position:absolute;right:8px;top:8px;z-index:2;width:34px;height:34px;padding:0;border:0;border-radius:50%;
+  background:rgba(41,45,57,.85);color:#fff;font-size:20px;line-height:1;cursor:pointer;
+  display:grid;place-items:center;transition:background .2s
+}
+.video-close:hover{background:var(--base-c)}
+/* The page-wide focus ring disappears against the black player */
+.video-close:focus-visible{outline:3px solid #fff;outline-offset:2px}
 
 /* Partners strip, a slow seamless marquee of wordmarks (swap in logo images later) */
 .partners{padding:clamp(40px,5vw,64px) 0 clamp(44px,5vw,72px);border-top:1px solid var(--rule)}
@@ -271,7 +385,7 @@ footer a{color:var(--muted)}
 @media (prefers-reduced-motion:reduce){
   .seq .b,.status .dot,.pipe button,.scan .bases span,.seqline::after{transition:none}
   .scan .cursor svg{animation:none}
-  .video-poster img,.video-poster .play{transition:none}
+  .video-poster img,.video-poster .play,.video-close{transition:none}
 }
 </style>
 </head>
@@ -319,10 +433,11 @@ footer a{color:var(--muted)}
       </div>
     </div>
     <figure class="hero-photo" hidden>
-      <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="1600" height="1200">
+      <!-- Requesting this is how the page detects the photo, so a 404 here is expected until someone adds it -->
+      <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="1600" height="1200" decoding="async">
     </figure>
     <div class="seqpanel" role="figure" aria-label="Illustration of a single-base correction at a target site">
-      <div class="seqpanel-head"><strong>Target site</strong><span>Guide RNA and PAM underlined</span></div>
+      <div class="seqpanel-head"><strong>Target site</strong><span>Guide RNA and PAM underlined</span><button type="button" class="seq-replay" id="seq-replay" aria-label="Replay the base correction">Replay</button></div>
       <div class="seq" id="seq" aria-hidden="true"></div>
       <div class="seqpanel-foot">
         <span class="status" id="seqstatus"><span class="dot"></span><span id="seqtext">Disease-causing variant</span></span>
@@ -369,15 +484,15 @@ footer a{color:var(--muted)}
       <h2>How we make a cure</h2>
       <p>A cure for one child is a sequence of decisions, each backed by data. Select a step to see what happens and what we measure.</p>
     </div>
-    <ol class="pipe" id="pipe">
-      <li><button type="button" aria-expanded="true" aria-controls="pipe-detail" data-step="0"><span class="num">1</span><span class="name">Diagnose</span></button></li>
-      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="1"><span class="num">2</span><span class="name">Design</span></button></li>
-      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="2"><span class="num">3</span><span class="name">Test in cells</span></button></li>
-      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="3"><span class="num">4</span><span class="name">Assess safety</span></button></li>
-      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="4"><span class="num">5</span><span class="name">Manufacture</span></button></li>
-      <li><button type="button" aria-expanded="false" aria-controls="pipe-detail" data-step="5"><span class="num">6</span><span class="name">Treat and share</span></button></li>
-    </ol>
-    <div class="pipe-detail" id="pipe-detail" aria-live="polite">
+    <div class="pipe" id="pipe" role="tablist" aria-label="Steps in making a cure">
+      <button type="button" role="tab" id="pipe-tab-0" aria-selected="true" aria-controls="pipe-detail" tabindex="0"><span class="num">1</span><span class="name">Diagnose</span></button>
+      <button type="button" role="tab" id="pipe-tab-1" aria-selected="false" aria-controls="pipe-detail" tabindex="-1"><span class="num">2</span><span class="name">Design</span></button>
+      <button type="button" role="tab" id="pipe-tab-2" aria-selected="false" aria-controls="pipe-detail" tabindex="-1"><span class="num">3</span><span class="name">Test in cells</span></button>
+      <button type="button" role="tab" id="pipe-tab-3" aria-selected="false" aria-controls="pipe-detail" tabindex="-1"><span class="num">4</span><span class="name">Assess safety</span></button>
+      <button type="button" role="tab" id="pipe-tab-4" aria-selected="false" aria-controls="pipe-detail" tabindex="-1"><span class="num">5</span><span class="name">Manufacture</span></button>
+      <button type="button" role="tab" id="pipe-tab-5" aria-selected="false" aria-controls="pipe-detail" tabindex="-1"><span class="num">6</span><span class="name">Treat and share</span></button>
+    </div>
+    <div class="pipe-detail" id="pipe-detail" role="tabpanel" aria-labelledby="pipe-tab-0" tabindex="0">
       <div>
         <h3 id="pd-title">Diagnose</h3>
         <p id="pd-text"></p>
@@ -396,44 +511,130 @@ footer a{color:var(--muted)}
       <h2>People</h2>
       <p>Bench scientists, clinicians, and program staff across UC Berkeley and UCSF, working on the same patients.</p>
     </div>
-    <div class="people-grid">
-      <div class="person pi">
-        <div class="portrait"><span class="initials" aria-hidden="true">FU</span></div>
-        <div class="name">Fyodor Urnov</div>
+    <!-- The PI sits on its own above the roster because it carries a bio and a wider portrait.
+         Everyone else is one <li> in the list below: copy one, change the name and the role,
+         and that is the whole job. Every portrait frame carries a silhouette placeholder,
+         drawn by the CSS, until a photo covers it. For a headshot, put the file in photos/ and
+         add data-photo="photos/their-name.jpg" to that person's <li>; the photo takes over
+         once the file actually loads, so a typo in the filename leaves the silhouette rather
+         than a broken image. An <img> written into .portrait by hand overrides all of this.
+
+         The twenty slots below are placeholders until the lab sends names and photos: each
+         reads "Team member" over a guessed role. Filling one is overwriting those two lines.
+
+         There is nothing special about twenty: the grid just keeps adding rows, so add or
+         delete <li> elements freely. To break the roster into groups, close the <ul>, add an
+         <h3>, and open another one. -->
+    <div class="person pi" data-photo="photos/fyodor-urnov.jpg" data-focus="69% 40%">
+      <div class="portrait"></div>
+      <div class="person-text">
+        <h3 class="name">Fyodor Urnov</h3>
         <p class="role">Principal Investigator. Director of Therapeutic R&amp;D at the IGI and Professor of Molecular Therapeutics at UC Berkeley</p>
         <p class="bio">A genome-editing pioneer who helped build the human genome-editing toolbox and bring its first applications to the clinic. He directs the Center for Pediatric CRISPR Cures and the Danaher-IGI Beacon for CRISPR Cures, and was the IGI lead on the first personalized in vivo CRISPR therapy.</p>
       </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
-        <p class="role">Staff scientist</p>
-      </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
-        <p class="role">Postdoctoral scholar</p>
-      </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
-        <p class="role">Research associate</p>
-      </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
-        <p class="role">Research associate</p>
-      </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
-        <p class="role">Project manager</p>
-      </div>
-      <div class="person">
-        <div class="portrait"><span class="initials" aria-hidden="true">&nbsp;</span></div>
-        <div class="name">Team member</div>
-        <p class="role">Graduate student</p>
-      </div>
     </div>
+    <ul class="people-grid">
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Staff scientist</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Staff scientist</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Staff scientist</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Postdoctoral scholar</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Postdoctoral scholar</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Postdoctoral scholar</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Postdoctoral scholar</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Postdoctoral scholar</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Graduate student</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Graduate student</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Graduate student</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Graduate student</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Research associate</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Research associate</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Research associate</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Research associate</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Computational biologist</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Computational biologist</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Project manager</p>
+      </li>
+      <li class="person">
+        <div class="portrait"></div>
+        <h3 class="name">Team member</h3>
+        <p class="role">Lab manager</p>
+      </li>
+    </ul>
   </div>
 </section>
 
@@ -442,7 +643,9 @@ footer a{color:var(--muted)}
     <div class="section-head">
       <h2>Publications</h2>
     </div>
-    <ul class="pubs" id="pubs"><li class="pubs-status" id="pubs-status">Loading recent papers.</li></ul>
+    <ul class="pubs" id="pubs"></ul>
+    <noscript><p class="pubs-note">This list is pulled live from Europe PMC and needs JavaScript. The full list is on PubMed below.</p></noscript>
+    <p class="pubs-note" id="pubs-note" hidden></p>
     <p class="pub-more"><a href="https://pubmed.ncbi.nlm.nih.gov/?term=Urnov+FD%5BAuthor%5D&amp;sort=date">See all publications on PubMed</a></p>
   </div>
 </section>
@@ -573,23 +776,76 @@ footer a{color:var(--muted)}
   /* Mobile nav */
   var toggle = document.querySelector('.nav-toggle');
   var links = document.getElementById('navlinks');
-  toggle.addEventListener('click', function(){
-    var open = links.classList.toggle('open');
+  function setMenu(open){
+    links.classList.toggle('open', open);
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
+  }
+  toggle.addEventListener('click', function(){ setMenu(!links.classList.contains('open')); });
   links.addEventListener('click', function(e){
-    if (e.target.tagName === 'A') { links.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+    if (e.target.tagName === 'A') setMenu(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape' || !links.classList.contains('open')) return;
+    setMenu(false);
+    toggle.focus();          /* without this, focus is left inside a menu that is now display:none */
   });
 
-  /* Hero photo: use it when the file exists, keep the sequence panel otherwise */
+  /* Hero photo: use it when the file exists, keep the sequence panel otherwise.
+     The src stays in the markup so the photo loads during parse and the hero does not
+     flash the panel first. Until the file is added the request 404s, which is the
+     detection mechanism rather than a fault; the panel simply stays. */
   (function(){
     var fig = document.querySelector('.hero-photo');
     var photo = fig && fig.querySelector('img');
     var panel = document.querySelector('.seqpanel');
     if (!photo || !panel) return;
     function usePhoto(){ panel.hidden = true; fig.hidden = false; }
-    if (photo.complete && photo.naturalWidth > 0) usePhoto();
-    else photo.addEventListener('load', usePhoto);
+    function keepPanel(){ fig.remove(); }
+    if (photo.complete) { if (photo.naturalWidth > 0) usePhoto(); else keepPanel(); }
+    else { photo.addEventListener('load', usePhoto); photo.addEventListener('error', keepPanel); }
+  })();
+
+  /* Nav scroll-spy: mark whichever section is currently under the header */
+  (function(){
+    var nav = document.querySelector('.nav-links');
+    if (!nav) return;
+    var items = [].slice.call(nav.querySelectorAll('a[href^="#"]')).map(function(a){
+      return { link: a, el: document.getElementById(a.getAttribute('href').slice(1)) };
+    }).filter(function(x){ return x.el; });
+    if (!items.length) return;
+
+    var spots = [], current = null, ticking = false;
+
+    function measure(){
+      /* Contact is a column inside the Join section, so tracking both would leave the two
+         fighting over one band and Join never winning. Keep only the outermost targets. */
+      var outer = items.filter(function(x){
+        return !items.some(function(o){ return o.el !== x.el && o.el.contains(x.el); });
+      });
+      spots = outer.map(function(x){
+        return { link: x.link, top: x.el.getBoundingClientRect().top + window.pageYOffset };
+      }).sort(function(a, b){ return a.top - b.top; });
+      update();
+    }
+    function update(){
+      ticking = false;
+      var line = window.pageYOffset + 120;          /* just below the nav and the scan strip */
+      var found = null;
+      for (var i = 0; i < spots.length; i++){ if (spots[i].top <= line) found = spots[i].link; }
+      /* A short last section may never reach the line, but at the bottom it is the one you are on */
+      if (spots.length && window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight - 2)
+        found = spots[spots.length - 1].link;
+      if (found === current) return;
+      if (current) current.removeAttribute('aria-current');
+      if (found) found.setAttribute('aria-current', 'location');
+      current = found;
+    }
+    window.addEventListener('scroll', function(){
+      if (!ticking){ ticking = true; requestAnimationFrame(update); }
+    }, {passive:true});
+    window.addEventListener('resize', measure);
+    measure();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   })();
 
   /* Sequence panel: a single base correction at a base-editor target site */
@@ -656,10 +912,7 @@ footer a{color:var(--muted)}
     timers.push(setTimeout(function(){ targetEl.textContent = CORRECT; targetEl.classList.add('fixed'); }, 1650));
     timers.push(setTimeout(function(){ targetEl.classList.remove('flip'); status.classList.add('fixed'); statusText.textContent = 'Corrected'; }, 1900));
   }
-  var panel = document.querySelector('.seqpanel');
-  panel.title = 'Click to replay';
-  panel.style.cursor = 'pointer';
-  panel.addEventListener('click', play);
+  document.getElementById('seq-replay').addEventListener('click', play);
   play();
 
   /* Genome scan strip: a reader travels the strip as the page scrolls */
@@ -754,37 +1007,98 @@ footer a{color:var(--muted)}
       measure:'Clinical follow-up. Data shared with other centers.' }
   ];
   var pipe = document.getElementById('pipe');
+  var pipeDetail = document.getElementById('pipe-detail');
+  var pipeTabs = [].slice.call(pipe.querySelectorAll('[role="tab"]'));
   var pdTitle = document.getElementById('pd-title');
   var pdText = document.getElementById('pd-text');
   var pdMeasure = document.getElementById('pd-measure');
-  function showStep(n){
+  function showStep(n, moveFocus){
     var s = steps[n];
     pdTitle.textContent = s.name;
     pdText.textContent = s.text;
     pdMeasure.textContent = s.measure;
-    var buttons = pipe.querySelectorAll('button');
-    for (var k = 0; k < buttons.length; k++) buttons[k].setAttribute('aria-expanded', k === n ? 'true' : 'false');
+    pipeDetail.setAttribute('aria-labelledby', pipeTabs[n].id);
+    /* Roving tabindex: the whole set is one tab stop, arrows move within it */
+    pipeTabs.forEach(function(tab, k){
+      var on = k === n;
+      tab.setAttribute('aria-selected', on ? 'true' : 'false');
+      tab.tabIndex = on ? 0 : -1;
+      if (on && moveFocus) tab.focus();
+    });
   }
   pipe.addEventListener('click', function(e){
-    var btn = e.target.closest('button');
-    if (btn) showStep(parseInt(btn.getAttribute('data-step'), 10));
+    var btn = e.target.closest('[role="tab"]');
+    if (btn) showStep(pipeTabs.indexOf(btn), false);
   });
-  showStep(0);
+  pipe.addEventListener('keydown', function(e){
+    var i = pipeTabs.indexOf(document.activeElement);
+    if (i < 0) return;
+    var n = -1;
+    if (e.key === 'ArrowRight') n = (i + 1) % pipeTabs.length;
+    else if (e.key === 'ArrowLeft') n = (i - 1 + pipeTabs.length) % pipeTabs.length;
+    else if (e.key === 'Home') n = 0;
+    else if (e.key === 'End') n = pipeTabs.length - 1;
+    else return;                                  /* leave Up/Down alone so the page still scrolls */
+    e.preventDefault();
+    showStep(n, true);
+  });
+  showStep(0, false);
+
+  /* People: names and roles live in the markup so they are in the page source and survive
+     with scripting off, and so does the placeholder silhouette, which is CSS. All that is
+     built here is the headshot named in data-photo, which takes over once it loads. */
+  (function(){
+    /* Every .person on the page, not just the ones in the grid: the PI card sits outside it */
+    [].forEach.call(document.querySelectorAll('.person'), function(person){
+      var portrait = person.querySelector('.portrait');
+      if (!portrait){                  /* backfill it, so a card copied without one still lines up */
+        portrait = document.createElement('div');
+        portrait.className = 'portrait';
+        person.insertBefore(portrait, person.firstChild);
+      }
+      if (portrait.querySelector('img')){            /* a photo placed by hand wins outright */
+        portrait.classList.add('has-photo');
+        return;
+      }
+      var src = person.getAttribute('data-photo');
+      if (!src) return;
+      var img = document.createElement('img');
+      img.alt = '';                    /* the name is the next line; reading it twice helps nobody */
+      img.decoding = 'async';
+      img.loading = 'lazy';            /* a full roster of headshots should not all load at once */
+      /* Portraits are cropped to fill a 4:5 frame, which cuts the sides off a landscape source
+         and the subject with them if they are not centred. data-focus steers that crop:
+         "69% 40%" keeps the point 69% across and 40% down in view. Default is dead centre. */
+      var focus = person.getAttribute('data-focus');
+      if (focus) img.style.objectPosition = focus;
+      /* The silhouette goes only once the photo is really there, and a missing or misspelled
+         file takes the image back out, so nobody ever sees a broken image icon. Appending before
+         setting src matters: a detached image ignores loading="lazy" and fetches immediately. */
+      img.addEventListener('load', function(){ portrait.classList.add('has-photo'); });
+      img.addEventListener('error', function(){ img.remove(); });
+      portrait.appendChild(img);
+      img.src = src;
+    });
+  })();
 
   /* Watch: swap a poster for the YouTube player on click, one at a time */
   (function(){
     var grid = document.getElementById('videos');
     if (!grid) return;
     var playing = null;
-    function stop(){
+    /* Swapping the poster out takes the focused element with it, so put focus somewhere deliberate */
+    function stop(restoreFocus){
       if (!playing) return;
-      playing.frame.parentNode.replaceChild(playing.poster, playing.frame);
+      var poster = playing.poster;
+      playing.frame.parentNode.replaceChild(poster, playing.frame);
       playing = null;
+      if (restoreFocus) poster.focus();
     }
     grid.addEventListener('click', function(e){
+      if (e.target.closest('.video-close')){ stop(true); return; }
       var btn = e.target.closest('.video-poster');
       if (!btn) return;
-      stop();
+      stop(false);
       var frame = document.createElement('div');
       frame.className = 'video-frame';
       var iframe = document.createElement('iframe');
@@ -792,9 +1106,19 @@ footer a{color:var(--muted)}
       iframe.title = btn.getAttribute('data-title');
       iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
       iframe.setAttribute('allowfullscreen', '');
+      var close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'video-close';
+      close.textContent = '\u00D7';
+      close.setAttribute('aria-label', 'Close the video');
       frame.appendChild(iframe);
+      frame.appendChild(close);
       btn.parentNode.replaceChild(frame, btn);
       playing = { poster: btn, frame: frame };
+      close.focus();          /* the player is cross-origin, so focus the one control we own */
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && playing) stop(true);
     });
   })();
 
@@ -813,15 +1137,19 @@ footer a{color:var(--muted)}
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(pace);
   })();
 
-  /* Publications, live from Europe PMC */
+  /* Publications, live from Europe PMC, with a cached copy so an outage never blanks the section */
   var pubsEl = document.getElementById('pubs');
-  var pubsStatus = document.getElementById('pubs-status');
+  var pubsNote = document.getElementById('pubs-note');
+  var PUBS_KEY = 'urnov-pubs-v1';
+  var PUBS_TTL = 86400000;                       /* re-check once a day, serve from cache in between */
+  var PUBS_TIMEOUT = 8000;
   var query = '(AUTH:"Urnov F" OR AUTH:"Urnov FD") AND FIRST_PDATE:[2020-01-01 TO 2035-12-31] AND SRC:MED';
   var url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=' + encodeURIComponent(query) + '&format=json&pageSize=40&resultType=lite';
 
   function authorLine(str){
     if (!str) return '';
-    var parts = str.split(', ');
+    /* Europe PMC already ends authorString with a period; drop it so we do not print two */
+    var parts = str.replace(/\.\s*$/, '').split(', ');
     if (parts.length > 6) parts = parts.slice(0, 5).concat(['et al']);
     return parts.join(', ') + '.';
   }
@@ -834,44 +1162,104 @@ footer a{color:var(--muted)}
       else el.appendChild(document.createTextNode(p));
     });
   }
-  function render(items){
-    pubsEl.innerHTML = '';
+  /* Keep only the fields we render, so the cached copy stays small */
+  function slim(it){
+    return {
+      year: it.pubYear || (it.firstPublicationDate || '').slice(0, 4),
+      title: it.title ? it.title.replace(/\.$/, '') : 'Untitled',
+      href: it.doi ? 'https://doi.org/' + it.doi : (it.pmid ? 'https://pubmed.ncbi.nlm.nih.gov/' + it.pmid + '/' : ''),
+      authors: it.authorString || '',
+      journal: it.journalTitle || ''
+    };
+  }
+  function pubsSetNote(msg){
+    if (!pubsNote) return;
+    pubsNote.textContent = msg || '';
+    pubsNote.hidden = !msg;
+  }
+  /* The PubMed link directly below the list covers the failure cases, so this stays a plain line */
+  function pubsStatus(msg){
+    pubsEl.textContent = '';
+    var li = document.createElement('li');
+    li.className = 'pubs-status';
+    li.textContent = msg;
+    pubsEl.appendChild(li);
+  }
+  function renderPubs(items){
+    pubsEl.textContent = '';
     items.forEach(function(it){
       var li = document.createElement('li');
       var year = document.createElement('span');
       year.className = 'year';
-      year.textContent = it.pubYear || (it.firstPublicationDate || '').slice(0, 4);
+      year.textContent = it.year;
       var body = document.createElement('div');
-      var a = document.createElement('a');
-      a.className = 'title';
-      a.textContent = it.title ? it.title.replace(/\.$/, '') : 'Untitled';
-      a.href = it.doi ? 'https://doi.org/' + it.doi : (it.pmid ? 'https://pubmed.ncbi.nlm.nih.gov/' + it.pmid + '/' : '#');
+      /* A record with neither DOI nor PMID has nowhere to point, so it is not a link */
+      var titleEl = document.createElement(it.href ? 'a' : 'span');
+      titleEl.className = 'title';
+      titleEl.textContent = it.title;
+      if (it.href) titleEl.href = it.href;
       var meta = document.createElement('p');
       meta.className = 'meta';
-      addAuthors(meta, it.authorString);
-      if (it.journalTitle) meta.appendChild(document.createTextNode(' ' + it.journalTitle + '.'));
-      body.appendChild(a);
+      addAuthors(meta, it.authors);
+      if (it.journal) meta.appendChild(document.createTextNode(' ' + it.journal + '.'));
+      body.appendChild(titleEl);
       body.appendChild(meta);
       li.appendChild(year);
       li.appendChild(body);
       pubsEl.appendChild(li);
     });
   }
-  function fail(){
-    pubsStatus.textContent = 'The live list could not load. The full list is on PubMed below.';
+
+  function readCache(){
+    try {
+      var c = JSON.parse(localStorage.getItem(PUBS_KEY));
+      return (c && c.items && c.items.length) ? c : null;
+    } catch (e){ return null; }
   }
-  if (window.fetch){
-    fetch(url).then(function(r){ return r.json(); }).then(function(data){
-      var list = (data.resultList && data.resultList.result) || [];
-      list = list.filter(function(it){
-        var t = (it.pubType || '').toLowerCase();
-        return t.indexOf('erratum') === -1 && t.indexOf('correction') === -1 && t.indexOf('retract') === -1;
-      });
-      list.sort(function(a, b){ return (b.firstPublicationDate || '').localeCompare(a.firstPublicationDate || ''); });
-      if (!list.length){ fail(); return; }
-      render(list.slice(0, 8));
-    }).catch(fail);
-  } else { fail(); }
+  function writeCache(items){
+    try { localStorage.setItem(PUBS_KEY, JSON.stringify({ at: Date.now(), items: items })); } catch (e){}
+  }
+
+  function loadPubs(){
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function(){ if (ctrl) ctrl.abort(); }, PUBS_TIMEOUT);
+    return fetch(url, ctrl ? { signal: ctrl.signal } : undefined)
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(data){
+        clearTimeout(timer);
+        var list = (data.resultList && data.resultList.result) || [];
+        list = list.filter(function(it){
+          var t = (it.pubType || '').toLowerCase();
+          return t.indexOf('erratum') === -1 && t.indexOf('correction') === -1 && t.indexOf('retract') === -1;
+        });
+        list.sort(function(a, b){ return (b.firstPublicationDate || '').localeCompare(a.firstPublicationDate || ''); });
+        if (!list.length) throw new Error('no results');
+        return list.slice(0, 8).map(slim);
+      })
+      .catch(function(e){ clearTimeout(timer); throw e; });
+  }
+
+  (function(){
+    var cached = readCache();
+    if (cached) renderPubs(cached.items);
+    else pubsStatus('Loading recent papers.');
+
+    if (!window.fetch){
+      if (!cached) pubsStatus('This list loads from Europe PMC, which this browser cannot reach.');
+      return;
+    }
+    /* A cache younger than the TTL is good enough; skip the request entirely */
+    if (cached && (Date.now() - cached.at) < PUBS_TTL) return;
+
+    loadPubs().then(function(items){
+      renderPubs(items);
+      writeCache(items);
+      pubsSetNote('');
+    }).catch(function(){
+      if (cached) pubsSetNote('Europe PMC did not answer, so this is the last list we loaded.');
+      else pubsStatus('The live list from Europe PMC is not loading right now. The full list is on PubMed below.');
+    });
+  })();
 })();
 </script>
 </body>
