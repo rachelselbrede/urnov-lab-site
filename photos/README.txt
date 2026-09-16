@@ -13,6 +13,13 @@ Photos for the site. Nothing here is committed yet except this note.
 Until a file exists the page asks for it, gets a 404 and quietly keeps the
 initials. That is the detection mechanism, not a fault.
 
+Getting the files in, without a checkout: on github.com open this photos folder,
+pick "Add file", then "Upload files", drop the JPEGs in and commit. Names have
+to match exactly, lower case with a .jpg ending, because GitHub Pages treats
+Fyodor-Urnov.JPG and fyodor-urnov.jpg as different files. The site is served
+from main, so a file committed on another branch shows up once that branch is
+merged.
+
 The PI portrait on the UC Berkeley VC for Research faculty page is:
 
   https://vcresearch.berkeley.edu/sites/default/files/styles/faculty_photo_large/public/2024-08/Fyodor%20Urnov.7_0.jpg
