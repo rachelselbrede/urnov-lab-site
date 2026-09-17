@@ -1,13 +1,18 @@
 # Keeps the News section current. Once a day this asks the IGI website for stories that
 # mention the lab, writes the newest ones to news.json, and commits that file if it changed.
 # GitHub Pages then redeploys on its own. Run it by hand from the Actions tab: pick
-# "Refresh news" and press "Run workflow".
+# "Refresh news" and press "Run workflow". It also runs whenever the script or this file
+# changes, so a new search term shows its effect right away.
 name: Refresh news
 
 on:
   schedule:
     - cron: '23 14 * * *'   # daily at 14:23 UTC, early morning in California
   workflow_dispatch:
+  push:
+    paths:
+      - scripts/fetch-news.mjs
+      - .github/workflows/news.yml
 
 permissions:
   contents: write

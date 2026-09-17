@@ -112,7 +112,7 @@ The News section refreshes itself once a day. The "Refresh news" workflow in `.g
 
 What counts as "about the lab" is the `TERMS` list at the top of the script: Urnov, CRISPR Cures (which covers the Center for Pediatric CRISPR Cures, the Danaher-IGI Beacon and the CRISPR Cures Core), and a few more. A story is kept when its title or text contains any of them. Add or remove lines there to widen or narrow the net.
 
-To refresh by hand, open the repo's Actions tab, pick "Refresh news" on the left, and press "Run workflow". Two things worth knowing. GitHub switches off scheduled workflows in a repo that has had no commits for 60 days and emails a warning; the Actions tab has a one-click button to switch it back on. And a run fails, with an email, only when the IGI website could not be reached at all; a day with no new stories is a normal, quiet run.
+To refresh by hand, open the repo's Actions tab, pick "Refresh news" on the left, and press "Run workflow". It also runs on its own whenever the script or the workflow file changes, so a new search term shows its effect within a minute of being committed. Two things worth knowing. GitHub switches off scheduled workflows in a repo that has had no commits for 60 days and emails a warning; the Actions tab has a one-click button to switch it back on. And a run fails, with an email, only when the IGI website could not be reached at all; a day with no new stories is a normal, quiet run.
 
 ## If the site moves to another address
 
