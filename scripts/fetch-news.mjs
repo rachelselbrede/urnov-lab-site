@@ -18,14 +18,16 @@ const TIMEOUT = 20000;
 const UA = 'urnov-lab-site news refresh (+https://github.com/rachelselbrede/urnov-lab-site)';
 
 /* What counts as news about the lab. A story is kept when its title or text contains any of
-   these, in any letter case. Add a line to widen the net, remove one to narrow it. */
+   these, in any letter case. Add a line to widen the net, remove one to narrow it. Keep the
+   terms specific: the IGI describes its whole mission as "CRISPR cures", so that phrase on
+   its own matches nearly every story on the site. The run log shows which term each kept
+   story matched and the sentence around it, which is the place to look when tuning. */
 const TERMS = [
   'Urnov',
-  'CRISPR Cures',          /* Center for Pediatric CRISPR Cures, Danaher-IGI Beacon for CRISPR Cures, CRISPR Cures Core */
-  'Pediatric CRISPR',
-  'personalized CRISPR',
-  'on-demand CRISPR',
-  'CPS1',                  /* the first personalized therapy, for a newborn with CPS1 deficiency */
+  'CRISPR Cures Core',
+  'Pediatric CRISPR Cures',     /* the Center for Pediatric CRISPR Cures */
+  'Beacon for CRISPR Cures',    /* the Danaher-IGI Beacon for CRISPR Cures */
+  'CPS1',                       /* the first personalized therapy, for a newborn with CPS1 deficiency */
 ];
 
 /* WordPress post types to search. "posts" is the standard one; "news" is tried in case the
@@ -34,8 +36,18 @@ const TYPES = ['posts', 'news'];
 const FEEDS = ['/feed/', '/news/feed/'];
 
 const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-const matchers = TERMS.map(t => new RegExp('(^|[^a-z0-9])' + esc(t) + '(?![a-z0-9])', 'i'));
-const mentionsLab = s => matchers.some(re => re.test(s));
+const matchers = TERMS.map(t => new RegExp('(^|[^a-z0-9])(' + esc(t) + ')(?![a-z0-9])', 'i'));
+/* The term a text matches, with the words around the match, or null when it matches none */
+function mention(s){
+  for (const re of matchers){
+    const m = re.exec(s);
+    if (!m) continue;
+    const at = m.index + m[1].length;
+    const around = s.slice(Math.max(0, at - 70), at + m[2].length + 70).trim();
+    return { term: m[2], around: (at > 70 ? '…' : '') + around + (at + m[2].length + 70 < s.length ? '…' : '') };
+  }
+  return null;
+}
 
 const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', hellip: '…',
   ndash: '–', mdash: '—', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“' };
@@ -77,8 +89,9 @@ function isoDate(s){
   return isNaN(d) ? '' : d.toISOString().slice(0, 10);
 }
 
-async function get(path){
-  const url = BASE + path;
+const pause = ms => new Promise(res => setTimeout(res, ms));
+
+async function once(url){
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT);
   try {
@@ -90,6 +103,18 @@ async function get(path){
   } finally {
     clearTimeout(timer);
   }
+}
+
+/* One request, retried once after a short pause when the site says no or falls over: the
+   first request of a run has been refused before while the rest went through. */
+async function get(path){
+  let r = await once(BASE + path);
+  if (!r.ok && r.status !== 404){
+    await pause(2500);
+    r = await once(BASE + path);
+  }
+  await pause(400);                   /* leave a gap between requests */
+  return r;
 }
 
 const log = (path, note) => console.log(`  ${path}\n      ${note}`);
@@ -115,8 +140,9 @@ async function fromApi(){
         const title = text(p.title && p.title.rendered != null ? p.title.rendered : p.title);
         const excerpt = p.excerpt ? p.excerpt.rendered : '';
         const content = p.content ? p.content.rendered : '';
-        if (!p.link || !title || !mentionsLab(`${title} ${text(excerpt)} ${text(content)}`)) continue;
-        items.push({ title, url: p.link, date: isoDate(p.date_gmt || p.date), summary: summary(excerpt) || summary(content) });
+        const why = p.link && title ? mention(`${title} ${text(excerpt)} ${text(content)}`) : null;
+        if (!why) continue;
+        items.push({ title, url: p.link, date: isoDate(p.date_gmt || p.date), summary: summary(excerpt) || summary(content), why });
         kept++;
       }
       log(path, `${posts.length} stories, ${kept} about the lab`);
@@ -144,8 +170,9 @@ async function fromFeeds(){
       const link = text(field('link'));
       const desc = field('description');
       const content = field('content:encoded');
-      if (!link || !title || !mentionsLab(`${title} ${text(desc)} ${text(content)}`)) continue;
-      items.push({ title, url: link, date: isoDate(text(field('pubDate'))), summary: summary(desc) || summary(content) });
+      const why = link && title ? mention(`${title} ${text(desc)} ${text(content)}`) : null;
+      if (!why) continue;
+      items.push({ title, url: link, date: isoDate(text(field('pubDate'))), summary: summary(desc) || summary(content), why });
       kept++;
     }
     log(path, `${entries.length} stories, ${kept} about the lab`);
@@ -187,7 +214,8 @@ if (!items.length){
   process.exit(0);
 }
 
-const next = JSON.stringify({ source: `${BASE} (${source})`, items }, null, 2) + '\n';
+const next = JSON.stringify({ source: `${BASE} (${source})`,
+  items: items.map(({ why, ...it }) => it) }, null, 2) + '\n';
 let prev = '';
 try { prev = readFileSync(OUT, 'utf8'); } catch {}
 if (prev === next){
@@ -196,4 +224,7 @@ if (prev === next){
   writeFileSync(OUT, next);
   console.log(`Wrote ${items.length} stories to ${OUT}:`);
 }
-for (const it of items) console.log(`  ${it.date}  ${it.title}`);
+for (const it of items){
+  console.log(`  ${it.date}  ${it.title}`);
+  console.log(`              matched "${it.why.term}": ${it.why.around}`);
+}

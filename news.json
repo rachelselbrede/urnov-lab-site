@@ -2,18 +2,6 @@
   "source": "https://innovativegenomics.org (WordPress API)",
   "items": [
     {
-      "title": "How One Simple Change Can Make Lipid Nanoparticles Safer for Gene Editing and Other Applications",
-      "url": "https://innovativegenomics.org/news/safer-lipid-nanoparticles-gene-editing/",
-      "date": "2026-09-08",
-      "summary": "Over the past few years, millions of people have learned about lipid nanoparticles courtesy of the breakthrough mRNA vaccines developed during the COVID-19 pandemic."
-    },
-    {
-      "title": "New CRISPR Screening Platform Boosts Power of Immunotherapy Against Solid Tumors",
-      "url": "https://innovativegenomics.org/news/crispr-screening-solid-tumors/",
-      "date": "2026-08-17",
-      "summary": "For patients with blood cancers like leukemia and lymphoma, the immunotherapy known as CAR-T cell therapy can be lifesaving."
-    },
-    {
       "title": "Innovative Collaboration Funded by ARPA-H THRIVE to Develop Affordable Gene-Editing Therapies for Rare Immune Diseases in Children",
       "url": "https://innovativegenomics.org/news/arpa-h-thrive-gene-editing-therapies-immune-diseases-in-children/",
       "date": "2026-07-27",
@@ -32,10 +20,22 @@
       "summary": "Today, with the scoop of a shovel, Innovative Genomics Institute (IGI) founder Jennifer Doudna marked a new chapter for the institute and UC Berkeley."
     },
     {
-      "title": "New CRISPR Technique Selectively Shreds Cancer Cells, Including “Undruggable” Cancers",
-      "url": "https://innovativegenomics.org/news/crispr-technique-selectively-shreds-cancer-cells/",
-      "date": "2026-06-08",
-      "summary": "The job of a tumor suppressor protein is right in the name: stopping us from getting cancer at the cellular level. But when they’re not working properly, the cell is left with limited defenses."
+      "title": "Gene Editing Innovators Receive 2026 Catalyst Award at American Society of Gene & Cell Therapy’s Annual Conference",
+      "url": "https://innovativegenomics.org/news/asgct-catalyst-award-2026/",
+      "date": "2026-05-12",
+      "summary": "Children’s Hospital of Philadelphia (CHOP), Danaher Corporation, the Innovative Genomics Institute (IGI), and Penn Medicine celebrate members of their teams as the 2026 recipients of the American…"
+    },
+    {
+      "title": "CRISPR Clinical Trials: A 2026 Update",
+      "url": "https://innovativegenomics.org/news/crispr-clinical-trials-2026/",
+      "date": "2026-03-23",
+      "summary": "CONTENTS Market Outlook Cardiovascular Disease Autoimmune Disorders Cancers Rare Genetic Diseases Red Blood Cell Disorders Diabetes Infections The past year has been full of high highs, low lows, and…"
+    },
+    {
+      "title": "Innovative Genomics Institute to Collaborate on ARPA-H-funded Project to Revolutionize In Vivo CAR-T Cell Therapy for Solid Tumor Cancers",
+      "url": "https://innovativegenomics.org/news/in-vivo-car-t-solid-tumor-cancers/",
+      "date": "2026-03-16",
+      "summary": "The Innovative Genomics Institute (IGI) is joining a new collaborative effort to develop and manufacture a transformative therapy platform for solid-tumor gastrointestinal (GI) cancers, using CAR-T…"
     }
   ]
 }
