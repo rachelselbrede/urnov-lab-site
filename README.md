@@ -8,6 +8,9 @@ index.html        the whole site: markup, styles and scripts in one file
 social/           the link preview card (PNG) and the HTML it is rendered from
 logos/            partner wordmarks
 photos/           team and group photos (mostly empty for now)
+news.json         the latest IGI stories about the lab, written by the news workflow
+scripts/          fetch-news.mjs, which finds those stories
+.github/          the workflow that runs it once a day
 robots.txt        points crawlers at the sitemap
 sitemap.xml       the one page
 .nojekyll         tells GitHub Pages to serve the files as they are
@@ -104,6 +107,12 @@ The card is entirely type, with no IGI or partner marks on it, so it does not ne
 The Publications section pulls recent papers from Europe PMC in the browser (author query on Urnov F / Urnov FD, 2020 onward, PubMed records only, newest first, eight shown), skipping news pieces, interviews and errata by publication type. Nobody has to maintain it. Adjust the query or the skip list in the `<script>` block at the bottom for a different date range, count or filter. If you change the filter, also bump `PUBS_KEY`, or visitors keep the old cached list for a day.
 
 A successful result is kept in the visitor's browser and reused for a day, so most visits do not call the API at all, and a Europe PMC outage leaves the last known list on the page rather than an empty section. A first-time visitor during an outage gets one line pointing at the PubMed link below.
+
+The News section refreshes itself once a day. The "Refresh news" workflow in `.github/workflows/news.yml` runs `scripts/fetch-news.mjs`, which asks the IGI website for stories that mention the lab, writes the newest six to `news.json`, and commits the file when something changed. GitHub Pages redeploys on its own after that commit. The page shows the first three, and falls back to the three cards written into `index.html` if `news.json` is missing or empty. The "More news from the IGI" link under the cards covers everything else.
+
+What counts as "about the lab" is the `TERMS` list at the top of the script: Urnov, CRISPR Cures (which covers the Center for Pediatric CRISPR Cures, the Danaher-IGI Beacon and the CRISPR Cures Core), and a few more. A story is kept when its title or text contains any of them. Add or remove lines there to widen or narrow the net.
+
+To refresh by hand, open the repo's Actions tab, pick "Refresh news" on the left, and press "Run workflow". It also runs on its own whenever the script or the workflow file changes, so a new search term shows its effect within a minute of being committed. Two things worth knowing. GitHub switches off scheduled workflows in a repo that has had no commits for 60 days and emails a warning; the Actions tab has a one-click button to switch it back on. And a run fails, with an email, only when the IGI website could not be reached at all; a day with no new stories is a normal, quiet run.
 
 ## If the site moves to another address
 

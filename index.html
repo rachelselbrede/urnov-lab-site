@@ -329,6 +329,7 @@ button{font:inherit;color:inherit}
 .news-grid h3 a{color:var(--ink);text-decoration:none}
 .news-grid h3 a:hover{color:var(--link);text-decoration:underline}
 .news-grid p{font-size:15.5px;color:var(--ink-2);margin:0}
+.news-more{margin-top:24px}
 
 /* Watch: small click-to-play video cards that stay on the page */
 .video-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2.5vw,28px)}
@@ -655,6 +656,10 @@ footer a{color:var(--muted)}
     <div class="section-head">
       <h2>News</h2>
     </div>
+    <!-- These three cards are the fallback. news.json, refreshed once a day by
+         .github/workflows/news.yml with the latest IGI stories that mention the lab, replaces
+         them whenever it is there and has something in it. Edit these by hand only if the
+         automatic refresh is switched off. -->
     <div class="news-grid">
       <article>
         <time datetime="2025-05">May 2025</time>
@@ -672,6 +677,7 @@ footer a{color:var(--muted)}
         <p>The IGI's yearly review of where CRISPR medicines stand, including the platform trials that grew out of the first on-demand therapy.</p>
       </article>
     </div>
+    <p class="news-more"><a href="https://innovativegenomics.org/news/">More news from the IGI</a></p>
   </div>
 </section>
 
@@ -1079,6 +1085,51 @@ footer a{color:var(--muted)}
       portrait.appendChild(img);
       img.src = src;
     });
+  })();
+
+  /* News: the three cards in the markup are the fallback. news.json, kept current by the
+     Refresh news workflow, replaces them when it is there and has stories in it. Anything
+     going wrong, from a missing file to a bad entry, leaves the cards exactly as written. */
+  (function(){
+    var grid = document.querySelector('.news-grid');
+    if (!grid || !window.fetch) return;
+    var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+      'September', 'October', 'November', 'December'];
+    function card(it){
+      var art = document.createElement('article');
+      var m = /^(\d{4})-(\d{2})/.exec(it.date || '');
+      if (m){
+        var time = document.createElement('time');
+        time.dateTime = m[1] + '-' + m[2];
+        time.textContent = MONTHS[Number(m[2]) - 1] + ' ' + m[1];
+        art.appendChild(time);
+      }
+      var h = document.createElement('h3');
+      var a = document.createElement('a');
+      a.href = it.url;
+      a.textContent = it.title;
+      h.appendChild(a);
+      art.appendChild(h);
+      if (it.summary){
+        var p = document.createElement('p');
+        p.textContent = it.summary;
+        art.appendChild(p);
+      }
+      return art;
+    }
+    fetch('news.json')
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(data){
+        var items = ((data && data.items) || []).filter(function(it){
+          return it && typeof it.title === 'string' && /^https:\/\//.test(it.url || '');
+        }).slice(0, 3);
+        if (!items.length) return;
+        var frag = document.createDocumentFragment();
+        items.forEach(function(it){ frag.appendChild(card(it)); });
+        grid.textContent = '';
+        grid.appendChild(frag);
+      })
+      .catch(function(){});
   })();
 
   /* Watch: swap a poster for the YouTube player on click, one at a time */
