@@ -162,28 +162,32 @@ button{font:inherit;color:inherit}
   .nav-links a[aria-current]::after{display:none}   /* stacked rows already read top to bottom */
 }
 
-/* Hero: a full-bleed dark scene. The canvas behind everything draws a double helix turning
-   inside a cell (see the script at the bottom); a scrim keeps the text side readable. The
-   scene fills the first screen below the nav and the scan strip, capped so it never dwarfs
-   the copy on a tall monitor. */
+/* Hero: a dark scene with the real Cas9 enzyme turning on the right, rendered from its
+   Protein Data Bank structure by model-viewer (vendor/model-viewer.min.js, loaded at the end
+   of the page). The hero fills the first screen below the nav and the scan strip, capped so
+   it never dwarfs the copy on a tall monitor. */
 .hero{position:relative;overflow:hidden;color:#fff;background:#292D39;
   background:linear-gradient(105deg,#242835 0%,#292D39 40%,#2B3149 100%);
   min-height:clamp(560px,calc(100vh - 103px),760px);min-height:clamp(560px,calc(100svh - 103px),760px);
-  display:grid;align-items:center;padding:clamp(40px,5vw,72px) 0}
-.hero .helix{position:absolute;inset:0;width:100%;height:100%;display:block}
-.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(90deg,rgba(41,45,57,.95) 0%,rgba(41,45,57,.82) 36%,rgba(41,45,57,0) 66%)}
-.hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:clamp(32px,5vw,72px);align-items:center}
+  display:grid;align-items:center;padding:clamp(40px,5vw,64px) 0}
+.hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,4vw,56px);align-items:center}
 .hero h1{max-width:20ch;text-wrap:balance;font-size:clamp(36px,4.3vw,54px);line-height:1.06}
 .hero .lead{margin:22px 0 30px;max-width:44ch;color:rgba(255,255,255,.84)}
 .hero .btn{border-color:rgba(255,255,255,.72);color:#fff}
 .hero .btn:hover{border-color:#fff}
 .hero .btn.primary{background:#fff;color:var(--ink);border-color:#fff}
 .hero .btn.primary:hover{background:var(--seq-seen);border-color:var(--seq-seen)}
+/* The molecule: a soft glow behind it, the viewer on top, one line of caption below */
+.molecule{position:relative;margin:0}
+.molecule::before{content:"";position:absolute;left:10%;right:10%;top:8%;bottom:14%;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(88,87,255,.32),rgba(88,87,255,0));filter:blur(24px);pointer-events:none}
+.molecule model-viewer{position:relative;display:block;width:100%;height:auto;aspect-ratio:1;max-height:600px;background:transparent;--poster-color:transparent;cursor:grab}
+.molecule model-viewer:active{cursor:grabbing}
+.molecule figcaption{margin:6px 0 0;text-align:center;font-size:13px;color:var(--seq)}
 @media (max-width:900px){
-  .hero{min-height:0;align-items:start;padding:40px 0 300px}
-  .hero .wrap{grid-template-columns:1fr}
-  .hero::before{background:linear-gradient(180deg,rgba(41,45,57,.94) 0%,rgba(41,45,57,.86) 48%,rgba(41,45,57,0) 72%)}
+  .hero{min-height:0;padding:40px 0 44px}
+  .hero .wrap{grid-template-columns:1fr;gap:28px}
+  .molecule model-viewer{max-height:420px}
 }
 .actions{display:flex;flex-wrap:wrap;gap:12px}
 .btn{display:inline-block;padding:13px 20px;border-radius:10px;font-weight:600;text-decoration:none;font-size:16px;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
@@ -413,7 +417,6 @@ footer a{color:var(--muted)}
 
 <main id="main">
 <section class="hero" id="top">
-  <canvas class="helix" id="helix" role="img" aria-label="A DNA double helix turns slowly inside a cell. A disease-causing base, in red, is corrected to blue as it passes the editing point, and the helix carries on with the corrected base in it."></canvas>
   <div class="wrap">
     <div>
       <h1>CRISPR cures for children, on demand.</h1>
@@ -423,7 +426,10 @@ footer a{color:var(--muted)}
         <a class="btn" href="#publications">Read our papers</a>
       </div>
     </div>
-    <div aria-hidden="true"></div>
+    <figure class="molecule">
+      <model-viewer src="models/cas9.glb" poster="models/cas9-poster.png" alt="The Cas9 enzyme, in white, holding its guide RNA, in gold, and the target DNA strand, in blue. Protein Data Bank structure 4OO8." camera-controls disable-zoom disable-pan touch-action="pan-y" interaction-prompt="none" rotation-per-second="6deg" camera-orbit="20deg 75deg 88%" field-of-view="28deg" exposure="1.05" shadow-intensity="0" loading="eager"></model-viewer>
+      <figcaption>Cas9 with its guide RNA (gold) and target DNA (blue), PDB 4OO8.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -758,6 +764,10 @@ footer a{color:var(--muted)}
   </div>
 </footer>
 
+<!-- The 3D viewer: copied from npm into vendor/ so the site depends on no CDN. The Draco
+     decoder unpacks the compressed model; its location has to be set before the viewer loads. -->
+<script>self.ModelViewerElement = self.ModelViewerElement || {}; self.ModelViewerElement.dracoDecoderLocation = 'vendor/draco/';</script>
+<script type="module" src="vendor/model-viewer.min.js"></script>
 <script>
 (function(){
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -837,231 +847,11 @@ footer a{color:var(--muted)}
 
   function rng(seed){ return function(){ seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }; }
 
-  /* Hero: a double helix turning inside a cell, drawn on the canvas behind the hero copy.
-     The helix is built in three dimensions, projected with a little perspective and drawn
-     far side first, so the near strand passes in front of the far one and the beads swell
-     as they come forward. It drifts along its own axis, turning as it goes, and sways slowly
-     while soft blobs and bokeh drift behind it. Every ninth rung carries a disease-causing
-     base in Human Health Red; when it reaches the editing point at the centre it is corrected
-     to IGI Blue with a short pulse and carries on, corrected, so the next child's edit is
-     visibly the same process again. Time-based, so it runs at one speed everywhere; paused
-     while off screen or in a background tab; a single still frame under reduced motion. */
+  /* The Cas9 model turns on its own unless the visitor prefers reduced motion. Dragging it
+     works either way; the viewer itself stops rendering while the hero is off screen. */
   (function(){
-    var canvas = document.getElementById('helix');
-    if (!canvas || !canvas.getContext) return;
-    var ctx = canvas.getContext('2d');
-    var css = getComputedStyle(document.documentElement);
-    function tone(n){ return css.getPropertyValue(n).trim(); }
-    var TINT = tone('--base-c-dark'), PALE = tone('--seq-seen'), RED = tone('--base-t');
-    function rgba(hex, a){
-      var n = parseInt(hex.slice(1), 16);
-      return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')';
-    }
-
-    var EVERY = 9;             /* one rung in this many carries the variant */
-    var FLOW = 15;             /* px per second along the axis */
-    var SPIN = 0.5;            /* radians per second */
-    var PULSE = 1100;
-
-    var W = 0, H = 0, narrow = false;
-    var CX = 0, CY = 0, R = 0, PITCH = 0, STEP = 0, SPAN = 0, F = 0, ANGLE = 0;
-    var sprites = {};
-
-    /* A shaded sphere with a soft halo, drawn once and reused at every size */
-    function sphere(color){
-      var c = document.createElement('canvas'); c.width = c.height = 96;
-      var g = c.getContext('2d');
-      var halo = g.createRadialGradient(48, 48, 12, 48, 48, 48);
-      halo.addColorStop(0, rgba(color, 0.45)); halo.addColorStop(1, rgba(color, 0));
-      g.fillStyle = halo; g.fillRect(0, 0, 96, 96);
-      var body = g.createRadialGradient(40, 38, 3, 48, 48, 26);
-      body.addColorStop(0, '#ffffff'); body.addColorStop(0.28, color); body.addColorStop(1, 'rgba(22,25,40,0.95)');
-      g.fillStyle = body; g.beginPath(); g.arc(48, 48, 26, 0, Math.PI * 2); g.fill();
-      return c;
-    }
-    function soft(color, size){
-      var c = document.createElement('canvas'); c.width = c.height = size;
-      var g = c.getContext('2d'), h = size / 2;
-      var grad = g.createRadialGradient(h, h, 0, h, h, h);
-      grad.addColorStop(0, rgba(color, 1)); grad.addColorStop(0.5, rgba(color, 0.35)); grad.addColorStop(1, rgba(color, 0));
-      g.fillStyle = grad; g.fillRect(0, 0, size, size);
-      return c;
-    }
-    function makeSprites(){
-      sprites.bead = sphere(TINT); sprites.red = sphere(RED); sprites.fixed = sphere(PALE);
-      sprites.glow = soft(PALE, 64);
-      sprites.blob = soft(TINT, 256);
-    }
-
-    function resize(){
-      var box = canvas.getBoundingClientRect();
-      W = Math.max(1, Math.round(box.width)); H = Math.max(1, Math.round(box.height));
-      var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      narrow = W < 900;
-      R = narrow ? Math.min(H * 0.11, 70) : H * 0.155;
-      PITCH = R * 3.4;                     /* one turn per 3.4 radii, the proportions of B-DNA */
-      STEP = PITCH / 10.5;                 /* 10.5 base pairs per turn */
-      SPAN = narrow ? W * 0.75 : H * 0.95; /* half the drawn length of the axis */
-      F = R * 9;                           /* perspective: how strongly depth changes size */
-      CX = narrow ? W * 0.5 : W * 0.7;
-      CY = narrow ? H - 150 : H * 0.5;
-      ANGLE = narrow ? -0.35 : -0.56;      /* the axis rises to the right */
-      if (!sprites.bead) makeSprites();
-    }
-
-    /* Ambient life behind the helix: three slow blobs and a field of bokeh */
-    var rand = rng(29);
-    var motes = [];
-    for (var m = 0; m < 42; m++){
-      motes.push({ x: rand(), y: rand(), r: 1.5 + rand() * rand() * 9, vx: (rand() - 0.5) * 0.006, vy: -0.004 - rand() * 0.008,
-        w: 0.4 + rand() * 0.8, ph: rand() * 6.3, a: 0.12 + rand() * 0.4 });
-    }
-    function ambient(t){
-      var blobs = [
-        { x: CX + 0.08 * W * Math.sin(t / 17), y: CY + 0.06 * H * Math.cos(t / 23), s: H * 1.25, a: 0.5 },
-        { x: W * 0.22 + 0.05 * W * Math.cos(t / 19), y: H * 0.85 + 0.05 * H * Math.sin(t / 15), s: H * 0.9, a: 0.3 },
-        { x: W * 0.9 + 0.04 * W * Math.sin(t / 21), y: H * 0.12 + 0.05 * H * Math.cos(t / 27), s: H * 0.8, a: 0.35 }
-      ];
-      blobs.forEach(function(b){
-        ctx.globalAlpha = b.a;
-        ctx.drawImage(sprites.blob, b.x - b.s / 2, b.y - b.s / 2, b.s, b.s);
-      });
-      motes.forEach(function(p){
-        var x = ((p.x + t * p.vx) % 1 + 1) % 1, y = ((p.y + t * p.vy) % 1 + 1) % 1;
-        x += 0.01 * Math.sin(t * p.w + p.ph);
-        var size = p.r * 2 * (p.r > 5 ? 2.2 : 1.4);
-        ctx.globalAlpha = p.a * (0.75 + 0.25 * Math.sin(t * p.w * 1.3 + p.ph));
-        ctx.drawImage(sprites.glow, x * W - size / 2, y * H - size / 2, size, size);
-      });
-      ctx.globalAlpha = 1;
-    }
-
-    /* Rung i sits at u = i * STEP - flow along the axis, so the helix drifts as flow grows.
-       Positive u is the upper right end, so rungs arrive there and leave at the lower left. */
-    var flow = 0, rungs = {};
-    function rung(i){
-      return rungs[i] || (rungs[i] = { variant: ((i % EVERY) + EVERY) % EVERY === 4, fixed: false, flipped: 0 });
-    }
-
-    function helix(now, t){
-      var a = ANGLE + 0.06 * Math.sin(t / 9);      /* slow sway in the plane */
-      var beta = 0.22 * Math.sin(t / 13);           /* slow turn toward and away from the viewer */
-      var ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(beta), sb = Math.sin(beta);
-      var spin = t * SPIN;
-      function project(u, y, z){
-        var u2 = u * cb - z * sb, z2 = u * sb + z * cb;
-        var s = F / (F + z2);
-        return { x: CX + (u2 * ca - y * sa) * s, y: CY + (u2 * sa + y * ca) * s, z: z2, s: s };
-      }
-      function onStrand(u, phase){
-        var th = u / PITCH * Math.PI * 2 + spin + phase;
-        return project(u, R * Math.cos(th), R * Math.sin(th));
-      }
-      var prims = [];
-      var LOW = narrow ? -SPAN : -SPAN * 0.72;     /* the lower end stops short of the hero copy on wide screens */
-      [0, Math.PI].forEach(function(phase){
-        var n = Math.ceil((SPAN - LOW) / 7), prev = null;
-        for (var k = 0; k <= n; k++){
-          var p = onStrand(LOW + (SPAN - LOW) * k / n, phase);
-          if (prev) prims.push({ kind: 0, a: prev, b: p, z: (prev.z + p.z) / 2, s: (prev.s + p.s) / 2 });
-          prev = p;
-        }
-      });
-      var first = Math.floor((flow + LOW) / STEP), last = Math.ceil((flow + SPAN) / STEP);
-      for (var i = first; i <= last; i++){
-        var u = i * STEP - flow, r = rung(i);
-        if (r.variant && !r.fixed && u <= 0){ r.fixed = true; r.flipped = now; }
-        var th = u / PITCH * Math.PI * 2 + spin;
-        var p1 = onStrand(u, 0), p2 = onStrand(u, Math.PI);
-        prims.push({ kind: 1, a: p1, b: p2, z: (p1.z + p2.z) / 2, s: (p1.s + p2.s) / 2, r: r });
-        [0.2, 0.5, 0.8].forEach(function(f, j){
-          var k = 1 - 2 * f;
-          var p = project(u, R * Math.cos(th) * k, R * Math.sin(th) * k);
-          prims.push({ kind: 2, p: p, z: p.z, s: p.s, r: r, mid: j === 1 });
-        });
-      }
-      for (var key in rungs) if (key < first - 2) delete rungs[key];
-
-      prims.sort(function(m, n){ return n.z - m.z; });     /* far first */
-      ctx.lineCap = 'round';
-      prims.forEach(function(q){
-        var near = Math.min(1, Math.max(0, 0.5 - q.z / (R * 2.4)));   /* 1 nearest, 0 farthest */
-        if (q.kind === 0){
-          ctx.globalAlpha = 0.3 + 0.65 * near;
-          ctx.strokeStyle = TINT;
-          ctx.lineWidth = (2.5 + 4.5 * near) * q.s;
-          ctx.beginPath(); ctx.moveTo(q.a.x, q.a.y); ctx.lineTo(q.b.x, q.b.y); ctx.stroke();
-          /* a thin light line along the top edge reads as a sheen on a tube */
-          ctx.globalAlpha = 0.15 + 0.45 * near;
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 1.1 * q.s;
-          var off = -ctx.lineWidth * 1.6;
-          ctx.beginPath(); ctx.moveTo(q.a.x, q.a.y + off); ctx.lineTo(q.b.x, q.b.y + off); ctx.stroke();
-        } else if (q.kind === 1){
-          var v = q.r.variant;
-          ctx.globalAlpha = (v ? 0.55 : 0.22) + 0.45 * near;
-          ctx.strokeStyle = v ? (q.r.fixed ? PALE : RED) : PALE;
-          ctx.lineWidth = (v ? 1.8 : 1.1) * q.s;
-          ctx.beginPath(); ctx.moveTo(q.a.x, q.a.y); ctx.lineTo(q.b.x, q.b.y); ctx.stroke();
-        } else {
-          var which = (q.mid && q.r.variant) ? (q.r.fixed ? 'fixed' : 'red') : 'bead';
-          var d = (q.mid ? 15 : 12) * q.s * (0.85 + 0.35 * near);
-          var box = d * 96 / 52;                        /* the sprite's halo extends past the ball */
-          ctx.globalAlpha = 0.6 + 0.4 * near;
-          ctx.drawImage(sprites[which], q.p.x - box / 2, q.p.y - box / 2, box, box);
-          if (q.mid && q.r.fixed && now - q.r.flipped < PULSE){
-            var k = (now - q.r.flipped) / PULSE;
-            ctx.globalAlpha = 0.85 * (1 - k);
-            ctx.strokeStyle = PALE; ctx.lineWidth = 2 * q.s;
-            ctx.beginPath(); ctx.arc(q.p.x, q.p.y, (8 + 46 * k) * q.s, 0, Math.PI * 2); ctx.stroke();
-          }
-        }
-      });
-      ctx.globalAlpha = 1;
-    }
-
-    function frame(now, t){
-      ctx.clearRect(0, 0, W, H);
-      ambient(t);
-      helix(now, t);
-    }
-    /* Rungs already past the centre when the page opens count as corrected, without a pulse */
-    function settle(){
-      var first = Math.floor((flow - SPAN) / STEP), last = Math.ceil((flow + SPAN) / STEP);
-      for (var i = first; i <= last; i++){ var r = rung(i); if (r.variant && i * STEP - flow <= 0){ r.fixed = true; r.flipped = -1e9; } }
-    }
-
-    resize();
-    if (reduce){
-      function still(){ resize(); flow = 4 * STEP + STEP * 0.5; settle(); frame(0, 0); }
-      still();
-      window.addEventListener('resize', still);
-      return;
-    }
-
-    /* Start with a variant on its way in, a few seconds from the centre */
-    flow = 4 * STEP - SPAN * 0.45;
-    settle();
-    var raf = 0, last = 0, t = 0, visible = true;
-    function tick(now){
-      raf = 0;
-      if (!visible || document.hidden) return;
-      var dt = last ? Math.min(50, now - last) : 0;
-      last = now;
-      t += dt / 1000;
-      flow += FLOW * dt / 1000;
-      frame(now, t);
-      raf = requestAnimationFrame(tick);
-    }
-    function start(){ if (!raf && visible && !document.hidden){ last = 0; raf = requestAnimationFrame(tick); } }
-    if ('IntersectionObserver' in window){
-      new IntersectionObserver(function(entries){ visible = entries[0].isIntersecting; if (visible) start(); }).observe(canvas);
-    }
-    document.addEventListener('visibilitychange', start);
-    window.addEventListener('resize', function(){ resize(); if (!raf) frame(performance.now(), t); });
-    start();
+    var mv = document.querySelector('.molecule model-viewer');
+    if (mv && !reduce) mv.setAttribute('auto-rotate', '');
   })();
 
   /* Genome scan strip: a reader travels the strip as the page scrolls */
