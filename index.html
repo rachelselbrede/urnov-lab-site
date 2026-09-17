@@ -162,8 +162,8 @@ button{font:inherit;color:inherit}
   .nav-links a[aria-current]::after{display:none}   /* stacked rows already read top to bottom */
 }
 
-/* Hero: a full-bleed dark scene. The canvas behind everything draws a double helix turning
-   inside a cell (see the script at the bottom); a scrim keeps the text side readable. The
+/* Hero: a full-bleed dark scene. The canvas behind everything draws CRISPR at work on a
+   stretch of DNA (see the script at the bottom); a scrim keeps the text side readable. The
    scene fills the first screen below the nav and the scan strip, capped so it never dwarfs
    the copy on a tall monitor. */
 .hero{position:relative;overflow:hidden;color:#fff;background:#292D39;
@@ -172,7 +172,7 @@ button{font:inherit;color:inherit}
   display:grid;align-items:center;padding:clamp(40px,5vw,72px) 0}
 .hero .helix{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hero::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(90deg,rgba(41,45,57,.95) 0%,rgba(41,45,57,.82) 36%,rgba(41,45,57,0) 66%)}
+  background:linear-gradient(90deg,rgba(41,45,57,.96) 0%,rgba(41,45,57,.86) 40%,rgba(41,45,57,0) 68%)}
 .hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:clamp(32px,5vw,72px);align-items:center}
 .hero h1{max-width:20ch;text-wrap:balance;font-size:clamp(36px,4.3vw,54px);line-height:1.06}
 .hero .lead{margin:22px 0 30px;max-width:44ch;color:rgba(255,255,255,.84)}
@@ -413,7 +413,7 @@ footer a{color:var(--muted)}
 
 <main id="main">
 <section class="hero" id="top">
-  <canvas class="helix" id="helix" role="img" aria-label="A DNA double helix turns slowly inside a cell. A disease-causing base, in red, is corrected to blue as it passes the editing point, and the helix carries on with the corrected base in it."></canvas>
+  <canvas class="helix" id="helix" role="img" aria-label="CRISPR at work: a Cas9 base editor arrives along a DNA double helix, docks, opens the helix so its guide RNA can pair with the target strand, corrects a disease-causing base from red to blue, and lets go as the DNA moves on to the next child's variant."></canvas>
   <div class="wrap">
     <div>
       <h1>CRISPR cures for children, on demand.</h1>
@@ -837,37 +837,39 @@ footer a{color:var(--muted)}
 
   function rng(seed){ return function(){ seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }; }
 
-  /* Hero: a double helix turning inside a cell, drawn on the canvas behind the hero copy.
-     The helix is built in three dimensions, projected with a little perspective and drawn
-     far side first, so the near strand passes in front of the far one and the beads swell
-     as they come forward. It drifts along its own axis, turning as it goes, and sways slowly
-     while soft blobs and bokeh drift behind it. Every ninth rung carries a disease-causing
-     base in Human Health Red; when it reaches the editing point at the centre it is corrected
-     to IGI Blue with a short pulse and carries on, corrected, so the next child's edit is
-     visibly the same process again. Time-based, so it runs at one speed everywhere; paused
-     while off screen or in a background tab; a single still frame under reduced motion. */
+  /* Hero: CRISPR at work, drawn on the canvas behind the hero copy. A stretch of DNA runs
+     across the scene as a double helix built in three dimensions, projected with a little
+     perspective and drawn far side first. A Cas9 base editor, the translucent two-lobed body,
+     arrives from the right carrying its guide RNA (gold), scans along the DNA, docks at a
+     PAM, and opens the helix: the non-target strand is pushed aside while the guide pairs
+     with the target strand, the R-loop that is the signature of CRISPR. Inside that opened
+     window the disease-causing base, in Human Health Red, is corrected to IGI Blue with a
+     short pulse. The helix closes, the editor lets go, and the DNA slides on to bring the
+     next stretch, with the next child's variant, into place. Time-based, paused while off
+     screen or in a background tab, and a single still frame under reduced motion. */
   (function(){
     var canvas = document.getElementById('helix');
     if (!canvas || !canvas.getContext) return;
     var ctx = canvas.getContext('2d');
     var css = getComputedStyle(document.documentElement);
     function tone(n){ return css.getPropertyValue(n).trim(); }
-    var TINT = tone('--base-c-dark'), PALE = tone('--seq-seen'), RED = tone('--base-t');
+    var BLUE = tone('--base-c'), TINT = tone('--base-c-dark'), PALE = tone('--seq-seen'), RED = tone('--base-t'), GOLD = tone('--base-g');
     function rgba(hex, a){
       var n = parseInt(hex.slice(1), 16);
       return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')';
     }
 
-    var EVERY = 9;             /* one rung in this many carries the variant */
-    var FLOW = 15;             /* px per second along the axis */
-    var SPIN = 0.5;            /* radians per second */
+    /* One edit from start to finish, in seconds from the start of a cycle */
+    var T = { settle: 3.6, open: 4.2, opened: 5.4, flip: 5.9, close: 7.8, closed: 8.8, gone: 10.2, end: 12.8 };
+    var SPIN = 0.3;                  /* radians per second the helix turns */
     var PULSE = 1100;
+    var PROTO = 20, PAMLEN = 3, AT = 5;   /* protospacer length, PAM length, the edited base's place in the protospacer */
 
     var W = 0, H = 0, narrow = false;
-    var CX = 0, CY = 0, R = 0, PITCH = 0, STEP = 0, SPAN = 0, F = 0, ANGLE = 0;
+    var CX = 0, CY = 0, R = 0, PITCH = 0, STEP = 0, LOW = 0, HIGH = 0, F = 0, ANGLE = 0, EVERY = 40, VT = 0;
     var sprites = {};
 
-    /* A shaded sphere with a soft halo, drawn once and reused at every size */
+    /* Sprites drawn once and reused at every size: a shaded sphere with a halo, and soft discs */
     function sphere(color){
       var c = document.createElement('canvas'); c.width = c.height = 96;
       var g = c.getContext('2d');
@@ -879,18 +881,31 @@ footer a{color:var(--muted)}
       g.fillStyle = body; g.beginPath(); g.arc(48, 48, 26, 0, Math.PI * 2); g.fill();
       return c;
     }
-    function soft(color, size){
+    function soft(color, size, mid){
       var c = document.createElement('canvas'); c.width = c.height = size;
       var g = c.getContext('2d'), h = size / 2;
       var grad = g.createRadialGradient(h, h, 0, h, h, h);
-      grad.addColorStop(0, rgba(color, 1)); grad.addColorStop(0.5, rgba(color, 0.35)); grad.addColorStop(1, rgba(color, 0));
+      grad.addColorStop(0, rgba(color, 1)); grad.addColorStop(0.5, rgba(color, mid)); grad.addColorStop(1, rgba(color, 0));
       g.fillStyle = grad; g.fillRect(0, 0, size, size);
+      return c;
+    }
+    /* One blob of the editor's body: translucent, solid to near its edge, then a soft rim.
+       Several of these overlap to make each lobe, so the body reads as an organic mass. */
+    function lobe(color){
+      var c = document.createElement('canvas'); c.width = c.height = 256;
+      var g = c.getContext('2d');
+      var grad = g.createRadialGradient(118, 112, 8, 128, 128, 128);
+      grad.addColorStop(0, rgba(color, 0.5)); grad.addColorStop(0.6, rgba(color, 0.38));
+      grad.addColorStop(0.86, rgba(color, 0.14)); grad.addColorStop(1, rgba(color, 0));
+      g.fillStyle = grad; g.fillRect(0, 0, 256, 256);
       return c;
     }
     function makeSprites(){
       sprites.bead = sphere(TINT); sprites.red = sphere(RED); sprites.fixed = sphere(PALE);
-      sprites.glow = soft(PALE, 64);
-      sprites.blob = soft(TINT, 256);
+      sprites.glow = soft(PALE, 64, 0.35);
+      sprites.blob = soft(TINT, 256, 0.35);
+      sprites.lobe = lobe(BLUE);
+      sprites.core = soft(PALE, 128, 0.4);
     }
 
     function resize(){
@@ -900,29 +915,32 @@ footer a{color:var(--muted)}
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       narrow = W < 900;
-      R = narrow ? Math.min(H * 0.11, 70) : H * 0.155;
-      PITCH = R * 3.4;                     /* one turn per 3.4 radii, the proportions of B-DNA */
-      STEP = PITCH / 10.5;                 /* 10.5 base pairs per turn */
-      SPAN = narrow ? W * 0.75 : H * 0.95; /* half the drawn length of the axis */
-      F = R * 9;                           /* perspective: how strongly depth changes size */
-      CX = narrow ? W * 0.5 : W * 0.7;
-      CY = narrow ? H - 150 : H * 0.5;
-      ANGLE = narrow ? -0.35 : -0.56;      /* the axis rises to the right */
+      R = narrow ? Math.min(H * 0.075, 54) : H * 0.1;
+      PITCH = R * 3.4;                       /* one turn per 3.4 radii, the proportions of B-DNA */
+      STEP = PITCH / 10.5;                   /* 10.5 base pairs per turn */
+      F = R * 10;                            /* perspective: how strongly depth changes size */
+      CX = narrow ? W * 0.5 : W * 0.62;
+      CY = narrow ? H - 150 : H * 0.52;
+      ANGLE = narrow ? -0.08 : -0.12;        /* the DNA runs almost level, rising a little to the right */
+      LOW = narrow ? -W * 0.62 : -W * 0.27;  /* how far the DNA is drawn to either side of the centre */
+      HIGH = narrow ? W * 0.62 : W * 0.5;
+      VT = narrow ? W * 0.02 : W * 0.04;     /* where the edited base sits, along the axis from the centre */
+      /* The DNA slides this many rungs between edits, so each stretch brings one variant to VT */
+      EVERY = Math.max(PROTO + PAMLEN + 8, Math.round((narrow ? W * 0.9 : W * 0.55) / STEP));
       if (!sprites.bead) makeSprites();
     }
 
-    /* Ambient life behind the helix: three slow blobs and a field of bokeh */
+    /* Ambient life behind the DNA: two slow blobs and a sparse field of bokeh */
     var rand = rng(29);
     var motes = [];
-    for (var m = 0; m < 42; m++){
-      motes.push({ x: rand(), y: rand(), r: 1.5 + rand() * rand() * 9, vx: (rand() - 0.5) * 0.006, vy: -0.004 - rand() * 0.008,
-        w: 0.4 + rand() * 0.8, ph: rand() * 6.3, a: 0.12 + rand() * 0.4 });
+    for (var m = 0; m < 26; m++){
+      motes.push({ x: rand(), y: rand(), r: 1.5 + rand() * rand() * 8, vx: (rand() - 0.5) * 0.005, vy: -0.003 - rand() * 0.006,
+        w: 0.4 + rand() * 0.8, ph: rand() * 6.3, a: 0.1 + rand() * 0.3 });
     }
     function ambient(t){
       var blobs = [
-        { x: CX + 0.08 * W * Math.sin(t / 17), y: CY + 0.06 * H * Math.cos(t / 23), s: H * 1.25, a: 0.5 },
-        { x: W * 0.22 + 0.05 * W * Math.cos(t / 19), y: H * 0.85 + 0.05 * H * Math.sin(t / 15), s: H * 0.9, a: 0.3 },
-        { x: W * 0.9 + 0.04 * W * Math.sin(t / 21), y: H * 0.12 + 0.05 * H * Math.cos(t / 27), s: H * 0.8, a: 0.35 }
+        { x: W * 0.88 + 0.05 * W * Math.sin(t / 17), y: H * 0.18 + 0.06 * H * Math.cos(t / 23), s: H * 1.1, a: 0.4 },
+        { x: W * 0.2 + 0.05 * W * Math.cos(t / 19), y: H * 0.9 + 0.05 * H * Math.sin(t / 15), s: H * 0.9, a: 0.25 }
       ];
       blobs.forEach(function(b){
         ctx.globalAlpha = b.a;
@@ -938,112 +956,200 @@ footer a{color:var(--muted)}
       ctx.globalAlpha = 1;
     }
 
-    /* Rung i sits at u = i * STEP - flow along the axis, so the helix drifts as flow grows.
-       Positive u is the upper right end, so rungs arrive there and leave at the lower left. */
-    var flow = 0, rungs = {};
-    function rung(i){
-      return rungs[i] || (rungs[i] = { variant: ((i % EVERY) + EVERY) % EVERY === 4, fixed: false, flipped: 0 });
-    }
+    function ease(x){ x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); }
+    function between(k, a, b){ return ease((k - a) / (b - a)); }      /* 0 before a, 1 after b */
+    function lerp(p, q, f){ return { x: p.x + (q.x - p.x) * f, y: p.y + (q.y - p.y) * f }; }
 
-    function helix(now, t){
-      var a = ANGLE + 0.06 * Math.sin(t / 9);      /* slow sway in the plane */
-      var beta = 0.22 * Math.sin(t / 13);           /* slow turn toward and away from the viewer */
+    /* Rung i sits at v = i * STEP - flow along the axis. Variants are the rungs at multiples of
+       EVERY; the DNA slides by EVERY rungs after each edit, so the next one lands at VT. */
+    var rungs = {};
+    function rung(i){ return rungs[i] || (rungs[i] = { variant: ((i % EVERY) + EVERY) % EVERY === 0, fixed: false, flipped: 0 }); }
+
+    function scene(now, t){
+      var n = Math.floor(t / T.end), k = t - n * T.end;          /* which edit, and how far into it */
+      var flow = -VT + EVERY * STEP * (n + between(k, T.gone, T.end));
+      var iT = n * EVERY, iP = iT + (PROTO - AT);                 /* the edited rung, and the first PAM rung */
+      var vW = (iP - PROTO / 2 - 0.5) * STEP - flow;              /* centre of the protospacer window */
+      var OPEN = between(k, T.open, T.opened) - between(k, T.close, T.closed);
+      var present = between(k, 0, 0.8) - between(k, T.closed, T.gone);
+      var docked = between(k, T.settle, T.open) - between(k, T.closed, T.gone);
+      var lift = between(k, T.closed, T.gone);
+      var target = rung(iT);
+      if (!target.fixed && k >= T.flip){ target.fixed = true; target.flipped = now; }
+
+      var a = ANGLE + 0.03 * Math.sin(t / 9), beta = 0.1 * Math.sin(t / 11);
       var ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(beta), sb = Math.sin(beta);
+      var cy = CY + 0.035 * H * Math.sin(t / 6);
       var spin = t * SPIN;
       function project(u, y, z){
         var u2 = u * cb - z * sb, z2 = u * sb + z * cb;
         var s = F / (F + z2);
-        return { x: CX + (u2 * ca - y * sa) * s, y: CY + (u2 * sa + y * ca) * s, z: z2, s: s };
+        return { x: CX + (u2 * ca - y * sa) * s, y: cy + (u2 * sa + y * ca) * s, z: z2, s: s };
       }
-      function onStrand(u, phase){
-        var th = u / PITCH * Math.PI * 2 + spin + phase;
-        return project(u, R * Math.cos(th), R * Math.sin(th));
+      /* How far open the helix is at axis position v: a smooth bump over the protospacer */
+      function opening(v){
+        var x = (v - vW) / (STEP * (PROTO / 2 + 1.5));
+        return Math.abs(x) >= 1 ? 0 : OPEN * Math.pow(Math.cos(x * Math.PI / 2), 2);
       }
+      /* A strand point, with the two strands pushed apart where the helix is open */
+      function onStrand(v, phase, o){
+        var th = (v + flow) / PITCH * Math.PI * 2 + spin + phase;
+        var push = phase === 0 ? -1.15 * R : 0.5 * R;      /* non-target strand up, target strand a little down */
+        return project(v, R * Math.cos(th) + o * push, R * Math.sin(th));
+      }
+
       var prims = [];
-      var LOW = narrow ? -SPAN : -SPAN * 0.72;     /* the lower end stops short of the hero copy on wide screens */
       [0, Math.PI].forEach(function(phase){
-        var n = Math.ceil((SPAN - LOW) / 7), prev = null;
-        for (var k = 0; k <= n; k++){
-          var p = onStrand(LOW + (SPAN - LOW) * k / n, phase);
+        var num = Math.ceil((HIGH - LOW) / 7), prev = null;
+        for (var q = 0; q <= num; q++){
+          var v = LOW + (HIGH - LOW) * q / num;
+          var p = onStrand(v, phase, opening(v));
           if (prev) prims.push({ kind: 0, a: prev, b: p, z: (prev.z + p.z) / 2, s: (prev.s + p.s) / 2 });
           prev = p;
         }
       });
-      var first = Math.floor((flow + LOW) / STEP), last = Math.ceil((flow + SPAN) / STEP);
+      var guide = [], ticks = [], pams = [];
+      var first = Math.floor((flow + LOW) / STEP), last = Math.ceil((flow + HIGH) / STEP);
       for (var i = first; i <= last; i++){
-        var u = i * STEP - flow, r = rung(i);
-        if (r.variant && !r.fixed && u <= 0){ r.fixed = true; r.flipped = now; }
-        var th = u / PITCH * Math.PI * 2 + spin;
-        var p1 = onStrand(u, 0), p2 = onStrand(u, Math.PI);
-        prims.push({ kind: 1, a: p1, b: p2, z: (p1.z + p2.z) / 2, s: (p1.s + p2.s) / 2, r: r });
-        [0.2, 0.5, 0.8].forEach(function(f, j){
-          var k = 1 - 2 * f;
-          var p = project(u, R * Math.cos(th) * k, R * Math.sin(th) * k);
-          prims.push({ kind: 2, p: p, z: p.z, s: p.s, r: r, mid: j === 1 });
-        });
+        var v = i * STEP - flow, r = rung(i);
+        if (r.variant && !r.fixed && i < iT){ r.fixed = true; r.flipped = -1e9; }   /* already behind us */
+        var o = opening(v);
+        var p1 = onStrand(v, 0, o), p2 = onStrand(v, Math.PI, o);
+        var z = (p1.z + p2.z) / 2, sc = (p1.s + p2.s) / 2;
+        if (o < 0.08){
+          prims.push({ kind: 1, a: p1, b: p2, z: z, s: sc });
+        } else {
+          /* Broken pair: each base stays on its own strand, sticking into the gap */
+          prims.push({ kind: 1, a: p1, b: lerp(p1, p2, 0.5 - 0.36 * o), z: z, s: sc });
+          prims.push({ kind: 1, a: p2, b: lerp(p2, p1, 0.5 - 0.36 * o), z: z, s: sc });
+        }
+        var b1 = lerp(p1, p2, 0.22 - 0.1 * o), b2 = lerp(p1, p2, 0.78 + 0.1 * o);
+        prims.push({ kind: 2, p: b1, z: p1.z, s: p1.s, r: null });
+        prims.push({ kind: 2, p: b2, z: p2.z, s: p2.s, r: r.variant ? r : null });
+        var inWindow = i >= iP - PROTO && i < iP;
+        if (inWindow && o > 0.05){
+          /* The guide pairs with the target strand from the PAM end inward, as the helix opens */
+          var reach = (iP - 1 - i) / PROTO;
+          if (reach <= OPEN + 0.02){
+            var g = lerp(p2, p1, 0.27);
+            guide.push({ p: g, i: i, s: sc });
+            ticks.push({ a: b2, b: g, s: sc, f: o });
+          }
+        }
+        if (i >= iP && i < iP + PAMLEN && docked > 0) pams.push({ p: b1, s: p1.s, f: docked });
       }
       for (var key in rungs) if (key < first - 2) delete rungs[key];
 
-      prims.sort(function(m, n){ return n.z - m.z; });     /* far first */
+      /* The editor: two soft lobes around the DNA, half behind it and half in front */
+      var yoff = 0.35 * R * Math.sin(t * 2.4) * (1 - between(k, 0, T.settle)) - 2.4 * R * lift;
+      var vP = HIGH + 3 * R + (vW - HIGH - 3 * R) * between(k, 0, T.settle) - 0.6 * R * lift;
+      var breathe = 1 + 0.03 * Math.sin(t * 1.7) + 0.06 * (1 - Math.abs(2 * between(k, T.settle, T.open) - 1));
+      var lobeA = project(vP - 0.6 * R, -1.3 * R + yoff, 0);
+      /* The body: the larger recognition lobe above the DNA, the nuclease lobe below, each a
+         cluster of overlapping blobs that swell and settle a little out of step with each other */
+      var blobs = [
+        [-1.5, -1.35, 1.45, 0.0], [-0.1, -1.55, 1.3, 1.1], [1.1, -1.2, 1.15, 2.2], [0.4, -0.7, 1.0, 0.6],
+        [1.3, 1.05, 1.3, 1.7], [0.0, 1.25, 1.15, 2.8], [-1.1, 0.95, 0.95, 0.9]
+      ];
+      function lobes(alpha){
+        if (alpha <= 0) return;
+        ctx.globalAlpha = alpha;
+        blobs.forEach(function(b){
+          var wob = 1 + 0.05 * Math.sin(t * 1.3 + b[3]);
+          var p = project(vP + b[0] * R + 0.08 * R * Math.sin(t * 0.9 + b[3]), b[1] * R + yoff, 0);
+          var d = 2 * b[2] * R * breathe * wob * 256 / 200;
+          ctx.drawImage(sprites.lobe, p.x - d / 2, p.y - d / 2, d, d);
+        });
+        ctx.globalAlpha = 1;
+      }
+      lobes(0.62 * present);
+
+      prims.sort(function(m, q){ return q.z - m.z; });          /* far first */
       ctx.lineCap = 'round';
       prims.forEach(function(q){
-        var near = Math.min(1, Math.max(0, 0.5 - q.z / (R * 2.4)));   /* 1 nearest, 0 farthest */
+        var near = Math.min(1, Math.max(0, 0.5 - q.z / (R * 2.4)));
         if (q.kind === 0){
           ctx.globalAlpha = 0.3 + 0.65 * near;
           ctx.strokeStyle = TINT;
-          ctx.lineWidth = (2.5 + 4.5 * near) * q.s;
+          ctx.lineWidth = (2.4 + 3.8 * near) * q.s;
           ctx.beginPath(); ctx.moveTo(q.a.x, q.a.y); ctx.lineTo(q.b.x, q.b.y); ctx.stroke();
-          /* a thin light line along the top edge reads as a sheen on a tube */
           ctx.globalAlpha = 0.15 + 0.45 * near;
           ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 1.1 * q.s;
-          var off = -ctx.lineWidth * 1.6;
+          ctx.lineWidth = 1 * q.s;
+          var off = -ctx.lineWidth * 1.5;
           ctx.beginPath(); ctx.moveTo(q.a.x, q.a.y + off); ctx.lineTo(q.b.x, q.b.y + off); ctx.stroke();
         } else if (q.kind === 1){
-          var v = q.r.variant;
-          ctx.globalAlpha = (v ? 0.55 : 0.22) + 0.45 * near;
-          ctx.strokeStyle = v ? (q.r.fixed ? PALE : RED) : PALE;
-          ctx.lineWidth = (v ? 1.8 : 1.1) * q.s;
+          ctx.globalAlpha = 0.22 + 0.45 * near;
+          ctx.strokeStyle = PALE;
+          ctx.lineWidth = 1.1 * q.s;
           ctx.beginPath(); ctx.moveTo(q.a.x, q.a.y); ctx.lineTo(q.b.x, q.b.y); ctx.stroke();
         } else {
-          var which = (q.mid && q.r.variant) ? (q.r.fixed ? 'fixed' : 'red') : 'bead';
-          var d = (q.mid ? 15 : 12) * q.s * (0.85 + 0.35 * near);
-          var box = d * 96 / 52;                        /* the sprite's halo extends past the ball */
+          var which = q.r ? (q.r.fixed ? 'fixed' : 'red') : 'bead';
+          var d = (q.r ? 13 : 10) * q.s * (0.85 + 0.35 * near);
+          var box = d * 96 / 52;
           ctx.globalAlpha = 0.6 + 0.4 * near;
           ctx.drawImage(sprites[which], q.p.x - box / 2, q.p.y - box / 2, box, box);
-          if (q.mid && q.r.fixed && now - q.r.flipped < PULSE){
-            var k = (now - q.r.flipped) / PULSE;
-            ctx.globalAlpha = 0.85 * (1 - k);
+          if (q.r && q.r.fixed && now - q.r.flipped < PULSE){
+            var f = (now - q.r.flipped) / PULSE;
+            ctx.globalAlpha = 0.85 * (1 - f);
             ctx.strokeStyle = PALE; ctx.lineWidth = 2 * q.s;
-            ctx.beginPath(); ctx.arc(q.p.x, q.p.y, (8 + 46 * k) * q.s, 0, Math.PI * 2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(q.p.x, q.p.y, (8 + 46 * f) * q.s, 0, Math.PI * 2); ctx.stroke();
           }
         }
       });
+
+      /* Guide RNA: gold, running along the target strand inside the open helix and back up
+         into the editor; short ticks show it pairing base by base */
+      if (guide.length){
+        ctx.globalAlpha = 0.9 * OPEN;
+        ctx.strokeStyle = GOLD;
+        ctx.lineWidth = 2.6 * guide[0].s;
+        ctx.beginPath();
+        guide.sort(function(m, q){ return m.i - q.i; });
+        ctx.moveTo(guide[0].p.x, guide[0].p.y);
+        for (var gi = 1; gi < guide.length; gi++) ctx.lineTo(guide[gi].p.x, guide[gi].p.y);
+        var tail = guide[guide.length - 1].p;
+        ctx.quadraticCurveTo(tail.x + 1.2 * R, tail.y - 0.2 * R, lobeA.x + 0.4 * R, lobeA.y + 0.3 * R);
+        ctx.stroke();
+        ctx.globalAlpha = 0.6 * OPEN;
+        ctx.lineWidth = 1.2 * guide[0].s;
+        ticks.forEach(function(tk){ ctx.beginPath(); ctx.moveTo(tk.a.x, tk.a.y); ctx.lineTo(tk.b.x, tk.b.y); ctx.stroke(); });
+        ctx.globalAlpha = 1;
+      }
+      /* PAM: the three bases the editor reads first, ringed in gold while it is docked */
+      pams.forEach(function(pm){
+        ctx.globalAlpha = 0.9 * pm.f;
+        ctx.strokeStyle = GOLD; ctx.lineWidth = 1.6 * pm.s;
+        ctx.beginPath(); ctx.arc(pm.p.x, pm.p.y, 9 * pm.s, 0, Math.PI * 2); ctx.stroke();
+      });
       ctx.globalAlpha = 1;
+
+      lobes(0.26 * present);
+      if (present > 0){
+        /* the active site, a brighter core in the upper lobe, flares as the base is corrected */
+        var flare = (k > T.flip - 0.3 && k < T.flip + 0.9) ? 1 - Math.abs((k - T.flip - 0.3) / 0.6) : 0;
+        var cs = 1.6 * R * (1 + 0.35 * Math.max(0, flare));
+        ctx.globalAlpha = present * (0.3 + 0.5 * Math.max(0, flare));
+        ctx.drawImage(sprites.core, lobeA.x - cs / 2, lobeA.y - cs / 2, cs, cs);
+        ctx.globalAlpha = 1;
+      }
     }
 
     function frame(now, t){
       ctx.clearRect(0, 0, W, H);
       ambient(t);
-      helix(now, t);
-    }
-    /* Rungs already past the centre when the page opens count as corrected, without a pulse */
-    function settle(){
-      var first = Math.floor((flow - SPAN) / STEP), last = Math.ceil((flow + SPAN) / STEP);
-      for (var i = first; i <= last; i++){ var r = rung(i); if (r.variant && i * STEP - flow <= 0){ r.fixed = true; r.flipped = -1e9; } }
+      scene(now, t);
     }
 
     resize();
     if (reduce){
-      function still(){ resize(); flow = 4 * STEP + STEP * 0.5; settle(); frame(0, 0); }
+      /* One still frame: the editor docked and the helix open, the base already corrected */
+      function still(){ resize(); rungs = {}; var r = rung(0); r.fixed = true; r.flipped = -1e9; frame(0, T.flip + 0.6); }
       still();
       window.addEventListener('resize', still);
       return;
     }
 
-    /* Start with a variant on its way in, a few seconds from the centre */
-    flow = 4 * STEP - SPAN * 0.45;
-    settle();
     var raf = 0, last = 0, t = 0, visible = true;
     function tick(now){
       raf = 0;
@@ -1051,7 +1157,6 @@ footer a{color:var(--muted)}
       var dt = last ? Math.min(50, now - last) : 0;
       last = now;
       t += dt / 1000;
-      flow += FLOW * dt / 1000;
       frame(now, t);
       raf = requestAnimationFrame(tick);
     }
