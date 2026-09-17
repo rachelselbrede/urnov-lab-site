@@ -166,7 +166,7 @@ button{font:inherit;color:inherit}
 .hero{padding:clamp(56px,8vw,104px) 0 clamp(48px,6vw,80px)}
 .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(32px,5vw,72px);align-items:center}
 @media (max-width:900px){.hero .wrap{grid-template-columns:1fr}}
-.hero h1{max-width:12ch}
+.hero h1{max-width:15ch;text-wrap:balance}
 .hero .lead{margin:24px 0 32px;max-width:52ch}
 .actions{display:flex;flex-wrap:wrap;gap:12px}
 .btn{display:inline-block;padding:13px 20px;border-radius:10px;font-weight:600;text-decoration:none;font-size:16px;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
@@ -174,38 +174,24 @@ button{font:inherit;color:inherit}
 .btn:hover{border-color:var(--link)}
 .btn.primary:hover{background:var(--ink-2);border-color:var(--ink-2)}
 
-/* Hero photo: shown when photos/lab-group.jpg exists, otherwise the sequence panel stands in */
-.hero-photo{margin:0;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:var(--mist);box-shadow:0 30px 60px -30px rgba(41,45,57,.55)}
-.hero-photo img{display:block;width:100%;height:100%;object-fit:cover}
-[hidden]{display:none!important}
-
-/* Sequence panel, the one loud element on the page */
+/* Helix panel, the one loud element on the page: a base editor at work on a turning double
+   helix, drawn on a canvas by the script at the bottom. The panel keeps its dark frame, a
+   caption above and the status line below. */
 .seqpanel{background:var(--ink);border-radius:16px;padding:22px 24px 20px;color:#fff;box-shadow:0 30px 60px -30px rgba(41,45,57,.55)}
 .seqpanel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
 .seqpanel-head strong{font-family:var(--font-body);font-weight:600;font-size:16px}
 .seqpanel-head span{font-size:13px;color:var(--seq)}
-.seq-replay{
-  flex:none;background:transparent;border:1px solid rgba(255,255,255,.3);color:var(--seq);
-  font-family:var(--font-body);font-size:12.5px;line-height:1;padding:6px 11px;border-radius:999px;
-  cursor:pointer;transition:border-color .15s,color .15s
-}
-.seq-replay:hover{border-color:var(--base-c-dark);color:#fff}
-/* The page-wide focus ring uses IGI Blue, which is too dark against the Deep Blue panel */
-.seq-replay:focus-visible{outline:3px solid var(--base-c-dark);outline-offset:2px}
-.seq{font-family:var(--font-mono);font-size:clamp(13px,1.15vw,15px);line-height:1.9;letter-spacing:.08em;color:var(--seq);overflow:hidden;white-space:nowrap}
-.seq .row{display:block;line-height:2}
-.seq .b{display:inline-block;position:relative;line-height:1.25;padding-bottom:3px;transition:color .25s ease,transform .25s ease}
-.seq .proto{box-shadow:inset 0 -2px 0 rgba(255,255,255,.28)}
-.seq .pam{box-shadow:inset 0 -2px 0 rgba(255,255,255,.62)}
-.seq .target{color:var(--base-t);font-weight:500}
-.seq .target.fixed{color:var(--base-c-dark)}
-.seq .target.flip{transform:translateY(-3px) scale(1.25)}
-.seqpanel-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);font-size:14px}
+.helix{display:block;width:100%;height:auto;aspect-ratio:16/10}
+.seqpanel-foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px 16px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);font-size:14px}
 .status{display:inline-flex;align-items:center;gap:8px}
-.status .dot{width:8px;height:8px;border-radius:50%;background:var(--base-t);transition:background .3s}
+.status .dot{width:8px;height:8px;border-radius:50%;background:var(--seq);transition:background .3s}
+.status.variant .dot{background:var(--base-t)}
 .status.fixed .dot{background:var(--base-c-dark)}
 .seqpanel-foot .legend{color:var(--seq);font-size:13px}
-@media (max-width:480px){.seq{font-size:11px;letter-spacing:.05em}}
+
+/* Lab group photo: a wide band at the top of the People section once photos/lab-group.jpg exists */
+.group-photo{margin:0 0 clamp(32px,4vw,56px);border-radius:16px;overflow:hidden;aspect-ratio:16/7;background:var(--mist)}
+.group-photo img{display:block;width:100%;height:100%;object-fit:cover}
 
 /* Genome scan strip, rides under the nav and tracks scroll progress */
 .scan{position:sticky;top:65px;z-index:49;background:var(--ink);color:var(--seq);height:38px;overflow:hidden;user-select:none}
@@ -384,7 +370,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 footer a{color:var(--muted)}
 
 @media (prefers-reduced-motion:reduce){
-  .seq .b,.status .dot,.pipe button,.scan .bases span,.seqline::after{transition:none}
+  .status .dot,.pipe button,.scan .bases span,.seqline::after{transition:none}
   .scan .cursor svg{animation:none}
   .video-poster img,.video-poster .play,.video-close{transition:none}
 }
@@ -433,15 +419,11 @@ footer a{color:var(--muted)}
         <a class="btn" href="#publications">Read our papers</a>
       </div>
     </div>
-    <figure class="hero-photo" hidden>
-      <!-- Requesting this is how the page detects the photo, so a 404 here is expected until someone adds it -->
-      <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="1600" height="1200" decoding="async">
-    </figure>
-    <div class="seqpanel" role="figure" aria-label="Illustration of a single-base correction at a target site">
-      <div class="seqpanel-head"><strong>Target site</strong><span>Guide RNA and PAM underlined</span><button type="button" class="seq-replay" id="seq-replay" aria-label="Replay the base correction">Replay</button></div>
-      <div class="seq" id="seq" aria-hidden="true"></div>
+    <div class="seqpanel" role="figure" aria-label="Animation of a base editor correcting one base as a DNA double helix passes through it">
+      <div class="seqpanel-head"><strong>Target site</strong><span>A base editor at work</span></div>
+      <canvas class="helix" id="helix" aria-hidden="true"></canvas>
       <div class="seqpanel-foot">
-        <span class="status" id="seqstatus"><span class="dot"></span><span id="seqtext">Disease-causing variant</span></span>
+        <span class="status" id="seqstatus"><span class="dot"></span><span id="seqtext">Scanning</span></span>
         <span class="legend">One base out of three billion</span>
       </div>
     </div>
@@ -512,6 +494,10 @@ footer a{color:var(--muted)}
       <h2>People</h2>
       <p>Bench scientists, clinicians, and program staff across UC Berkeley and UCSF, working on the same patients.</p>
     </div>
+    <figure class="group-photo" hidden>
+      <!-- Requesting this is how the page detects the photo, so a 404 here is expected until someone adds it -->
+      <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="1600" height="700" decoding="async">
+    </figure>
     <!-- The PI sits on its own above the roster because it carries a bio and a wider portrait.
          Everyone else is one <li> in the list below: copy one, change the name and the role,
          and that is the whole job. Every portrait frame carries a silhouette placeholder,
@@ -796,19 +782,17 @@ footer a{color:var(--muted)}
     toggle.focus();          /* without this, focus is left inside a menu that is now display:none */
   });
 
-  /* Hero photo: use it when the file exists, keep the sequence panel otherwise.
-     The src stays in the markup so the photo loads during parse and the hero does not
-     flash the panel first. Until the file is added the request 404s, which is the
-     detection mechanism rather than a fault; the panel simply stays. */
+  /* Group photo: shown at the top of the People section when the file exists. The src stays
+     in the markup so the request starts during parse. Until the file is added it 404s, which
+     is the detection mechanism rather than a fault; the figure simply goes. */
   (function(){
-    var fig = document.querySelector('.hero-photo');
+    var fig = document.querySelector('.group-photo');
     var photo = fig && fig.querySelector('img');
-    var panel = document.querySelector('.seqpanel');
-    if (!photo || !panel) return;
-    function usePhoto(){ panel.hidden = true; fig.hidden = false; }
-    function keepPanel(){ fig.remove(); }
-    if (photo.complete) { if (photo.naturalWidth > 0) usePhoto(); else keepPanel(); }
-    else { photo.addEventListener('load', usePhoto); photo.addEventListener('error', keepPanel); }
+    if (!photo) return;
+    function show(){ fig.hidden = false; }
+    function drop(){ fig.remove(); }
+    if (photo.complete) { if (photo.naturalWidth > 0) show(); else drop(); }
+    else { photo.addEventListener('load', show); photo.addEventListener('error', drop); }
   })();
 
   /* Nav scroll-spy: mark whichever section is currently under the header */
@@ -854,72 +838,166 @@ footer a{color:var(--muted)}
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   })();
 
-  /* Sequence panel: a single base correction at a base-editor target site */
-  var ROWS = 6, COLS = 32;
-  var TROW = 2, PROTO_START = 3, PROTO_LEN = 20;
-  var TCOL = PROTO_START + 5;                 /* protospacer position 6, inside the editing window */
-  var PAM_START = PROTO_START + PROTO_LEN;    /* NGG immediately 3' of the protospacer */
-  var VARIANT = 'A', CORRECT = 'G';
-
   function rng(seed){ return function(){ seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }; }
-  var rand = rng(2015);
-  var bases = 'ACGT';
-  var grid = [];
-  for (var r = 0; r < ROWS; r++){
-    var row = [];
-    for (var c = 0; c < COLS; c++) row.push(bases.charAt(Math.floor(rand() * 4)));
-    grid.push(row);
-  }
-  grid[TROW][TCOL] = VARIANT;
-  grid[TROW][PAM_START + 1] = 'G';
-  grid[TROW][PAM_START + 2] = 'G';
 
-  var seqEl = document.getElementById('seq');
-  var targetEl = null;
-  for (var i = 0; i < ROWS; i++){
-    var line = document.createElement('span');
-    line.className = 'row';
-    for (var j = 0; j < COLS; j++){
-      var b = document.createElement('span');
-      b.className = 'b';
-      b.textContent = grid[i][j];
-      if (i === TROW){
-        if (j >= PROTO_START && j < PROTO_START + PROTO_LEN) b.classList.add('proto');
-        if (j >= PAM_START && j < PAM_START + 3) b.classList.add('pam');
-        if (j === TCOL){ b.classList.add('target'); targetEl = b; }
-      }
-      line.appendChild(b);
+  /* Helix panel: a double helix moves through a base editor, turning as it goes, the way a
+     real helix does when it travels along its axis. Every thirteenth rung carries a
+     disease-causing variant, in red. When it reaches the editor it is corrected, in blue,
+     and the helix carries on with the corrected base still in it. Nothing resets, because
+     the point is that the next child's edit is the same process again. Time-based, so it
+     runs at one speed on every screen; paused while off screen or in a background tab. */
+  (function(){
+    var canvas = document.getElementById('helix');
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    var status = document.getElementById('seqstatus');
+    var statusText = document.getElementById('seqtext');
+    var css = getComputedStyle(document.documentElement);
+    function tone(name){ return css.getPropertyValue(name).trim(); }
+    var STRAND = tone('--seq-seen'), STRAND_BACK = tone('--seq');
+    var VARIANT = tone('--base-t'), FIXED = tone('--base-c-dark');
+
+    var SPACING = 17;                 /* px between rungs */
+    var TURN = SPACING * 10.5;        /* one full turn every 10.5 rungs, as in B-DNA */
+    var SPEED = 26;                   /* px per second */
+    var EVERY = 13;                   /* one rung in this many is a variant */
+    var PULSE = 900, HOLD = 2200;     /* ms: the ring after a correction, and the status line */
+
+    var W = 0, H = 0, cy = 0, amp = 0, cx = 0;
+    function resize(){
+      var box = canvas.getBoundingClientRect();
+      W = Math.max(1, Math.round(box.width)); H = Math.max(1, Math.round(box.height));
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cy = H / 2; amp = H * 0.3; cx = W / 2;
     }
-    seqEl.appendChild(line);
-  }
 
-  var status = document.getElementById('seqstatus');
-  var statusText = document.getElementById('seqtext');
-  var timers = [];
-  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
-  function showVariant(){
-    targetEl.textContent = VARIANT;
-    targetEl.classList.remove('fixed','flip');
-    status.classList.remove('fixed');
-    statusText.textContent = 'Disease-causing variant';
-  }
-  function showFixed(){
-    targetEl.textContent = CORRECT;
-    targetEl.classList.add('fixed');
-    targetEl.classList.remove('flip');
-    status.classList.add('fixed');
-    statusText.textContent = 'Corrected';
-  }
-  function play(){
-    clearTimers();
-    if (reduce){ showFixed(); return; }
-    showVariant();
-    timers.push(setTimeout(function(){ targetEl.classList.add('flip'); }, 1400));
-    timers.push(setTimeout(function(){ targetEl.textContent = CORRECT; targetEl.classList.add('fixed'); }, 1650));
-    timers.push(setTimeout(function(){ targetEl.classList.remove('flip'); status.classList.add('fixed'); statusText.textContent = 'Corrected'; }, 1900));
-  }
-  document.getElementById('seq-replay').addEventListener('click', play);
-  play();
+    /* Rung i sits at x = i * SPACING - offset, so the helix moves left as offset grows */
+    var offset = 0, flipAt = -1e9;
+    var rungs = {};
+    function rung(i){
+      return rungs[i] || (rungs[i] = { variant: i % EVERY === 7, fixed: false, flipped: 0 });
+    }
+    function point(x, s){ var p = (x + offset) / TURN * Math.PI * 2 + s; return { y: cy + amp * Math.sin(p), z: Math.cos(p) }; }
+
+    function strand(s, front){
+      ctx.beginPath();
+      var open = false;
+      for (var x = -SPACING; x <= W + SPACING; x += 3){
+        var pt = point(x, s);
+        if ((pt.z >= 0) !== front){ open = false; continue; }
+        if (open) ctx.lineTo(x, pt.y); else { ctx.moveTo(x, pt.y); open = true; }
+      }
+      ctx.lineWidth = front ? 2.4 : 1.3;
+      ctx.strokeStyle = front ? STRAND : STRAND_BACK;
+      ctx.globalAlpha = front ? 0.95 : 0.4;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    function editor(hot, outline){
+      var w = SPACING * 2.6, top = cy - amp - 12, h = amp * 2 + 24, r = 8, x = cx - w / 2;
+      ctx.beginPath();
+      ctx.moveTo(x + r, top);
+      ctx.arcTo(x + w, top, x + w, top + h, r); ctx.arcTo(x + w, top + h, x, top + h, r);
+      ctx.arcTo(x, top + h, x, top, r); ctx.arcTo(x, top, x + w, top, r);
+      ctx.closePath();
+      if (outline){ ctx.lineWidth = 1; ctx.strokeStyle = hot ? FIXED : 'rgba(255,255,255,0.16)'; ctx.stroke(); }
+      else { ctx.fillStyle = hot ? 'rgba(137,141,249,0.10)' : 'rgba(255,255,255,0.04)'; ctx.fill(); }
+    }
+    function rungsDraw(now, first, last){
+      for (var i = first; i <= last; i++){
+        var r = rung(i), x = i * SPACING - offset;
+        var a = point(x, 0), b = point(x, Math.PI);
+        var len = Math.abs(a.y - b.y) / (2 * amp);        /* 0 edge-on, 1 face-on */
+        var color = r.variant ? (r.fixed ? FIXED : VARIANT) : STRAND_BACK;
+        ctx.globalAlpha = r.variant ? 0.55 + 0.45 * len : 0.18 + 0.45 * len;
+        ctx.lineWidth = r.variant ? 2.6 : 1.4;
+        ctx.strokeStyle = color;
+        ctx.beginPath(); ctx.moveTo(x, a.y); ctx.lineTo(x, b.y); ctx.stroke();
+        /* A bead where the rung meets each strand, brighter on the strand that is in front */
+        bead(x, a.y, a.z >= 0, r); bead(x, b.y, b.z >= 0, r);
+        if (!r.variant) continue;
+        var mid = (a.y + b.y) / 2;
+        var halo = ctx.createRadialGradient(x, mid, 0, x, mid, 14);
+        halo.addColorStop(0, color); halo.addColorStop(1, 'rgba(41,45,57,0)');
+        ctx.globalAlpha = 0.35; ctx.fillStyle = halo;
+        ctx.beginPath(); ctx.arc(x, mid, 14, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = 1; ctx.fillStyle = color;
+        ctx.beginPath(); ctx.arc(x, mid, 3.2, 0, Math.PI * 2); ctx.fill();
+        if (r.fixed && now - r.flipped < PULSE){
+          var t = (now - r.flipped) / PULSE;
+          ctx.globalAlpha = 0.8 * (1 - t); ctx.lineWidth = 2; ctx.strokeStyle = FIXED;
+          ctx.beginPath(); ctx.arc(x, mid, 6 + 26 * t, 0, Math.PI * 2); ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+      }
+    }
+    function bead(x, y, front, r){
+      ctx.globalAlpha = front ? 0.95 : 0.45;
+      ctx.fillStyle = r.variant ? (r.fixed ? FIXED : VARIANT) : (front ? STRAND : STRAND_BACK);
+      ctx.beginPath(); ctx.arc(x, y, front ? 2.2 : 1.6, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    var shown = null;
+    function setStatus(state){
+      if (state === shown) return;
+      shown = state;
+      status.classList.remove('variant', 'fixed');
+      if (state) status.classList.add(state);
+      statusText.textContent = state === 'variant' ? 'Disease-causing variant' : state === 'fixed' ? 'Corrected' : 'Scanning';
+    }
+
+    function frame(now){
+      ctx.clearRect(0, 0, W, H);
+      var first = Math.floor((offset - SPACING) / SPACING), last = Math.ceil((offset + W + SPACING) / SPACING);
+      var hot = false, coming = false;
+      for (var i = first; i <= last; i++){
+        var r = rung(i);
+        if (!r.variant) continue;
+        var x = i * SPACING - offset;
+        if (!r.fixed && x <= cx){ r.fixed = true; r.flipped = now; flipAt = now; }
+        if (!r.fixed && x < cx + SPACING * 6) coming = true;
+        if (r.fixed && now - r.flipped < PULSE) hot = true;
+      }
+      editor(hot, false);
+      strand(0, false); strand(Math.PI, false);
+      rungsDraw(now, first, last);
+      strand(0, true); strand(Math.PI, true);
+      editor(hot, true);
+      setStatus(coming ? 'variant' : (now - flipAt < HOLD ? 'fixed' : ''));
+      for (var k in rungs) if (k < first - 2) delete rungs[k];
+    }
+
+    resize();
+    if (reduce){
+      /* One still frame, a corrected base sitting in the editor, and no loop */
+      function still(){ resize(); rung(7).fixed = true; offset = 7 * SPACING - cx; frame(1e12); setStatus('fixed'); }
+      still();
+      window.addEventListener('resize', still);
+      return;
+    }
+
+    var raf = 0, last = 0, visible = true;
+    function tick(now){
+      raf = 0;
+      if (!visible || document.hidden) return;
+      var dt = last ? Math.min(50, now - last) : 0;
+      last = now;
+      offset += SPEED * dt / 1000;
+      frame(now);
+      raf = requestAnimationFrame(tick);
+    }
+    function start(){ if (!raf && visible && !document.hidden){ last = 0; raf = requestAnimationFrame(tick); } }
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(function(entries){ visible = entries[0].isIntersecting; if (visible) start(); }).observe(canvas);
+    }
+    document.addEventListener('visibilitychange', start);
+    window.addEventListener('resize', function(){ resize(); if (!raf) frame(performance.now()); });
+    /* Begin with the first variant already on its way in, so the first thing seen is an edit */
+    offset = 7 * SPACING - W * 0.86;
+    start();
+  })();
 
   /* Genome scan strip: a reader travels the strip as the page scrolls */
   (function(){
