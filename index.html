@@ -207,6 +207,23 @@ button{font:inherit;color:inherit}
 .seqpanel-foot .legend{color:var(--seq);font-size:13px}
 @media (max-width:480px){.seq{font-size:11px;letter-spacing:.05em}}
 
+/* The base-editor figure. The render carries its own transparency, so it sits
+   on the band background rather than in a box of its own. */
+.editor-figure{margin:0 0 34px;display:grid;gap:18px;align-items:center}
+.editor-figure picture{display:block;background:var(--ink);border-radius:16px;padding:14px;max-width:760px;margin:0 auto;box-shadow:0 30px 60px -30px rgba(41,45,57,.55)}
+.editor-figure img{display:block;width:100%;height:auto}
+.editor-figure figcaption{max-width:760px;margin:0 auto;width:100%}
+.editor-key{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;color:var(--ink-2)}
+.editor-key li{display:flex;align-items:center;gap:8px}
+.editor-key .sw{width:12px;height:12px;border-radius:3px;background:var(--sw);box-shadow:inset 0 0 0 1px rgba(41,45,57,.22);flex:none}
+.editor-cite{margin:0;font-size:13px;color:var(--muted)}
+.editor-cite a{color:inherit}
+@media (min-width:900px){
+  .editor-figure{grid-template-columns:1.35fr 1fr;gap:28px}
+  .editor-figure picture{max-width:none}
+  .editor-figure figcaption{margin:0}
+}
+
 /* Genome scan strip, rides under the nav and tracks scroll progress */
 .scan{position:sticky;top:65px;z-index:49;background:var(--ink);color:var(--seq);height:38px;overflow:hidden;user-select:none}
 .scan .track{position:relative;height:100%;display:flex;align-items:center}
@@ -484,6 +501,25 @@ footer a{color:var(--muted)}
       <h2>How we make a cure</h2>
       <p>A cure for one child is a sequence of decisions, each backed by data. Select a step to see what happens and what we measure.</p>
     </div>
+    <figure class="editor-figure">
+      <picture>
+        <source srcset="images/abe8e-dna.webp 1x, images/abe8e-dna@2x.webp 2x" type="image/webp">
+        <img src="images/abe8e-dna.webp" width="1000" height="700" loading="lazy" decoding="async"
+             alt="The ABE8e base editor on DNA: the Cas9 protein shown as a translucent grey surface, the guide RNA in gold, the DNA double helix in white threading out of the protein, and the TadA-8e deaminase in blue docked against the DNA where it makes the edit.">
+      </picture>
+      <figcaption>
+        <ul class="editor-key">
+          <li><span class="sw" style="--sw:#949AA8"></span>Cas9, the part that finds the site</li>
+          <li><span class="sw" style="--sw:#FFAC0F"></span>Guide RNA, which tells it where</li>
+          <li><span class="sw" style="--sw:#FFFFFF"></span>The patient's DNA</li>
+          <li><span class="sw" style="--sw:#5857FF"></span>The deaminase, which rewrites one base</li>
+        </ul>
+        <p class="editor-cite">Rendered from the experimental structure of ABE8e bound to DNA,
+          <a href="https://www.rcsb.org/structure/6VPC">PDB 6VPC</a> &middot;
+          Lapinaite, Knott <em>et al.</em>, <cite>Science</cite> 2020.</p>
+      </figcaption>
+    </figure>
+
     <div class="pipe" id="pipe" role="tablist" aria-label="Steps in making a cure">
       <button type="button" role="tab" id="pipe-tab-0" aria-selected="true" aria-controls="pipe-detail" tabindex="0"><span class="num">1</span><span class="name">Diagnose</span></button>
       <button type="button" role="tab" id="pipe-tab-1" aria-selected="false" aria-controls="pipe-detail" tabindex="-1"><span class="num">2</span><span class="name">Design</span></button>

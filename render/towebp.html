@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8"><body><script>
+/* PNG -> WebP using Chrome's own encoder. Keeps the alpha channel, and means
+   the pipeline needs no cwebp/ImageMagick install. */
+var Q=new URLSearchParams(location.search);
+var src=Q.get('src'), q=parseFloat(Q.get('q')||'0.9'), scale=parseFloat(Q.get('scale')||'1');
+var img=new Image();
+img.onload=function(){
+  var w=Math.round(img.width*scale), h=Math.round(img.height*scale);
+  var c=document.createElement('canvas'); c.width=w; c.height=h;
+  var x=c.getContext('2d'); x.imageSmoothingQuality='high';
+  x.clearRect(0,0,w,h); x.drawImage(img,0,0,w,h);
+  var s=document.createElement('script');
+  s.type='text/plain'; s.id='out'; s.textContent=c.toDataURL('image/webp',q);
+  document.body.appendChild(s);
+  document.title='DONE '+w+'x'+h;
+};
+img.onerror=function(){ document.title='ERR load'; };
+img.src=src;
+</script></body>

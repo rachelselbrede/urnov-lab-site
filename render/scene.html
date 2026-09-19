@@ -1,0 +1,145 @@
+<!doctype html>
+<meta charset="utf-8"><title>ABE8e render scene</title>
+<link rel="stylesheet" href="vendor/molstar.css">
+<style>html,body{margin:0;padding:0;background:transparent;overflow:hidden}
+#app{position:relative}
+.msp-viewport-controls,.msp-highlight-toast-wrapper{display:none!important}</style>
+<body><div id="app"></div>
+<script src="vendor/molstar.js"></script>
+<script>
+/* PDB 6VPC - ABE8e adenine base editor engaged on target DNA (Lapinaite,
+   Knott & Doudna, Science 2020). Chains: A sgRNA, B SpCas9,
+   C DNA target strand, D DNA non-target strand, E+F TadA-8e deaminase. */
+var Q=new URLSearchParams(location.search), n=function(k,d){var v=parseFloat(Q.get(k));return isFinite(v)?v:d;};
+var W=n('w',1600), H=n('h',1200);
+var L=[]; function log(){L.push([].slice.call(arguments).map(String).join(' '));}
+window.onerror=function(m,s,l,c,e){log('WINERR',m);};
+
+var C={cas9:0x949AA8, tada:0x5857FF, sgrna:0xFFAC0F, dnaT:0xFFFFFF, dnaN:0x9BA0AD};
+
+/* mol-script string syntax differs between Mol* versions; try each and keep
+   whichever actually selects atoms. Logged so the winner is visible. */
+function exprs(ch){return [
+  '(sel.atom.atom-groups :chain-test (= atom.auth_asym_id "'+ch+'"))',
+  '(sel.atom.atom-groups :chain-test (core.rel.eq (atom.auth_asym_id) '+ch+'))',
+  '(sel.atom.atom-groups :chain-test (core.rel.eq (structure-query.atom-property.macromolecular.auth_asym_id) "'+ch+'"))'
+];}
+
+(async function(){
+ try{
+  var app=document.getElementById('app'); app.style.width=W+'px'; app.style.height=H+'px';
+  var viewer=await molstar.Viewer.create('app',{layoutIsExpanded:false,layoutShowControls:false,
+    layoutShowSequence:false,layoutShowLog:false,layoutShowLeftPanel:false,viewportShowExpand:false,
+    viewportShowSelectionMode:false,viewportShowAnimation:false,allowMajorPerformanceCaveat:true});
+  var p=viewer.plugin, ST=molstar.lib.plugin.StateTransforms;
+  log('canvas3d=',!!p.canvas3d);
+
+  var d=await p.builders.data.download({url:'vendor/6vpc.bcif',isBinary:true},{state:{isGhost:true}});
+  var traj=await p.builders.structure.parseTrajectory(d,'mmcif');
+  var model=await p.builders.structure.createModel(traj);
+  var struct=await p.builders.structure.createStructure(model);
+  log('loaded, total elements=', struct.data?struct.data.elementCount:'?');
+
+  /* Orient by rotating the structure, not the camera. The screenshot helper
+     renders through its own cached camera, so camera.setState never reaches
+     the output; a conformation transform does, and the auto-frame follows it.
+     Column-major Rx(elev) * Ry(rot). */
+  var ROT=n('rot',0)*Math.PI/180, ELEV=n('elev',0)*Math.PI/180;
+  if(ROT||ELEV){
+    var ca=Math.cos(ROT), sa=Math.sin(ROT), ce=Math.cos(ELEV), se=Math.sin(ELEV);
+    var M=[ ca, se*sa, -ce*sa, 0,
+            0,  ce,     se,    0,
+            sa, -se*ca,  ce*ca, 0,
+            0,  0,       0,     1 ];
+    try{
+      struct = await p.build().to(struct).apply(ST.Model.TransformStructureConformation,
+        {transform:{name:'matrix',params:{data:M,transpose:false}}}).commit();
+      log('rotated rot='+n('rot',0)+' elev='+n('elev',0));
+    }catch(e){ log('rotate FAILED: '+String(e&&e.message).slice(0,80)); }
+  }
+
+  async function paint(chains,key,type,color,tp){
+    for(var ci=0;ci<chains.length;ci++){
+      var ch=chains[ci], cands=exprs(ch), made=false;
+      for(var i=0;i<cands.length;i++){
+        try{
+          var sel=await p.build().to(struct).apply(ST.Model.StructureSelectionFromScript,
+            {script:{language:'mol-script',expression:cands[i]},label:key+ch}).commit();
+          var cnt=sel.data?sel.data.elementCount:0;
+          if(cnt>0){
+            await p.builders.structure.representation.addRepresentation(sel,
+              {type:type,color:'uniform',colorParams:{value:color},typeParams:tp||{}});
+            log('  '+key+' chain '+ch+': '+cnt+' atoms, syntax#'+i+', '+type); made=true; break;
+          } else { await p.build().delete(sel.ref).commit(); }
+        }catch(e){ log('  syntax#'+i+' err '+String(e.message).slice(0,60)); }
+      }
+      if(!made) log('  FAILED chain '+ch);
+    }
+  }
+
+  /* Cas9 is the housing, not the subject: keep it translucent so the guide
+     and the DNA threaded through it stay visible. Only one TadA copy (E) is
+     shown; chain F is the second protomer and just clutters the silhouette. */
+  await paint(['B'],'Cas9','gaussian-surface',C.cas9,{alpha:n('cas9a',0.26),smoothness:0.55,ignoreLight:false});
+  await paint(['E'],'TadA','gaussian-surface',C.tada,{alpha:n('tadaa',0.92),smoothness:0.7});
+  await paint(['A'],'sgRNA','cartoon',C.sgrna,{sizeFactor:0.32});
+  await paint(['C'],'DNA-target','cartoon',C.dnaT,{sizeFactor:0.55});
+  await paint(['D'],'DNA-nontarget','cartoon',C.dnaN,{sizeFactor:0.55});
+
+  if(p.canvas3d){
+    p.canvas3d.setProps({
+      transparentBackground:true,
+      renderer:{backgroundColor:0x000000},
+      postprocessing:{
+        occlusion:{name:'on',params:{samples:32,radius:5,bias:0.8,blurKernelSize:15,resolutionScale:1,multiScale:{name:'off',params:{}}}},
+        outline:{name:'off',params:{}},
+        shadow:{name:'off',params:{}}
+      }
+    });
+    p.canvas3d.requestCameraReset();
+    /* Force the reset to actually land. setTimeout is useless here: under
+       --virtual-time-budget it resolves without a frame being drawn, so the
+       queued reset would otherwise apply after setState and clobber it. */
+    try{ p.canvas3d.commit(true); }catch(e){ log('commit err '+String(e.message).slice(0,40)); }
+  }
+
+  /* Render offscreen through Mol*'s own screenshot helper. A plain page
+     screenshot comes back empty here: under --virtual-time-budget the WebGL
+     canvas never composites into the page surface. This path does its own
+     readPixels at an explicit size, honours the transparent background and
+     supersamples, so it is both correct and better quality. */
+  var shot=p.helpers.viewportScreenshot;
+  log('helper=',!!shot);
+  var uri=null;
+  if(shot){
+    log('values keys=', shot.values?Object.keys(shot.values).join(','):'none');
+    /* The params object is a plain struct in some builds and a set of
+       observables in others; set it whichever way this build wants. */
+    function put(k,v){
+      try{
+        var slot=shot.values&&shot.values[k];
+        if(slot&&typeof slot.next==='function') slot.next(v);
+        else if(shot.values) shot.values[k]=v;
+        else return;
+        log('  set '+k);
+      }catch(e){ log('  set '+k+' failed: '+String(e.message).slice(0,50)); }
+    }
+    put('transparent',true);
+    put('axes',{name:'off',params:{}});
+    put('resolution',{name:'custom',params:{width:W,height:H}});
+    try{ uri=await shot.getImageDataUri(); }
+    catch(e){ log('getImageDataUri failed: '+String(e.message).slice(0,80)); }
+  }
+  if(!uri){ var cv=document.querySelector('canvas'); if(cv) uri=cv.toDataURL('image/png'); log('fallback canvas'); }
+  log('uri bytes=', uri?uri.length:0);
+
+  var out=document.createElement('script');
+  out.type='text/plain'; out.id='png';
+  out.textContent = uri || '';
+  document.body.appendChild(out);
+  log('scene built');
+  document.title='SCENE'+JSON.stringify(L);
+  window.__READY=true;
+ }catch(e){ log('FATAL',e&&e.message); document.title='SCENE'+JSON.stringify(L); window.__READY=true; }
+})();
+</script></body>
