@@ -1,7 +1,8 @@
 Photos for the site. Nothing here is committed yet except this note.
 
-  lab-group.jpg       the hero photo. Landscape, at least 1600 px wide.
-                      The hero swaps the sequence panel for it once it exists.
+  lab-group.jpg       the lab group photo. Landscape, at least 1600 px wide.
+                      It appears across the top of the People section once it
+                      exists, cropped to a wide 16:7 band.
 
   fyodor-urnov.jpg    the PI portrait. Portrait orientation, 4:5, about 600 px wide.
                       index.html already points at this filename, so the portrait

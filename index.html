@@ -162,50 +162,43 @@ button{font:inherit;color:inherit}
   .nav-links a[aria-current]::after{display:none}   /* stacked rows already read top to bottom */
 }
 
-/* Hero */
-.hero{padding:clamp(56px,8vw,104px) 0 clamp(48px,6vw,80px)}
-.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(32px,5vw,72px);align-items:center}
-@media (max-width:900px){.hero .wrap{grid-template-columns:1fr}}
-.hero h1{max-width:12ch}
-.hero .lead{margin:24px 0 32px;max-width:52ch}
+/* Hero: a dark scene with the real Cas9 enzyme turning on the right, rendered from its
+   Protein Data Bank structure by model-viewer (vendor/model-viewer.min.js, loaded at the end
+   of the page). The hero fills the first screen below the nav and the scan strip, capped so
+   it never dwarfs the copy on a tall monitor. */
+.hero{position:relative;overflow:hidden;color:#fff;background:#292D39;
+  background:linear-gradient(105deg,#242835 0%,#292D39 40%,#2B3149 100%);
+  min-height:clamp(560px,calc(100vh - 103px),760px);min-height:clamp(560px,calc(100svh - 103px),760px);
+  display:grid;align-items:center;padding:clamp(40px,5vw,64px) 0}
+.hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,4vw,56px);align-items:center}
+.hero h1{max-width:20ch;text-wrap:balance;font-size:clamp(36px,4.3vw,54px);line-height:1.06}
+.hero .lead{margin:22px 0 30px;max-width:44ch;color:rgba(255,255,255,.84)}
+.hero .btn{border-color:rgba(255,255,255,.72);color:#fff}
+.hero .btn:hover{border-color:#fff}
+.hero .btn.primary{background:#fff;color:var(--ink);border-color:#fff}
+.hero .btn.primary:hover{background:var(--seq-seen);border-color:var(--seq-seen)}
+/* The molecule: a soft glow behind it, the viewer on top, one line of caption below */
+.molecule{position:relative;margin:0}
+.molecule::before{content:"";position:absolute;left:10%;right:10%;top:8%;bottom:14%;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(88,87,255,.32),rgba(88,87,255,0));filter:blur(24px);pointer-events:none}
+.molecule model-viewer{position:relative;display:block;width:100%;height:auto;aspect-ratio:1;max-height:600px;background:transparent;--poster-color:transparent;cursor:grab}
+.molecule model-viewer:active{cursor:grabbing}
+.molecule figcaption{margin:6px 0 0;text-align:center;font-size:13px;color:var(--seq)}
+@media (max-width:900px){
+  .hero{min-height:0;padding:40px 0 44px}
+  .hero .wrap{grid-template-columns:1fr;gap:28px}
+  .molecule model-viewer{max-height:420px}
+}
 .actions{display:flex;flex-wrap:wrap;gap:12px}
 .btn{display:inline-block;padding:13px 20px;border-radius:10px;font-weight:600;text-decoration:none;font-size:16px;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
 .btn.primary{background:var(--ink);color:#fff}
 .btn:hover{border-color:var(--link)}
 .btn.primary:hover{background:var(--ink-2);border-color:var(--ink-2)}
 
-/* Hero photo: shown when photos/lab-group.jpg exists, otherwise the sequence panel stands in */
-.hero-photo{margin:0;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:var(--mist);box-shadow:0 30px 60px -30px rgba(41,45,57,.55)}
-.hero-photo img{display:block;width:100%;height:100%;object-fit:cover}
-[hidden]{display:none!important}
 
-/* Sequence panel, the one loud element on the page */
-.seqpanel{background:var(--ink);border-radius:16px;padding:22px 24px 20px;color:#fff;box-shadow:0 30px 60px -30px rgba(41,45,57,.55)}
-.seqpanel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
-.seqpanel-head strong{font-family:var(--font-body);font-weight:600;font-size:16px}
-.seqpanel-head span{font-size:13px;color:var(--seq)}
-.seq-replay{
-  flex:none;background:transparent;border:1px solid rgba(255,255,255,.3);color:var(--seq);
-  font-family:var(--font-body);font-size:12.5px;line-height:1;padding:6px 11px;border-radius:999px;
-  cursor:pointer;transition:border-color .15s,color .15s
-}
-.seq-replay:hover{border-color:var(--base-c-dark);color:#fff}
-/* The page-wide focus ring uses IGI Blue, which is too dark against the Deep Blue panel */
-.seq-replay:focus-visible{outline:3px solid var(--base-c-dark);outline-offset:2px}
-.seq{font-family:var(--font-mono);font-size:clamp(13px,1.15vw,15px);line-height:1.9;letter-spacing:.08em;color:var(--seq);overflow:hidden;white-space:nowrap}
-.seq .row{display:block;line-height:2}
-.seq .b{display:inline-block;position:relative;line-height:1.25;padding-bottom:3px;transition:color .25s ease,transform .25s ease}
-.seq .proto{box-shadow:inset 0 -2px 0 rgba(255,255,255,.28)}
-.seq .pam{box-shadow:inset 0 -2px 0 rgba(255,255,255,.62)}
-.seq .target{color:var(--base-t);font-weight:500}
-.seq .target.fixed{color:var(--base-c-dark)}
-.seq .target.flip{transform:translateY(-3px) scale(1.25)}
-.seqpanel-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);font-size:14px}
-.status{display:inline-flex;align-items:center;gap:8px}
-.status .dot{width:8px;height:8px;border-radius:50%;background:var(--base-t);transition:background .3s}
-.status.fixed .dot{background:var(--base-c-dark)}
-.seqpanel-foot .legend{color:var(--seq);font-size:13px}
-@media (max-width:480px){.seq{font-size:11px;letter-spacing:.05em}}
+/* Lab group photo: a wide band at the top of the People section once photos/lab-group.jpg exists */
+.group-photo{margin:0 0 clamp(32px,4vw,56px);border-radius:16px;overflow:hidden;aspect-ratio:16/7;background:var(--mist)}
+.group-photo img{display:block;width:100%;height:100%;object-fit:cover}
 
 /* The base-editor figure. The render carries its own transparency, so it sits
    on the band background rather than in a box of its own. */
@@ -346,6 +339,7 @@ button{font:inherit;color:inherit}
 .news-grid h3 a{color:var(--ink);text-decoration:none}
 .news-grid h3 a:hover{color:var(--link);text-decoration:underline}
 .news-grid p{font-size:15.5px;color:var(--ink-2);margin:0}
+.news-more{margin-top:24px}
 
 /* Watch: small click-to-play video cards that stay on the page */
 .video-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2.5vw,28px)}
@@ -400,7 +394,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 footer a{color:var(--muted)}
 
 @media (prefers-reduced-motion:reduce){
-  .seq .b,.status .dot,.pipe button,.scan .bases span,.seqline::after{transition:none}
+  .pipe button,.scan .bases span,.seqline::after{transition:none}
   .scan .cursor svg{animation:none}
   .video-poster img,.video-poster .play,.video-close{transition:none}
 }
@@ -443,24 +437,16 @@ footer a{color:var(--muted)}
   <div class="wrap">
     <div>
       <h1>CRISPR cures for children, on demand.</h1>
-      <p class="lead">The Urnov Lab at the Innovative Genomics Institute designs and safety-tests personalized genome-editing therapies for children born with severe genetic diseases, then turns each one into a process that can be repeated for the next child.</p>
+      <p class="lead">We design and safety-test personalized genome-editing therapies for children with severe genetic diseases, then make each cure repeatable for the next child.</p>
       <div class="actions">
         <a class="btn primary" href="#how">See how we make a cure</a>
         <a class="btn" href="#publications">Read our papers</a>
       </div>
     </div>
-    <figure class="hero-photo" hidden>
-      <!-- Requesting this is how the page detects the photo, so a 404 here is expected until someone adds it -->
-      <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="1600" height="1200" decoding="async">
+    <figure class="molecule">
+      <model-viewer src="models/cas9.glb" poster="models/cas9-poster.png" alt="The Cas9 enzyme, in white, holding its guide RNA, in gold, and the target DNA strand, in blue. Protein Data Bank structure 4OO8." camera-controls disable-zoom disable-pan touch-action="pan-y" interaction-prompt="none" rotation-per-second="6deg" camera-orbit="20deg 75deg 88%" field-of-view="28deg" exposure="1.05" shadow-intensity="0" loading="eager"></model-viewer>
+      <figcaption>Cas9 with its guide RNA (gold) and target DNA (blue), PDB 4OO8.</figcaption>
     </figure>
-    <div class="seqpanel" role="figure" aria-label="Illustration of a single-base correction at a target site">
-      <div class="seqpanel-head"><strong>Target site</strong><span>Guide RNA and PAM underlined</span><button type="button" class="seq-replay" id="seq-replay" aria-label="Replay the base correction">Replay</button></div>
-      <div class="seq" id="seq" aria-hidden="true"></div>
-      <div class="seqpanel-foot">
-        <span class="status" id="seqstatus"><span class="dot"></span><span id="seqtext">Disease-causing variant</span></span>
-        <span class="legend">One base out of three billion</span>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -547,6 +533,10 @@ footer a{color:var(--muted)}
       <h2>People</h2>
       <p>Bench scientists, clinicians, and program staff across UC Berkeley and UCSF, working on the same patients.</p>
     </div>
+    <figure class="group-photo" hidden>
+      <!-- Requesting this is how the page detects the photo, so a 404 here is expected until someone adds it -->
+      <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="1600" height="700" decoding="async">
+    </figure>
     <!-- The PI sits on its own above the roster because it carries a bio and a wider portrait.
          Everyone else is one <li> in the list below: copy one, change the name and the role,
          and that is the whole job. Every portrait frame carries a silhouette placeholder,
@@ -691,6 +681,10 @@ footer a{color:var(--muted)}
     <div class="section-head">
       <h2>News</h2>
     </div>
+    <!-- These three cards are the fallback. news.json, refreshed once a day by
+         .github/workflows/news.yml with the latest IGI stories that mention the lab, replaces
+         them whenever it is there and has something in it. Edit these by hand only if the
+         automatic refresh is switched off. -->
     <div class="news-grid">
       <article>
         <time datetime="2025-05">May 2025</time>
@@ -708,6 +702,7 @@ footer a{color:var(--muted)}
         <p>The IGI's yearly review of where CRISPR medicines stand, including the platform trials that grew out of the first on-demand therapy.</p>
       </article>
     </div>
+    <p class="news-more"><a href="https://innovativegenomics.org/news/">More news from the IGI</a></p>
   </div>
 </section>
 
@@ -781,7 +776,7 @@ footer a{color:var(--muted)}
     <div>
       <h2>Join us</h2>
       <p>We hire bench scientists, computational biologists, clinicians, and program staff who want their work to reach a patient. Openings are posted through the Innovative Genomics Institute and UC Berkeley.</p>
-      <p><a class="btn" href="https://innovativegenomics.org/">Openings at the IGI</a></p>
+      <p><a class="btn" href="https://innovativegenomics.org/careers/">Openings at the IGI</a></p>
     </div>
     <div id="contact">
       <h2>Contact</h2>
@@ -805,6 +800,10 @@ footer a{color:var(--muted)}
   </div>
 </footer>
 
+<!-- The 3D viewer: copied from npm into vendor/ so the site depends on no CDN. The Draco
+     decoder unpacks the compressed model; its location has to be set before the viewer loads. -->
+<script>self.ModelViewerElement = self.ModelViewerElement || {}; self.ModelViewerElement.dracoDecoderLocation = 'vendor/draco/';</script>
+<script type="module" src="vendor/model-viewer.min.js"></script>
 <script>
 (function(){
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -826,19 +825,17 @@ footer a{color:var(--muted)}
     toggle.focus();          /* without this, focus is left inside a menu that is now display:none */
   });
 
-  /* Hero photo: use it when the file exists, keep the sequence panel otherwise.
-     The src stays in the markup so the photo loads during parse and the hero does not
-     flash the panel first. Until the file is added the request 404s, which is the
-     detection mechanism rather than a fault; the panel simply stays. */
+  /* Group photo: shown at the top of the People section when the file exists. The src stays
+     in the markup so the request starts during parse. Until the file is added it 404s, which
+     is the detection mechanism rather than a fault; the figure simply goes. */
   (function(){
-    var fig = document.querySelector('.hero-photo');
+    var fig = document.querySelector('.group-photo');
     var photo = fig && fig.querySelector('img');
-    var panel = document.querySelector('.seqpanel');
-    if (!photo || !panel) return;
-    function usePhoto(){ panel.hidden = true; fig.hidden = false; }
-    function keepPanel(){ fig.remove(); }
-    if (photo.complete) { if (photo.naturalWidth > 0) usePhoto(); else keepPanel(); }
-    else { photo.addEventListener('load', usePhoto); photo.addEventListener('error', keepPanel); }
+    if (!photo) return;
+    function show(){ fig.hidden = false; }
+    function drop(){ fig.remove(); }
+    if (photo.complete) { if (photo.naturalWidth > 0) show(); else drop(); }
+    else { photo.addEventListener('load', show); photo.addEventListener('error', drop); }
   })();
 
   /* Nav scroll-spy: mark whichever section is currently under the header */
@@ -884,72 +881,14 @@ footer a{color:var(--muted)}
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   })();
 
-  /* Sequence panel: a single base correction at a base-editor target site */
-  var ROWS = 6, COLS = 32;
-  var TROW = 2, PROTO_START = 3, PROTO_LEN = 20;
-  var TCOL = PROTO_START + 5;                 /* protospacer position 6, inside the editing window */
-  var PAM_START = PROTO_START + PROTO_LEN;    /* NGG immediately 3' of the protospacer */
-  var VARIANT = 'A', CORRECT = 'G';
-
   function rng(seed){ return function(){ seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }; }
-  var rand = rng(2015);
-  var bases = 'ACGT';
-  var grid = [];
-  for (var r = 0; r < ROWS; r++){
-    var row = [];
-    for (var c = 0; c < COLS; c++) row.push(bases.charAt(Math.floor(rand() * 4)));
-    grid.push(row);
-  }
-  grid[TROW][TCOL] = VARIANT;
-  grid[TROW][PAM_START + 1] = 'G';
-  grid[TROW][PAM_START + 2] = 'G';
 
-  var seqEl = document.getElementById('seq');
-  var targetEl = null;
-  for (var i = 0; i < ROWS; i++){
-    var line = document.createElement('span');
-    line.className = 'row';
-    for (var j = 0; j < COLS; j++){
-      var b = document.createElement('span');
-      b.className = 'b';
-      b.textContent = grid[i][j];
-      if (i === TROW){
-        if (j >= PROTO_START && j < PROTO_START + PROTO_LEN) b.classList.add('proto');
-        if (j >= PAM_START && j < PAM_START + 3) b.classList.add('pam');
-        if (j === TCOL){ b.classList.add('target'); targetEl = b; }
-      }
-      line.appendChild(b);
-    }
-    seqEl.appendChild(line);
-  }
-
-  var status = document.getElementById('seqstatus');
-  var statusText = document.getElementById('seqtext');
-  var timers = [];
-  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
-  function showVariant(){
-    targetEl.textContent = VARIANT;
-    targetEl.classList.remove('fixed','flip');
-    status.classList.remove('fixed');
-    statusText.textContent = 'Disease-causing variant';
-  }
-  function showFixed(){
-    targetEl.textContent = CORRECT;
-    targetEl.classList.add('fixed');
-    targetEl.classList.remove('flip');
-    status.classList.add('fixed');
-    statusText.textContent = 'Corrected';
-  }
-  function play(){
-    clearTimers();
-    if (reduce){ showFixed(); return; }
-    showVariant();
-    timers.push(setTimeout(function(){ targetEl.classList.add('flip'); }, 1400));
-    timers.push(setTimeout(function(){ targetEl.textContent = CORRECT; targetEl.classList.add('fixed'); }, 1650));
-    timers.push(setTimeout(function(){ targetEl.classList.remove('flip'); status.classList.add('fixed'); statusText.textContent = 'Corrected'; }, 1900));
-  }
-  document.getElementById('seq-replay').addEventListener('click', play);
-  play();
+  /* The Cas9 model turns on its own unless the visitor prefers reduced motion. Dragging it
+     works either way; the viewer itself stops rendering while the hero is off screen. */
+  (function(){
+    var mv = document.querySelector('.molecule model-viewer');
+    if (mv && !reduce) mv.setAttribute('auto-rotate', '');
+  })();
 
   /* Genome scan strip: a reader travels the strip as the page scrolls */
   (function(){
@@ -1115,6 +1054,51 @@ footer a{color:var(--muted)}
       portrait.appendChild(img);
       img.src = src;
     });
+  })();
+
+  /* News: the three cards in the markup are the fallback. news.json, kept current by the
+     Refresh news workflow, replaces them when it is there and has stories in it. Anything
+     going wrong, from a missing file to a bad entry, leaves the cards exactly as written. */
+  (function(){
+    var grid = document.querySelector('.news-grid');
+    if (!grid || !window.fetch) return;
+    var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+      'September', 'October', 'November', 'December'];
+    function card(it){
+      var art = document.createElement('article');
+      var m = /^(\d{4})-(\d{2})/.exec(it.date || '');
+      if (m){
+        var time = document.createElement('time');
+        time.dateTime = m[1] + '-' + m[2];
+        time.textContent = MONTHS[Number(m[2]) - 1] + ' ' + m[1];
+        art.appendChild(time);
+      }
+      var h = document.createElement('h3');
+      var a = document.createElement('a');
+      a.href = it.url;
+      a.textContent = it.title;
+      h.appendChild(a);
+      art.appendChild(h);
+      if (it.summary){
+        var p = document.createElement('p');
+        p.textContent = it.summary;
+        art.appendChild(p);
+      }
+      return art;
+    }
+    fetch('news.json')
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(data){
+        var items = ((data && data.items) || []).filter(function(it){
+          return it && typeof it.title === 'string' && /^https:\/\//.test(it.url || '');
+        }).slice(0, 3);
+        if (!items.length) return;
+        var frag = document.createDocumentFragment();
+        items.forEach(function(it){ frag.appendChild(card(it)); });
+        grid.textContent = '';
+        grid.appendChild(frag);
+      })
+      .catch(function(){});
   })();
 
   /* Watch: swap a poster for the YouTube player on click, one at a time */

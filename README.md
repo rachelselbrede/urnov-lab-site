@@ -8,6 +8,11 @@ index.html        the whole site: markup, styles and scripts in one file
 social/           the link preview card (PNG) and the HTML it is rendered from
 logos/            partner wordmarks
 photos/           team and group photos (mostly empty for now)
+news.json         the latest IGI stories about the lab, written by the news workflow
+models/           the Cas9 structure shown in the hero, as a compressed glTF, and its poster image
+vendor/           the 3D viewer and the Draco decoder, copied from npm so the site depends on no CDN
+scripts/          fetch-news.mjs, which finds those stories, and build-cas9-model.py, which makes the model
+.github/          the workflow that runs the news refresh once a day
 robots.txt        points crawlers at the sitemap
 sitemap.xml       the one page
 .nojekyll         tells GitHub Pages to serve the files as they are
@@ -26,11 +31,10 @@ Every later change is an edit to `index.html` and a commit. Pages redeploys on i
 
 - Lab email in the Contact section (currently `lab@example.edu`). It is deliberately left out of the structured data until it is real.
 - The PI portrait. `index.html` already points at `photos/fyodor-urnov.jpg`, so saving the file under that name is the whole job. `photos/README.txt` has the URL of the portrait on the UC Berkeley VC for Research faculty page and a note to clear its reuse with IGI communications.
-- Lab group photo. Save it as `photos/lab-group.jpg` (landscape, at least 1600 px wide, JPEG) and commit. The hero swaps the sequence panel for the photo automatically when the file exists. Until then the page asks for that file and gets a 404, which is how it knows the photo is not there yet.
+- Lab group photo. Save it as `photos/lab-group.jpg` (landscape, at least 1600 px wide, JPEG) and commit. It appears as a wide band at the top of the People section automatically when the file exists, cropped to 16:7. Until then the page asks for that file and gets a 404, which is how it knows the photo is not there yet.
 - Team names, roles, and photos. Twenty placeholder cards are waiting, each a silhouette over "Team member" and a guessed role; see "Adding people" below. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
 - Confirm the mailing address and zip. It appears twice: in the Contact section and in the JSON-LD block in the `<head>`. Both have to change together.
 - The research section lists only programs already public in IGI, CZI, and Danaher announcements. Add or remove programs with Fyodor.
-- The "Openings at the IGI" button links to the IGI homepage. Swap in the real jobs page.
 - Partner logos. The "Partners and supporters" strip uses files in `logos/`, pulled from each organization's own website (IGI, UC Berkeley, UCSF, CZI) or from public-domain vector copies of the official marks on Wikimedia Commons (Danaher, Penn Medicine), plus CHOP's own PNG. Logos are trademarks of their owners: confirm usage with each organization's communications office before a public launch, and prune the list to the partners the lab wants named. To change a logo, replace the file and adjust the `--h` height on its `<li>` so it sits at a similar visual weight.
 - Videos. The Watch section embeds YouTube videos through youtube-nocookie.com and loads the player only when someone clicks a card. To add one, copy a `.video` card and change the video id, title, and duration.
 
@@ -99,11 +103,30 @@ Check the result is exactly 1200x630. Some headless builds report a shorter view
 
 The card is entirely type, with no IGI or partner marks on it, so it does not need a logo usage sign-off the way the partners strip does.
 
+## The Cas9 in the hero
+
+The molecule turning at the top of the page is the real thing: Protein Data Bank entry 4OO8 (Nishimasu et al., Cell 2014), Streptococcus pyogenes Cas9 with its guide RNA and the target DNA strand. The enzyme is white, the guide RNA Genome Gold, the DNA IGI Blue. Visitors can drag it to turn it, and it turns on its own unless they have asked their system for reduced motion. It is rendered by model-viewer 4.3.1, copied from npm into `vendor/` along with the Draco decoder from three.js 0.186, so nothing loads from a third-party CDN. `models/cas9.glb` is about 270 KB and `models/cas9-poster.png` shows while it loads.
+
+To rebuild the model, download a structure from the Protein Data Bank and run the script:
+
+```
+python3 scripts/build-cas9-model.py 4oo8.pdb models/cas9.glb
+npx gltf-pipeline -i models/cas9.glb -o models/cas9.glb -d --draco.compressionLevel 7
+```
+
+The script turns each chain into a smooth molecular surface and needs `pip install numpy scipy scikit-image trimesh fast-simplification`. To show the DNA double helix reaching out of the enzyme, the way the printed models do, use entry 5F9R (Jiang et al., Science 2016) with `--chains A B CD`; the `--help` text explains the chain letters. PDB data is free to reuse; cite the entry if the model appears in print.
+
 ## What updates itself
 
 The Publications section pulls recent papers from Europe PMC in the browser (author query on Urnov F / Urnov FD, 2020 onward, PubMed records only, newest first, eight shown), skipping news pieces, interviews and errata by publication type. Nobody has to maintain it. Adjust the query or the skip list in the `<script>` block at the bottom for a different date range, count or filter. If you change the filter, also bump `PUBS_KEY`, or visitors keep the old cached list for a day.
 
 A successful result is kept in the visitor's browser and reused for a day, so most visits do not call the API at all, and a Europe PMC outage leaves the last known list on the page rather than an empty section. A first-time visitor during an outage gets one line pointing at the PubMed link below.
+
+The News section refreshes itself once a day. The "Refresh news" workflow in `.github/workflows/news.yml` runs `scripts/fetch-news.mjs`, which asks the IGI website for stories that mention the lab, writes the newest six to `news.json`, and commits the file when something changed. GitHub Pages redeploys on its own after that commit. The page shows the first three, and falls back to the three cards written into `index.html` if `news.json` is missing or empty. The "More news from the IGI" link under the cards covers everything else.
+
+What counts as "about the lab" is the `TERMS` list at the top of the script: Urnov, CRISPR Cures Core, Pediatric CRISPR Cures, Beacon for CRISPR Cures, and CPS1. A story is kept when its title or text contains any of them. Add or remove lines there to widen or narrow the net, and keep them specific: the IGI describes its whole mission as "CRISPR cures", so that phrase alone matches nearly every story on the site. Each run's log in the Actions tab shows which term every kept story matched and the sentence around it, which is the place to look when a story seems out of place.
+
+To refresh by hand, open the repo's Actions tab, pick "Refresh news" on the left, and press "Run workflow". It also runs on its own whenever the script or the workflow file changes, so a new search term shows its effect within a minute of being committed. Two things worth knowing. GitHub switches off scheduled workflows in a public repo that has had no commits for 60 days, so the workflow looks after that itself: when the last commit is 45 days old it leaves a one-line commit (the date in `.github/last-check`), which resets the clock. Nobody has to touch the repo to keep it running. And a run fails, with an email, only when the IGI website could not be reached at all; a day with no new stories is a normal, quiet run.
 
 ## If the site moves to another address
 
@@ -123,4 +146,4 @@ grep -rn 'https://rachelselbrede.github.io/urnov-lab-site' .
 - Move the repo to a GitHub organization owned by the lab so it does not depend on one person's account.
 - Decide on the address. Options are a `berkeley.edu` subdomain through campus IT, an IGI subdomain through IGI comms, or a purchased domain (about $10 to $20 a year) pointed at GitHub Pages.
 - The palette follows the IGI brand guidelines (innovativegenomics.org/resources/member-resources/brand-guidelines/): IGI Deep Blue for text and dark panels, IGI Blue for links and the corrected base, Slate Grey for rules, Human Health Red for the disease-causing variant. Official tints are used where the true colors would fail contrast on dark panels. Fonts are Source Serif 4 and Inter, the pairing UC Berkeley's own site uses. All tokens are at the top of the CSS in `:root`. Ask IGI comms for headshots and to confirm logo and color usage before launch.
-- Check accessibility once real content is in (UC expects WCAG AA). The page has a skip link, visible focus states that hold up on both light and dark backgrounds, reduced-motion support, readable contrast, and keyboard support for every control: the pipeline is a tab set with arrow-key navigation, the sequence panel has a Replay button, videos can be closed with Escape and return focus to the card they came from, and the mobile menu closes with Escape.
+- Check accessibility once real content is in (UC expects WCAG AA). The page has a skip link, visible focus states that hold up on both light and dark backgrounds, reduced-motion support, readable contrast, and keyboard support for every control: the pipeline is a tab set with arrow-key navigation, the Cas9 model has alt text and a caption, turns on its own only when motion is allowed, and can be turned with a drag or with the arrow keys once it has focus, videos can be closed with Escape and return focus to the card they came from, and the mobile menu closes with Escape.

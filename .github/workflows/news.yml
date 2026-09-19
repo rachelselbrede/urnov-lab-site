@@ -1,0 +1,56 @@
+# Keeps the News section current. Once a day this asks the IGI website for stories that
+# mention the lab, writes the newest ones to news.json, and commits that file if it changed.
+# GitHub Pages then redeploys on its own. Run it by hand from the Actions tab: pick
+# "Refresh news" and press "Run workflow". It also runs whenever the script or this file
+# changes, so a new search term shows its effect right away.
+name: Refresh news
+
+on:
+  schedule:
+    - cron: '23 14 * * *'   # daily at 14:23 UTC, early morning in California
+  workflow_dispatch:
+  push:
+    paths:
+      - scripts/fetch-news.mjs
+      - .github/workflows/news.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-news
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Look for Urnov Lab news on the IGI site
+        run: node scripts/fetch-news.mjs
+
+      - name: Commit news.json if it changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add news.json
+          if git diff --cached --quiet; then
+            echo "news.json is unchanged, nothing to commit."
+          else
+            git commit -m "Refresh news from the IGI"
+            git push
+          fi
+
+      # GitHub switches off a schedule in a public repo that has had no commits for 60 days.
+      # When the last commit is 45 days old, this leaves a one-line commit so that never happens.
+      - name: Keep the schedule alive through quiet stretches
+        run: |
+          days=$(( ( $(date +%s) - $(git log -1 --format=%ct) ) / 86400 ))
+          if [ "$days" -lt 45 ]; then
+            echo "Last commit was $days days ago, nothing to do."
+            exit 0
+          fi
+          date -u +%Y-%m-%d > .github/last-check
+          git add .github/last-check
+          git commit -m "Keep the news schedule alive"
+          git push
