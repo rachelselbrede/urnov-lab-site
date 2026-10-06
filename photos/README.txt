@@ -1,8 +1,9 @@
 Photos for the site. Nothing here is committed yet except this note.
 
-  lab-group.jpg       the lab group photo. Landscape, at least 1600 px wide.
-                      It appears across the top of the People section once it
-                      exists, cropped to a wide 16:7 band.
+  lab-group.jpg       the lab group photo. Landscape, at least 2400 px wide.
+                      It is the first thing on the page: a full-width band under
+                      the headline, cropped to 12:5 on a computer and shown whole
+                      on a phone. Grey silhouettes hold the space until it exists.
 
   fyodor-urnov.jpg    the PI portrait. Portrait orientation, 4:5, about 600 px wide.
                       index.html already points at this filename, so the portrait

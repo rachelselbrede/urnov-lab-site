@@ -24,7 +24,7 @@
 <meta name="twitter:description" content="CRISPR cures for children, on demand. Cure design and safety testing at UC Berkeley, clinical care at UCSF.">
 <meta name="twitter:image" content="https://rachelselbrede.github.io/urnov-lab-site/social/og-image.png">
 <meta name="theme-color" content="#292D39">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23292D39'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Menlo,Consolas,monospace' font-size='36' font-weight='700' fill='%235857FF'%3EC%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%23292D39'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='Georgia,serif' font-size='40' font-weight='700' fill='%23FFFFFF'%3EU%3C/text%3E%3C/svg%3E">
 <!-- Structured data. Every claim here is also stated on the page; nothing is asserted that
      the page does not say. The lab email is deliberately absent while it is a placeholder. -->
 <script type="application/ld+json">
@@ -80,7 +80,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
 <style>
 :root{
   /* IGI brand palette, from innovativegenomics.org/resources/member-resources/brand-guidelines/ */
@@ -90,22 +90,17 @@
   --mist:#F4F4F4;       /* IGI light grey */
   --rule:#D8D8D8;       /* IGI Slate Grey */
   --muted:#696C73;      /* Deep Blue tint */
-  --seq:#AAABAF;        /* Deep Blue tint, sequence text on dark panels */
-  --seq-seen:#BCBEFB;   /* IGI Blue tint */
-  --base-c-dark:#898DF9; /* IGI Blue tint, the corrected base on dark panels */
-  --base-a:#96C04B;     /* Sustainable Green */
-  --base-c:#5857FF;     /* IGI Blue, the corrected base and links */
-  --base-g:#FFAC0F;     /* Genome Gold */
-  --base-t:#EC5121;     /* Human Health Red, the disease-causing variant */
+  --seq:#AAABAF;        /* Deep Blue tint, secondary text on dark panels */
+  --base-c:#5857FF;     /* IGI Blue, links and focus rings */
   --link:#5857FF;
   --font-display:'Source Serif 4',Georgia,'Times New Roman',serif;
   --font-body:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
-  --font-mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --radius:4px;         /* one small radius for every frame and button, so nothing reads as an app card */
   --max:1120px;
   --gutter:clamp(20px,4vw,48px);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{
   margin:0;
@@ -139,11 +134,7 @@ button{font:inherit;color:inherit}
 .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
 .brand-group{display:flex;align-items:center;gap:16px}
-.brand{font-family:var(--font-display);font-weight:600;font-size:21px;line-height:1;color:var(--ink);text-decoration:none;display:inline-flex;flex-direction:column;gap:5px}
-/* A sequence underline: faint ticks with one base out of place, corrected on hover */
-.seqline{position:relative;display:block;height:7px;background:repeating-linear-gradient(90deg,#AAABAF 0 2.4px,transparent 2.4px 5.4px) left bottom/100% 4px no-repeat}
-.seqline::after{content:"";position:absolute;left:64.8px;bottom:0;width:2.4px;height:7px;border-radius:1px;background:var(--base-t);transition:background .25s ease,height .25s ease}
-.brand:hover .seqline::after,.brand:focus-visible .seqline::after{background:var(--base-c);height:4px}
+.brand{font-family:var(--font-display);font-weight:700;font-size:22px;line-height:1;color:var(--ink);text-decoration:none}
 .affiliation{display:flex;align-items:center;padding-left:16px;border-left:1px solid var(--rule);height:30px}
 .affiliation img{display:block;height:40px;width:auto}
 @media (max-width:480px){.affiliation{display:none}}
@@ -153,7 +144,7 @@ button{font:inherit;color:inherit}
 /* Marks the section you are reading. Drawn rather than bolded so nothing shifts as you scroll. */
 .nav-links a[aria-current]{color:var(--link)}
 .nav-links a[aria-current]::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;border-radius:1px;background:var(--base-c)}
-.nav-toggle{display:none;background:none;border:1px solid var(--rule);border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
+.nav-toggle{display:none;background:none;border:1px solid var(--rule);border-radius:var(--radius);padding:8px 12px;font-size:14px;cursor:pointer}
 @media (max-width:860px){
   .nav-toggle{display:inline-block}
   .nav-links{display:none;position:absolute;left:0;right:0;top:64px;background:var(--paper);border-bottom:1px solid var(--rule);flex-direction:column;gap:0;padding:8px var(--gutter) 16px}
@@ -162,48 +153,40 @@ button{font:inherit;color:inherit}
   .nav-links a[aria-current]::after{display:none}   /* stacked rows already read top to bottom */
 }
 
-/* Hero: a dark scene with the real Cas9 enzyme turning on the right, rendered from its
-   Protein Data Bank structure by model-viewer (vendor/model-viewer.min.js, loaded at the end
-   of the page). The hero fills the first screen below the nav and the scan strip, capped so
-   it never dwarfs the copy on a tall monitor. */
-.hero{position:relative;overflow:hidden;color:#fff;background:#292D39;
-  background:linear-gradient(105deg,#242835 0%,#292D39 40%,#2B3149 100%);
-  min-height:clamp(560px,calc(100vh - 103px),760px);min-height:clamp(560px,calc(100svh - 103px),760px);
-  display:grid;align-items:center;padding:clamp(40px,5vw,64px) 0}
-.hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,4vw,56px);align-items:center}
-.hero h1{max-width:20ch;text-wrap:balance;font-size:clamp(36px,4.3vw,54px);line-height:1.06}
-.hero .lead{margin:22px 0 30px;max-width:44ch;color:rgba(255,255,255,.84)}
-.hero .btn{border-color:rgba(255,255,255,.72);color:#fff}
-.hero .btn:hover{border-color:#fff}
-.hero .btn.primary{background:#fff;color:var(--ink);border-color:#fff}
-.hero .btn.primary:hover{background:var(--seq-seen);border-color:var(--seq-seen)}
-/* The molecule: a soft glow behind it, the viewer on top, one line of caption below */
-.molecule{position:relative;margin:0}
-.molecule::before{content:"";position:absolute;left:10%;right:10%;top:8%;bottom:14%;border-radius:50%;
-  background:radial-gradient(closest-side,rgba(88,87,255,.32),rgba(88,87,255,0));filter:blur(24px);pointer-events:none}
-.molecule model-viewer{position:relative;display:block;width:100%;height:auto;aspect-ratio:1;max-height:600px;background:transparent;--poster-color:transparent;cursor:grab}
-.molecule model-viewer:active{cursor:grabbing}
-.molecule figcaption{margin:6px 0 0;text-align:center;font-size:13px;color:var(--seq)}
-@media (max-width:900px){
-  .hero{min-height:0;padding:40px 0 44px}
-  .hero .wrap{grid-template-columns:1fr;gap:28px}
-  .molecule model-viewer{max-height:420px}
-}
+/* Hero: the mission in one line, then the lab itself. The group photo runs the full width of
+   the window. Until photos/lab-group.jpg exists the frame shows a drawn group of silhouettes,
+   the same placeholder idea as the headshots, so the space is held and the page still looks
+   finished. */
+.hero{padding:clamp(44px,6.5vw,88px) 0 0}
+.hero-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,5vw,72px);align-items:end;margin-bottom:clamp(30px,4vw,52px)}
+.hero h1{font-size:clamp(40px,5.2vw,68px);line-height:1.03;letter-spacing:-.012em;max-width:14ch;text-wrap:balance}
+.hero .lead{margin:0 0 24px;max-width:46ch}
+@media (max-width:860px){.hero-head{grid-template-columns:1fr;gap:18px}}
 .actions{display:flex;flex-wrap:wrap;gap:12px}
-.btn{display:inline-block;padding:13px 20px;border-radius:10px;font-weight:600;text-decoration:none;font-size:16px;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
+.btn{display:inline-block;padding:12px 20px;border-radius:var(--radius);font-weight:600;text-decoration:none;font-size:16px;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
 .btn.primary{background:var(--ink);color:#fff}
 .btn:hover{border-color:var(--link)}
 .btn.primary:hover{background:var(--ink-2);border-color:var(--ink-2)}
 
-
-/* Lab group photo: a wide band at the top of the People section once photos/lab-group.jpg exists */
-.group-photo{margin:0 0 clamp(32px,4vw,56px);border-radius:16px;overflow:hidden;aspect-ratio:16/7;background:var(--mist)}
-.group-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.group-photo{margin:0}
+.group-frame{position:relative;width:100%;aspect-ratio:12/5;max-height:calc(100vh - 150px);min-height:230px;overflow:hidden;
+  background:#EEEFF1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 640 200'%3E%3Cdefs%3E%3Cg id='p'%3E%3Ccircle cx='50' cy='36' r='17'/%3E%3Cpath d='M13 160V100c0-23 16-37 37-37s37 14 37 37v60z'/%3E%3C/g%3E%3C/defs%3E%3Cg fill='%23DCDEE2'%3E%3Cuse xlink:href='%23p' x='37' y='38'/%3E%3Cuse xlink:href='%23p' x='115' y='30'/%3E%3Cuse xlink:href='%23p' x='193' y='36'/%3E%3Cuse xlink:href='%23p' x='271' y='28'/%3E%3Cuse xlink:href='%23p' x='349' y='34'/%3E%3Cuse xlink:href='%23p' x='427' y='29'/%3E%3Cuse xlink:href='%23p' x='505' y='37'/%3E%3C/g%3E%3Cg fill='%23CDD0D6'%3E%3Cuse xlink:href='%23p' transform='translate(70 62) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(152 70) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(234 64) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(316 71) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(398 63) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(480 69) scale(1.12)'/%3E%3C/g%3E%3C/svg%3E") center bottom/auto 56% no-repeat}
+.group-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .5s ease}
+.group-photo.has-photo .group-frame{background-image:none}
+.group-photo.has-photo .group-frame img{opacity:1}
+.group-photo figcaption{padding-top:12px;padding-bottom:18px;font-size:14px;color:var(--muted)}
+/* On a phone a wide crop would cut off whoever stands at either end, so the real photo is
+   shown whole there, at its own shape. The placeholder keeps a 3:2 frame. */
+@media (max-width:640px){
+  .group-frame{aspect-ratio:3/2;background-size:92% auto}
+  .group-photo.has-photo .group-frame{aspect-ratio:auto;min-height:0}
+  .group-photo.has-photo .group-frame img{position:static;height:auto}
+}
 
 /* The base-editor figure. The render carries its own transparency, so it sits
    on the band background rather than in a box of its own. */
 .editor-figure{margin:0 0 34px;display:grid;gap:18px;align-items:center}
-.editor-figure picture{display:block;background:var(--ink);border-radius:16px;padding:14px;max-width:760px;margin:0 auto;box-shadow:0 30px 60px -30px rgba(41,45,57,.55)}
+.editor-figure picture{display:block;background:var(--ink);border-radius:var(--radius);padding:14px;max-width:760px;margin:0 auto}
 .editor-figure img{display:block;width:100%;height:auto}
 .editor-figure figcaption{max-width:760px;margin:0 auto;width:100%}
 .editor-key{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;color:var(--ink-2)}
@@ -217,26 +200,6 @@ button{font:inherit;color:inherit}
   .editor-figure figcaption{margin:0}
 }
 
-/* Genome scan strip, rides under the nav and tracks scroll progress */
-.scan{position:sticky;top:65px;z-index:49;background:var(--ink);color:var(--seq);height:38px;overflow:hidden;user-select:none}
-.scan .track{position:relative;height:100%;display:flex;align-items:center}
-.scan .lane{position:relative;flex:1;min-width:0;align-self:stretch;display:flex;align-items:center;font-size:13px}
-.scan .bases{font-family:var(--font-mono);letter-spacing:.14em;white-space:nowrap;line-height:1;width:100%;overflow:hidden}
-.scan .bases span{display:inline-block;width:1.05em;text-align:center;transition:color .2s}
-.scan .bases span.seen{color:var(--seq-seen)}
-.scan .bases span.target{color:var(--base-t);font-weight:500}
-.scan .bases span.target.fixed{color:var(--base-c-dark)}
-.scan .cursor{position:absolute;top:0;bottom:0;left:0;width:1.05em;pointer-events:none;will-change:transform}
-.scan .cursor::before{content:"";position:absolute;left:-2px;right:-2px;top:6px;bottom:6px;border:1.5px solid var(--base-c-dark);border-radius:3px;background:rgba(137,141,249,.2)}
-.scan .cursor svg{position:absolute;left:50%;top:-1px;width:14px;height:14px;transform:translateX(-50%) rotate(90deg);transform-origin:50% 50%;color:#fff}
-.scan.found .cursor svg{animation:snip .45s ease-in-out 1}
-@keyframes snip{0%,100%{transform:translateX(-50%) rotate(90deg) scale(1)}50%{transform:translateX(-50%) rotate(90deg) scale(.7)}}
-.scan .readout{flex:none;padding-left:18px;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em;white-space:nowrap}
-.scan .readout .count{display:inline-block;min-width:13ch;text-align:right;font-variant-numeric:tabular-nums}
-.scan .readout strong{color:#fff;font-weight:500}
-.scan.found .readout strong{color:var(--base-c-dark)}
-@media (max-width:640px){.scan .readout{display:none}.scan .lane{font-size:11px}.scan .bases{letter-spacing:.1em}}
-
 /* Facts row */
 .facts{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .facts .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
@@ -249,7 +212,19 @@ button{font:inherit;color:inherit}
   .facts p+p{border-left:0;padding-left:0;border-top:1px solid var(--rule)}
 }
 
-/* Research */
+/* Research. The intro shares its row with the Cas9 model, rendered from its Protein Data Bank
+   structure by model-viewer (vendor/model-viewer.min.js, loaded at the end of the page). */
+.research-intro{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,72px);align-items:center;margin-bottom:clamp(40px,5vw,64px)}
+.research-intro .section-head{margin-bottom:0}
+.molecule{margin:0}
+.molecule .stage{background:var(--ink);border-radius:var(--radius);overflow:hidden}
+.molecule model-viewer{display:block;width:100%;height:auto;aspect-ratio:1;max-height:440px;background:transparent;--poster-color:transparent;cursor:grab}
+.molecule model-viewer:active{cursor:grabbing}
+.molecule figcaption{margin:10px 0 0;font-size:13.5px;line-height:1.45;color:var(--muted)}
+@media (max-width:860px){
+  .research-intro{grid-template-columns:1fr}
+  .molecule{max-width:440px}
+}
 .research-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,40px)}
 @media (max-width:860px){.research-grid{grid-template-columns:1fr}}
 .research-grid article{border-top:2px solid var(--ink);padding-top:20px}
@@ -261,16 +236,16 @@ button{font:inherit;color:inherit}
 @media (max-width:900px){.pipe{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:560px){.pipe{grid-template-columns:1fr 1fr}}
 .pipe button{
-  width:100%;text-align:left;background:var(--paper);border:1.5px solid var(--rule);border-radius:12px;
+  width:100%;text-align:left;background:var(--paper);border:1.5px solid var(--rule);border-radius:var(--radius);
   padding:16px 16px 14px;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-height:112px;
   transition:border-color .15s,background .15s
 }
 .pipe button:hover{border-color:var(--ink-2)}
 .pipe button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
-.pipe .num{font-family:var(--font-mono);font-size:13px;color:var(--muted)}
+.pipe .num{font-size:13px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
 .pipe button[aria-selected="true"] .num{color:var(--seq)}
 .pipe .name{font-family:var(--font-body);font-weight:600;font-size:17px;line-height:1.25}
-.pipe-detail{margin-top:20px;background:var(--paper);border:1.5px solid var(--rule);border-radius:14px;padding:clamp(22px,3vw,36px);display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(24px,4vw,48px)}
+.pipe-detail{margin-top:20px;background:var(--paper);border:1.5px solid var(--rule);border-radius:var(--radius);padding:clamp(22px,3vw,36px);display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(24px,4vw,48px)}
 @media (max-width:760px){.pipe-detail{grid-template-columns:1fr}}
 .pipe-detail h3{margin-bottom:10px}
 .pipe-detail p{color:var(--ink-2);margin:0}
@@ -305,7 +280,7 @@ button{font:inherit;color:inherit}
 /* Every frame starts as a placeholder: a silhouette drawn by the CSS, in Slate Grey on the light
    grey, so it is there with scripting off and needs nothing in the markup. A photo covers it once
    loaded, and .has-photo then drops it so it cannot show through a transparent PNG. */
-.portrait{position:relative;aspect-ratio:4/5;border-radius:12px;overflow:hidden;
+.portrait{position:relative;aspect-ratio:4/5;border-radius:2px;overflow:hidden;
   background:var(--mist) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='36' r='17' fill='%23D8D8D8'/%3E%3Cpath d='M13 100c0-23 16-37 37-37s37 14 37 37z' fill='%23D8D8D8'/%3E%3C/svg%3E") center bottom/60% auto no-repeat}
 .portrait.has-photo{background-image:none}
 /* Taken out of flow so a lazy photo that has not loaded yet leaves the placeholder exactly where
@@ -321,7 +296,7 @@ button{font:inherit;color:inherit}
 .pubs{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
 .pubs li{display:grid;grid-template-columns:72px 1fr;gap:16px;padding:20px 0;border-bottom:1px solid var(--rule)}
 @media (max-width:560px){.pubs li{grid-template-columns:1fr;gap:4px}}
-.pubs .year{font-family:var(--font-mono);font-size:14px;color:var(--muted);padding-top:3px}
+.pubs .year{font-size:14.5px;font-weight:500;color:var(--muted);padding-top:2px;font-variant-numeric:tabular-nums}
 .pubs .title{font-weight:600;font-size:17px;line-height:1.35;color:var(--ink);text-decoration:none}
 .pubs .title:hover{color:var(--link);text-decoration:underline}
 .pubs .meta{font-size:14.5px;color:var(--muted);margin:6px 0 0}
@@ -334,7 +309,7 @@ button{font:inherit;color:inherit}
 .news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,40px)}
 @media (max-width:860px){.news-grid{grid-template-columns:1fr}}
 .news-grid article{border-top:1px solid var(--rule);padding-top:18px}
-.news-grid time{font-family:var(--font-mono);font-size:13.5px;color:var(--muted);display:block;margin-bottom:8px}
+.news-grid time{font-size:14px;font-weight:500;color:var(--muted);display:block;margin-bottom:8px}
 .news-grid h3{font-size:19px;margin-bottom:8px}
 .news-grid h3 a{color:var(--ink);text-decoration:none}
 .news-grid h3 a:hover{color:var(--link);text-decoration:underline}
@@ -346,14 +321,14 @@ button{font:inherit;color:inherit}
 @media (max-width:960px){.video-grid{grid-template-columns:repeat(2,1fr)}}
 .video h3{font-size:17px;line-height:1.3;margin:12px 0 4px}
 .video p{font-size:14px;color:var(--muted);margin:0}
-.video-poster{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;border-radius:12px;overflow:hidden;background:var(--ink);cursor:pointer}
+.video-poster{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;border-radius:var(--radius);overflow:hidden;background:var(--ink);cursor:pointer}
 .video-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease}
 .video-poster:hover img{transform:scale(1.03)}
 .video-poster .play{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:rgba(41,45,57,.85);box-shadow:0 4px 16px rgba(0,0,0,.3);transition:background .2s}
 .video-poster .play::after{content:"";position:absolute;left:19px;top:14px;border-style:solid;border-width:10px 0 10px 16px;border-color:transparent transparent transparent #fff}
 .video-poster:hover .play{background:var(--base-c)}
-.video-poster .duration{position:absolute;right:8px;bottom:8px;font-family:var(--font-mono);font-size:12px;color:#fff;background:rgba(41,45,57,.8);padding:3px 7px;border-radius:6px}
-.video-frame{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.video-poster .duration{position:absolute;right:8px;bottom:8px;font-size:12px;font-weight:500;color:#fff;background:rgba(41,45,57,.8);padding:3px 7px;border-radius:2px}
+.video-frame{position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:#000}
 .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .video-close{
   position:absolute;right:8px;top:8px;z-index:2;width:34px;height:34px;padding:0;border:0;border-radius:50%;
@@ -364,22 +339,13 @@ button{font:inherit;color:inherit}
 /* The page-wide focus ring disappears against the black player */
 .video-close:focus-visible{outline:3px solid #fff;outline-offset:2px}
 
-/* Partners strip, a slow seamless marquee of wordmarks (swap in logo images later) */
+/* Partners: one still row of marks. --h on each <li> sets that mark to a similar visual weight
+   as the others; the row shows them a little under that size so all seven fit across. */
 .partners{padding:clamp(40px,5vw,64px) 0 clamp(44px,5vw,72px);border-top:1px solid var(--rule)}
-.partners-label{font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
-.marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
-.marquee-track{display:flex;width:max-content;animation:marquee var(--marquee-duration,40s) linear infinite;will-change:transform}
-.marquee:hover .marquee-track,.marquee:focus-within .marquee-track{animation-play-state:paused}
-.marquee-set{display:flex;align-items:center;gap:clamp(44px,6vw,96px);padding-right:clamp(44px,6vw,96px);list-style:none;margin:0;padding-left:0}
-.marquee-set li{font-family:var(--font-display);font-size:clamp(19px,2vw,24px);font-weight:600;color:var(--ink-2);white-space:nowrap;line-height:1}
-.marquee-set li img{display:block;height:var(--h,36px);width:auto}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion:reduce){
-  .marquee{-webkit-mask-image:none;mask-image:none}
-  .marquee-track{animation:none;width:auto}
-  .marquee-set{flex-wrap:wrap;justify-content:center;gap:18px 40px;padding-right:0}
-  .marquee-set[data-clone]{display:none}
-}
+.partners-label{font-size:15px;font-weight:600;color:var(--ink-2);margin:0 0 26px}
+.partner-logos{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:24px 40px}
+.partner-logos img{display:block;height:calc(var(--h,36px) * .84);width:auto}
+@media (min-width:1100px){.partner-logos{justify-content:space-between;gap:24px 28px}}
 
 /* Join and contact */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px)}
@@ -394,8 +360,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 footer a{color:var(--muted)}
 
 @media (prefers-reduced-motion:reduce){
-  .pipe button,.scan .bases span,.seqline::after{transition:none}
-  .scan .cursor svg{animation:none}
+  .pipe button,.group-frame img{transition:none}
   .video-poster img,.video-poster .play,.video-close{transition:none}
 }
 </style>
@@ -406,7 +371,7 @@ footer a{color:var(--muted)}
 <header class="nav">
   <div class="wrap">
     <div class="brand-group">
-      <a class="brand" href="#top" aria-label="Urnov Lab home"><span class="wordmark">Urnov Lab</span><span class="seqline" aria-hidden="true"></span></a>
+      <a class="brand" href="#top" aria-label="Urnov Lab home">Urnov Lab</a>
       <a class="affiliation" href="https://innovativegenomics.org/"><img src="logos/igi.svg" alt="Innovative Genomics Institute" width="178" height="77"></a>
     </div>
     <button class="nav-toggle" aria-expanded="false" aria-controls="navlinks">Menu</button>
@@ -422,32 +387,29 @@ footer a{color:var(--muted)}
   </div>
 </header>
 
-<div class="scan" id="scan" aria-hidden="true">
-  <div class="wrap track">
-    <div class="lane">
-      <div class="bases" id="scan-bases"></div>
-      <div class="cursor" id="scan-cursor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div>
-    </div>
-    <div class="readout"><span class="count" id="scan-count">0</span> of 3,000,000,000 bp <strong id="scan-state">Scanning</strong></div>
-  </div>
-</div>
-
 <main id="main">
 <section class="hero" id="top">
-  <div class="wrap">
+  <div class="wrap hero-head">
+    <h1>CRISPR cures for children, on demand.</h1>
     <div>
-      <h1>CRISPR cures for children, on demand.</h1>
       <p class="lead">We design and safety-test personalized genome-editing therapies for children with severe genetic diseases, then make each cure repeatable for the next child.</p>
       <div class="actions">
         <a class="btn primary" href="#how">See how we make a cure</a>
-        <a class="btn" href="#publications">Read our papers</a>
+        <a class="btn" href="#people">Meet the lab</a>
       </div>
     </div>
-    <figure class="molecule">
-      <model-viewer src="models/cas9.glb" poster="models/cas9-poster.png" alt="The Cas9 enzyme, in white, holding its guide RNA, in gold, and the target DNA strand, in blue. Protein Data Bank structure 4OO8." camera-controls disable-zoom disable-pan touch-action="pan-y" interaction-prompt="none" rotation-per-second="6deg" camera-orbit="20deg 75deg 88%" field-of-view="28deg" exposure="1.05" shadow-intensity="0" loading="eager"></model-viewer>
-      <figcaption>Cas9 with its guide RNA (gold) and target DNA (blue), PDB 4OO8.</figcaption>
-    </figure>
   </div>
+  <!-- The lab group photo. Save it as photos/lab-group.jpg (landscape, at least 2000 px wide)
+       and it fades in over the placeholder on its own. Requesting the file is how the page
+       finds out whether it exists, so a 404 for it is expected until someone adds it.
+       data-focus steers the crop the same way it does on a headshot: "50% 30%" keeps the
+       point halfway across and 30% down in view. Leave it at centre unless heads get cut. -->
+  <figure class="group-photo" data-focus="50% 40%">
+    <div class="group-frame">
+      <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="2400" height="1000" decoding="async" fetchpriority="high">
+    </div>
+    <figcaption class="wrap">The Urnov Lab at the Innovative Genomics Institute, Berkeley.</figcaption>
+  </figure>
 </section>
 
 <div class="facts">
@@ -460,9 +422,17 @@ footer a{color:var(--muted)}
 
 <section class="section" id="research">
   <div class="wrap">
-    <div class="section-head">
-      <h2>What we work on</h2>
-      <p>Most children with a rare genetic disease will never have a drug developed for them. Their conditions are too rare for the usual model. We are building a different one, where the tools, the tests, and the regulatory path are ready before the next patient arrives.</p>
+    <div class="research-intro">
+      <div class="section-head">
+        <h2>What we work on</h2>
+        <p>Most children with a rare genetic disease will never have a drug developed for them. Their conditions are too rare for the usual model. We are building a different one, where the tools, the tests, and the regulatory path are ready before the next patient arrives.</p>
+      </div>
+      <figure class="molecule">
+        <div class="stage">
+          <model-viewer src="models/cas9.glb" poster="models/cas9-poster.png" alt="The Cas9 enzyme, in white, holding its guide RNA, in gold, and the target DNA strand, in blue. Protein Data Bank structure 4OO8." camera-controls disable-zoom disable-pan touch-action="pan-y" interaction-prompt="none" rotation-per-second="6deg" camera-orbit="20deg 75deg 104%" field-of-view="28deg" exposure="1.05" shadow-intensity="0" loading="lazy"></model-viewer>
+        </div>
+        <figcaption>Cas9 with its guide RNA (gold) and target DNA (blue), from PDB 4OO8. Drag to turn it.</figcaption>
+      </figure>
     </div>
     <div class="research-grid">
       <article>
@@ -533,10 +503,6 @@ footer a{color:var(--muted)}
       <h2>People</h2>
       <p>Bench scientists, clinicians, and program staff across UC Berkeley and UCSF, working on the same patients.</p>
     </div>
-    <figure class="group-photo" hidden>
-      <!-- Requesting this is how the page detects the photo, so a 404 here is expected until someone adds it -->
-      <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="1600" height="700" decoding="async">
-    </figure>
     <!-- The PI sits on its own above the roster because it carries a bio and a wider portrait.
          Everyone else is one <li> in the list below: copy one, change the name and the role,
          and that is the whole job. Every portrait frame carries a silhouette placeholder,
@@ -550,7 +516,7 @@ footer a{color:var(--muted)}
 
          There is nothing special about twenty: the grid just keeps adding rows, so add or
          delete <li> elements freely. To break the roster into groups, close the <ul>, add an
-         <h3>, and open another one. -->
+         <h3>, and open another one. The lab group photo lives at the top of the page. -->
     <div class="person pi" data-photo="photos/fyodor-urnov.jpg" data-focus="69% 40%">
       <div class="portrait"></div>
       <div class="person-text">
@@ -755,19 +721,15 @@ footer a{color:var(--muted)}
 <section class="partners" id="partners" aria-label="Partners and supporters">
   <div class="wrap">
     <p class="partners-label">Partners and supporters</p>
-  </div>
-  <div class="marquee">
-    <div class="marquee-track">
-      <ul class="marquee-set">
-        <li style="--h:40px"><img src="logos/igi.svg" alt="Innovative Genomics Institute" width="178" height="77" loading="lazy"></li>
-        <li style="--h:30px"><img src="logos/uc-berkeley.svg" alt="UC Berkeley" width="225" height="42" loading="lazy"></li>
-        <li style="--h:38px"><img src="logos/ucsf.svg" alt="UCSF" width="80" height="39" loading="lazy"></li>
-        <li style="--h:44px"><img src="logos/czi.svg" alt="Chan Zuckerberg Initiative" width="112" height="62" loading="lazy"></li>
-        <li style="--h:26px"><img src="logos/danaher.svg" alt="Danaher" width="298" height="45" loading="lazy"></li>
-        <li style="--h:34px"><img src="logos/chop.png" alt="Children's Hospital of Philadelphia" width="620" height="130" loading="lazy"></li>
-        <li style="--h:30px"><img src="logos/penn-medicine.svg" alt="Penn Medicine" width="500" height="80" loading="lazy"></li>
-      </ul>
-    </div>
+    <ul class="partner-logos">
+      <li style="--h:40px"><img src="logos/igi.svg" alt="Innovative Genomics Institute" width="178" height="77" loading="lazy"></li>
+      <li style="--h:30px"><img src="logos/uc-berkeley.svg" alt="UC Berkeley" width="225" height="42" loading="lazy"></li>
+      <li style="--h:38px"><img src="logos/ucsf.svg" alt="UCSF" width="80" height="39" loading="lazy"></li>
+      <li style="--h:44px"><img src="logos/czi.svg" alt="Chan Zuckerberg Initiative" width="112" height="62" loading="lazy"></li>
+      <li style="--h:26px"><img src="logos/danaher.svg" alt="Danaher" width="298" height="45" loading="lazy"></li>
+      <li style="--h:34px"><img src="logos/chop.png" alt="Children's Hospital of Philadelphia" width="620" height="130" loading="lazy"></li>
+      <li style="--h:30px"><img src="logos/penn-medicine.svg" alt="Penn Medicine" width="500" height="80" loading="lazy"></li>
+    </ul>
   </div>
 </section>
 
@@ -825,15 +787,18 @@ footer a{color:var(--muted)}
     toggle.focus();          /* without this, focus is left inside a menu that is now display:none */
   });
 
-  /* Group photo: shown at the top of the People section when the file exists. The src stays
-     in the markup so the request starts during parse. Until the file is added it 404s, which
-     is the detection mechanism rather than a fault; the figure simply goes. */
+  /* Group photo: the frame and its drawn placeholder are always there, so the space is held from
+     the first visit. The photo fades in over the placeholder once photos/lab-group.jpg has really
+     loaded. Until someone adds the file the request 404s and the placeholder stays, which is the
+     detection mechanism rather than a fault. */
   (function(){
     var fig = document.querySelector('.group-photo');
     var photo = fig && fig.querySelector('img');
     if (!photo) return;
-    function show(){ fig.hidden = false; }
-    function drop(){ fig.remove(); }
+    var focus = fig.getAttribute('data-focus');
+    if (focus) photo.style.objectPosition = focus;
+    function show(){ fig.classList.add('has-photo'); }
+    function drop(){ photo.remove(); }
     if (photo.complete) { if (photo.naturalWidth > 0) show(); else drop(); }
     else { photo.addEventListener('load', show); photo.addEventListener('error', drop); }
   })();
@@ -862,7 +827,7 @@ footer a{color:var(--muted)}
     }
     function update(){
       ticking = false;
-      var line = window.pageYOffset + 120;          /* just below the nav and the scan strip */
+      var line = window.pageYOffset + 100;          /* just below the sticky nav */
       var found = null;
       for (var i = 0; i < spots.length; i++){ if (spots[i].top <= line) found = spots[i].link; }
       /* A short last section may never reach the line, but at the bottom it is the one you are on */
@@ -881,83 +846,11 @@ footer a{color:var(--muted)}
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   })();
 
-  function rng(seed){ return function(){ seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }; }
-
   /* The Cas9 model turns on its own unless the visitor prefers reduced motion. Dragging it
-     works either way; the viewer itself stops rendering while the hero is off screen. */
+     works either way; the viewer itself stops rendering while it is off screen. */
   (function(){
     var mv = document.querySelector('.molecule model-viewer');
     if (mv && !reduce) mv.setAttribute('auto-rotate', '');
-  })();
-
-  /* Genome scan strip: a reader travels the strip as the page scrolls */
-  (function(){
-    var strip = document.getElementById('scan');
-    var basesEl = document.getElementById('scan-bases');
-    var cursor = document.getElementById('scan-cursor');
-    var countEl = document.getElementById('scan-count');
-    var stateEl = document.getElementById('scan-state');
-    if (!strip || !basesEl) return;
-    var spans = [], targetIdx = 0, targetX = 0, stepX = 14, found = null, ticking = false;
-
-    function build(){
-      basesEl.textContent = '';
-      var probe = document.createElement('span');
-      probe.textContent = 'A';
-      basesEl.appendChild(probe);
-      stepX = probe.getBoundingClientRect().width || 14;
-      basesEl.textContent = '';
-      var n = Math.max(16, Math.floor(basesEl.clientWidth / stepX) - 1);
-      targetIdx = n - 8;                        /* target base, with an NGG PAM three bases downstream */
-      var r = rng(7), letters = 'ACGT';
-      spans = [];
-      for (var i = 0; i < n; i++){
-        var s = document.createElement('span');
-        var ch = letters.charAt(Math.floor(r() * 4));
-        if (i === targetIdx){ ch = 'A'; s.className = 'target'; }
-        else if (i === targetIdx + 4 || i === targetIdx + 5){ ch = 'G'; }
-        s.textContent = ch;
-        spans.push(s);
-        basesEl.appendChild(s);
-      }
-      targetX = targetIdx * stepX;
-      found = null;
-      strip.classList.remove('found');
-      update();
-    }
-    function progress(){
-      var max = document.documentElement.scrollHeight - window.innerHeight;
-      return max > 0 ? Math.min(1, Math.max(0, window.pageYOffset / max)) : 1;
-    }
-    function update(){
-      ticking = false;
-      var p = progress();
-      var x = p * targetX;
-      cursor.style.transform = 'translateX(' + x + 'px)';
-      var seenUpTo = Math.floor(x / stepX);
-      for (var i = 0; i < spans.length; i++) spans[i].classList.toggle('seen', i < seenUpTo);
-      countEl.textContent = Math.round(p * 3e9).toLocaleString('en-US');
-      var nowFound = p >= 0.995;
-      if (nowFound !== found){
-        found = nowFound;
-        strip.classList.toggle('found', found);
-        stateEl.textContent = found ? 'Corrected' : 'Scanning';
-        var t = spans[targetIdx];
-        if (found){
-          if (reduce){ t.textContent = 'G'; t.classList.add('fixed'); }
-          else setTimeout(function(){ if (found){ t.textContent = 'G'; t.classList.add('fixed'); } }, 220);
-        } else {
-          t.textContent = 'A';
-          t.classList.remove('fixed');
-        }
-      }
-    }
-    window.addEventListener('scroll', function(){
-      if (!ticking){ ticking = true; requestAnimationFrame(update); }
-    }, {passive:true});
-    window.addEventListener('resize', build);
-    build();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
   })();
 
   /* Pipeline */
@@ -1140,21 +1033,6 @@ footer a{color:var(--muted)}
     document.addEventListener('keydown', function(e){
       if (e.key === 'Escape' && playing) stop(true);
     });
-  })();
-
-  /* Partners strip: clone the set for a seamless loop and pace the scroll by its width */
-  (function(){
-    var track = document.querySelector('.marquee-track');
-    if (!track) return;
-    var set = track.querySelector('.marquee-set');
-    var clone = set.cloneNode(true);
-    clone.setAttribute('aria-hidden', 'true');
-    clone.setAttribute('data-clone', '');
-    track.appendChild(clone);
-    function pace(){ track.style.setProperty('--marquee-duration', Math.max(24, Math.round(set.scrollWidth / 45)) + 's'); }
-    pace();
-    window.addEventListener('resize', pace);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(pace);
   })();
 
   /* Publications, live from Europe PMC, with a cached copy so an outage never blanks the section */
