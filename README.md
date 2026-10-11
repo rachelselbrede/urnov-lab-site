@@ -11,8 +11,10 @@ photos/           the group photo and the headshots (empty until the lab sends t
 news.json         the latest IGI stories about the lab, written by the news workflow
 models/           the Cas9 structure shown beside "What we work on", as a compressed glTF, and its poster image
 vendor/           the 3D viewer and the Draco decoder, copied from npm so the site depends on no CDN
-scripts/          fetch-news.mjs, which finds those stories, and build-cas9-model.py, which makes the model
-.github/          the workflow that runs the news refresh once a day
+icons/            the browser tab and home screen icons: the site's U, drawn as a path
+scripts/          fetch-news.mjs, which finds those stories; build-cas9-model.py, which makes the model;
+                  check-domain.mjs, which checks the lab's domain before the site moves to it
+.github/          two workflows: the news refresh, once a day, and the one-time switch to www.urlab.bio
 robots.txt        points crawlers at the sitemap
 sitemap.xml       the one page
 .nojekyll         tells GitHub Pages to serve the files as they are
@@ -27,9 +29,12 @@ sitemap.xml       the one page
 
 Every later change is an edit to `index.html` and a commit. Pages redeploys on its own.
 
+To put it on the lab's own address, see "Moving to www.urlab.bio" below.
+
 ## Fill in before you show it
 
-- Lab email in the Contact section (currently `lab@example.edu`). It is deliberately left out of the structured data until it is real.
+- Lab email, which appears twice: in the Contact section and in "For families and clinicians" just above it (currently `lab@example.edu` in both). It is deliberately left out of the structured data until it is real.
+- The "For families and clinicians" paragraphs, in the same band as Join us. They say what the center is and is not, who its first programs are for, and what a first message from a family or a referring doctor should contain. Have Fyodor and the UCSF clinical team confirm that wording, and the address it points to, before launch.
 - The PI portrait. `index.html` already points at `photos/fyodor-urnov.jpg`, so saving the file under that name is the whole job. `photos/README.txt` has the URL of the portrait on the UC Berkeley VC for Research faculty page and a note to clear its reuse with IGI communications.
 - Lab group photo. It is the first thing a visitor sees: a full-width band right under the headline. Save it as `photos/lab-group.jpg` (landscape, JPEG, at least 2400 px wide) and commit, and it fades in on its own. Until then the band shows a drawn group of grey silhouettes, the same idea as the headshot placeholders, so the space is held and the page still looks finished. The page finds out whether the photo exists by asking for it, so a 404 for that file is expected until it is added. See "The group photo" below for how it is cropped.
 - Team names, roles, and photos. Twenty placeholder cards are waiting, each a silhouette over "Team member" and a guessed role; see "Adding people" below. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
@@ -98,6 +103,10 @@ The caption under the band reads "The Urnov Lab at the Innovative Genomics Insti
 
 For the photo itself: daylight or soft, even light, everyone's face visible, a real place (the lab, the IGI atrium, the courtyard) rather than a plain wall, and no wide-angle lens close in, which stretches the people at the edges. A photo of the lab at work, taken by someone who knows the space, beats a posed lineup if nobody can get everyone together.
 
+## The first-cure timeline
+
+Under the six steps in "How we make a cure" is a dated account of the first personalized CRISPR therapy, for KJ, from August 2024 to July 2025. Every date and role in it comes from the NEJM report (Musunuru et al. 2025), UC Berkeley News and the Children's Hospital of Philadelphia, and the sources are linked under the list. The IGI's part was the safety and efficacy testing, and the entry says exactly that. It is the one place on the page where the lab's claims are checkable to the month, so change an entry only with a source in hand.
+
 ## The link preview card
 
 `social/og-image.png` is what Slack, Teams, email and social platforms show when someone posts the link. It is rendered from `social/og-image.html`, which is ordinary HTML using the same palette and fonts as the site. To change the wording, edit that file and re-render it:
@@ -138,37 +147,43 @@ To refresh by hand, open the repo's Actions tab, pick "Refresh news" on the left
 
 ## Moving to www.urlab.bio
 
-The lab owns `urlab.bio` through Squarespace. Squarespace only has to hold the domain; the site itself stays on GitHub Pages and nothing about how it is edited changes. The switch is about twenty minutes of clicking, then up to a day of waiting for DNS to spread. Do the steps in this order: a domain pointed at GitHub before GitHub knows who owns it can be claimed by somebody else's Pages site.
+The lab owns `urlab.bio` through Squarespace. Squarespace only has to hold the domain and answer DNS for it; the site stays on GitHub Pages and nothing about how it is edited changes. There are three steps. The first is ten minutes of clicking at Squarespace, the second is one button in this repo, the third is one tick at GitHub.
 
-1. **Claim the domain on GitHub.** Signed in as the account that owns this repo, open your profile Settings (not the repo's), then Pages, then "Add a domain", and enter `urlab.bio`. GitHub shows a TXT record: a host name that starts `_github-pages-challenge-` and a value to go with it. Keep that page open.
-2. **Open the domain's DNS in Squarespace.** Log in at account.squarespace.com, open Domains, pick `urlab.bio`, then DNS (or DNS Settings).
-3. **Take out the records that point the domain at a Squarespace website.** These are usually grouped as "Squarespace Defaults": A records on `@` and a CNAME on `www` pointing at `ext-sq.squarespace.com`. Delete those. Leave any MX records, and TXT records you did not add, exactly as they are: they carry email for the domain. If `urlab.bio` shows a Squarespace site today, that site goes offline at this step.
-4. **Add the GitHub records** as custom records:
+### 1. Point the domain at GitHub (at Squarespace)
 
-   | Host | Type | Data |
-   |---|---|---|
-   | the `_github-pages-challenge-` name from step 1, without `.urlab.bio` on the end | TXT | the value from step 1 |
-   | `@` | A | `185.199.108.153` |
-   | `@` | A | `185.199.109.153` |
-   | `@` | A | `185.199.110.153` |
-   | `@` | A | `185.199.111.153` |
-   | `@` | AAAA | `2606:50c0:8000::153` |
-   | `@` | AAAA | `2606:50c0:8001::153` |
-   | `@` | AAAA | `2606:50c0:8002::153` |
-   | `@` | AAAA | `2606:50c0:8003::153` |
-   | `www` | CNAME | `rachelselbrede.github.io` |
+Log in at account.squarespace.com, open **Domains**, pick `urlab.bio`, then **DNS** (or **DNS settings**).
 
-   The AAAA records are for visitors on IPv6 and are optional. The CNAME names the account that owns the repo, so it changes if the repo ever moves to a lab organization.
-5. **Verify.** Back on the GitHub page from step 1, press Verify. If it fails, the records have not spread yet; try again in an hour.
-6. **Point the repo at the domain.** In this repo, open Settings, then Pages, type `www.urlab.bio` under "Custom domain" and save. GitHub commits a one-line file named `CNAME` to `main`. Leave it there: it is how Pages knows the address. From then on `urlab.bio` and the old github.io address both forward to `www.urlab.bio` on their own.
-7. **Turn on HTTPS.** When the DNS check on that page turns green, tick "Enforce HTTPS". The certificate can take a while to be issued; until it is, the box stays greyed out.
-8. **Change the address written into the files**, as described in the next section. The new prefix is `https://www.urlab.bio`.
+Take out the records that point the domain at Squarespace itself. They are usually grouped as **Squarespace Defaults**: A records on `@` and a CNAME on `www`. Delete them. If Squarespace will not let you, the domain is still connected to a Squarespace website; disconnect it first, under the domain's settings. Leave MX records, and any TXT records you did not add, exactly as they are: they carry email for the domain.
 
-Keep the domain itself renewing in Squarespace. A Squarespace website plan is not needed for any of this.
+Then add these under **Custom Records**:
+
+| Host | Type | Data |
+|---|---|---|
+| `www` | CNAME | `rachelselbrede.github.io` |
+| `@` | A | `185.199.108.153` |
+| `@` | A | `185.199.109.153` |
+| `@` | A | `185.199.110.153` |
+| `@` | A | `185.199.111.153` |
+
+Recommended, two more minutes: prove to GitHub that the lab owns the domain, so that no other GitHub user can ever point a Pages site at it. Signed in as the account that owns this repo, open your profile **Settings** (not the repo's), then **Pages**, then **Add a domain**, and enter `urlab.bio`. GitHub shows a TXT record: a host that starts `_github-pages-challenge-` and a value to go with it. Add it at Squarespace as one more custom record, the host without `.urlab.bio` on the end, wait a little, and press **Verify**. If it fails, the record has not spread yet; try again in an hour. Keep that record in place afterwards.
+
+### 2. Run the switch (in this repo)
+
+Open the repo's **Actions** tab, pick **Switch to www.urlab.bio** on the left, press **Run workflow**, and run it on `main`.
+
+It first checks that the records above have reached the internet, which can take from a few minutes to a day. If they have not, it stops with a plain report of what is still missing, changes nothing, and can be run again later. If they have, it writes the `CNAME` file that tells GitHub Pages the address, changes every copy of the site URL in the files, and commits to `main`. Pages redeploys on its own within a minute or two. The run's summary page lists what to do next. Running the workflow a second time is harmless.
+
+To see the same DNS report without switching anything, run `node scripts/check-domain.mjs` on any computer.
+
+### 3. Turn on HTTPS (at GitHub)
+
+Open the repo's **Settings**, then **Pages**. "Custom domain" now reads `www.urlab.bio`, with a DNS check under it. When that check is green, tick **Enforce HTTPS**. The box stays greyed out until GitHub has issued the certificate, which can take from a few minutes to an hour, so come back if it is grey.
+
+From then on `urlab.bio`, `www.urlab.bio` and the old github.io address all lead to the same site. Keep the domain renewing at Squarespace; a Squarespace website plan is not needed for any of this. If the repo ever moves to a lab organization, the `www` CNAME at Squarespace changes to that organization's `.github.io` name, and so do `PAGES_HOST` in `scripts/check-domain.mjs` and `OLD_URL` in the workflow.
 
 ## If the site moves to another address
 
-Several files spell the site URL out in full, because link scrapers and crawlers do not resolve relative paths. Change them together with a find and replace across the repo. To see every copy first:
+Several files spell the site URL out in full, because link scrapers and crawlers do not resolve relative paths. For the move to `www.urlab.bio` the workflow above does this. For any other address, change them together with a find and replace across the repo. To see every copy first:
 
 ```
 grep -rn 'https://rachelselbrede.github.io/urnov-lab-site' .
@@ -184,7 +199,7 @@ grep -rl 'https://rachelselbrede.github.io/urnov-lab-site' --exclude-dir=.git . 
 - `index.html`: `canonical`, `og:url`, `og:image`, `twitter:image`, and `url` in the JSON-LD block
 - `sitemap.xml`: the `<loc>`
 - `robots.txt`: the `Sitemap:` line
-- `404.html`: the home page button and the section links
+- `404.html`: the icon links, the home page button and the section links
 
 ## If it gets approved
 

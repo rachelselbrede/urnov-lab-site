@@ -24,7 +24,11 @@
 <meta name="twitter:description" content="CRISPR cures for children, on demand. Cure design and safety testing at UC Berkeley, clinical care at UCSF.">
 <meta name="twitter:image" content="https://rachelselbrede.github.io/urnov-lab-site/social/og-image.png">
 <meta name="theme-color" content="#292D39">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%23292D39'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='Georgia,serif' font-size='40' font-weight='700' fill='%23FFFFFF'%3EU%3C/text%3E%3C/svg%3E">
+<!-- The icon is the site's U in Source Serif, drawn as a path (icons/icon.svg) so it needs no
+     font. The PNGs are for Safari, which ignores SVG icons, and for phone home screens. -->
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <!-- Structured data. Every claim here is also stated on the page; nothing is asserted that
      the page does not say. The lab email is deliberately absent while it is a placeholder. -->
 <script type="application/ld+json">
@@ -56,6 +60,10 @@
     "@type": "Person",
     "name": "Fyodor Urnov",
     "jobTitle": "Principal Investigator",
+    "sameAs": [
+      "https://en.wikipedia.org/wiki/Fyodor_Urnov",
+      "https://innovativegenomics.org/people/fyodor-urnov/"
+    ],
     "affiliation": [
       {
         "@type": "ResearchOrganization",
@@ -68,6 +76,11 @@
         "url": "https://www.berkeley.edu/"
       }
     ]
+  },
+  "funder": {
+    "@type": "Organization",
+    "name": "Chan Zuckerberg Initiative",
+    "url": "https://chanzuckerberg.com/"
   },
   "knowsAbout": [
     "Genome editing",
@@ -253,6 +266,20 @@ button{font:inherit;color:inherit}
 .pipe-detail .measure-box small{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
 .pipe-detail .measure-box p{color:var(--ink);font-weight:500}
 
+/* The worked example under the six steps: one dated entry per stage, laid out like the
+   publications list so it reads as a record rather than a feature. */
+.first-cure{margin-top:clamp(48px,6vw,80px);padding-top:clamp(32px,4vw,48px);border-top:1px solid var(--rule)}
+.first-cure .section-head{margin-bottom:clamp(20px,3vw,32px)}
+.first-cure h3{font-size:clamp(24px,2.6vw,30px)}
+.timeline{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.timeline li{display:grid;grid-template-columns:168px 1fr;gap:16px 24px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.timeline .when{font-size:14.5px;font-weight:500;color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums}
+.timeline h4{font-family:var(--font-display);font-size:19px;font-weight:600;line-height:1.25;margin:0 0 6px}
+.timeline p{font-size:15.5px;color:var(--ink-2);margin:0;max-width:62ch}
+.timeline-note{font-size:14px;color:var(--muted);margin:14px 0 0;max-width:72ch}
+.timeline-note a{color:inherit}
+@media (max-width:560px){.timeline li{grid-template-columns:1fr;gap:4px}}
+
 /* People. Sized for a roster of twenty-odd and any number after that: the column count is
    fixed per breakpoint, so rows simply keep coming as people are added. */
 .people-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:30px 24px;list-style:none;margin:0;padding:0}
@@ -347,6 +374,12 @@ button{font:inherit;color:inherit}
 .partner-logos img{display:block;height:calc(var(--h,36px) * .84);width:auto}
 @media (min-width:1100px){.partner-logos{justify-content:space-between;gap:24px 28px}}
 
+/* For families: a full-width block of plain prose above Join and Contact, in the same band */
+.families{max-width:66ch;margin-bottom:clamp(40px,5vw,64px);padding-bottom:clamp(36px,4vw,56px);border-bottom:1px solid var(--rule)}
+.families h2{margin-bottom:16px}
+.families p{color:var(--ink-2)}
+.families p:last-child{margin-bottom:0}
+
 /* Join and contact */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px)}
 @media (max-width:760px){.two-col{grid-template-columns:1fr}}
@@ -381,6 +414,7 @@ footer a{color:var(--muted)}
       <li><a href="#people">People</a></li>
       <li><a href="#publications">Publications</a></li>
       <li><a href="#news">News</a></li>
+      <li><a href="#families">For families</a></li>
       <li><a href="#join">Join us</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -493,6 +527,69 @@ footer a{color:var(--muted)}
         <small>What we measure</small>
         <p id="pd-measure"></p>
       </div>
+    </div>
+
+    <!-- The worked example. Every date and role comes from the NEJM report (Musunuru et al.
+         2025), UC Berkeley News and the Children's Hospital of Philadelphia, linked under the
+         list. The IGI's part was the safety and efficacy testing, and that is what the IGI
+         line says. Change an entry only with a source in hand. -->
+    <div class="first-cure">
+      <div class="section-head">
+        <h3>The first time, it took six months</h3>
+        <p>In 2025 this was done for one child: KJ, born with severe CPS1 deficiency, a urea cycle disorder that kills about half of the infants who have it. Physicians at the Children's Hospital of Philadelphia and Penn Medicine led the work, the IGI tested the therapy, and industry partners made it. Month by month:</p>
+      </div>
+      <ol class="timeline">
+        <li>
+          <time class="when" datetime="2024-08">August 2024</time>
+          <div>
+            <h4>Diagnosis</h4>
+            <p>KJ is born at the Children's Hospital of Philadelphia and diagnosed within days. Without a working CPS1 enzyme, ammonia builds up in his blood. The usual options are a strict low-protein diet, drugs that mop up ammonia, and a liver transplant once he is big enough for one.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when">August 2024 to February 2025</span>
+          <div>
+            <h4>Design, test, make</h4>
+            <p>Kiran Musunuru at Penn Medicine and Rebecca Ahrens-Nicklas at CHOP design a base editor for KJ's exact variant. Fyodor Urnov's team at the IGI tests its safety and efficacy, work that helped the therapy clear FDA review quickly. Aldevron and Integrated DNA Technologies, both Danaher companies, make the editor and guide, and Acuitas Therapeutics supplies the lipid nanoparticles that carry them to the liver.</p>
+          </div>
+        </li>
+        <li>
+          <time class="when" datetime="2025-02">February 2025</time>
+          <div>
+            <h4>First dose</h4>
+            <p>At about six months old, KJ receives the first infusion: the first CRISPR therapy ever built for a single patient.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when">March and April 2025</span>
+          <div>
+            <h4>Two more doses</h4>
+            <p>No serious side effects. Within seven weeks of the first dose he is tolerating more protein in his diet, and his ammonia-scavenging medication is cut in half.</p>
+          </div>
+        </li>
+        <li>
+          <time class="when" datetime="2025-05-15">May 2025</time>
+          <div>
+            <h4>Published</h4>
+            <p>The case appears in <cite>The New England Journal of Medicine</cite> and is presented the same day at the American Society of Gene and Cell Therapy meeting.</p>
+          </div>
+        </li>
+        <li>
+          <time class="when" datetime="2025-06-03">June 2025</time>
+          <div>
+            <h4>Home</h4>
+            <p>KJ leaves the hospital, 307 days after he was admitted.</p>
+          </div>
+        </li>
+        <li>
+          <time class="when" datetime="2025-07">July 2025</time>
+          <div>
+            <h4>The next eight</h4>
+            <p>The Chan Zuckerberg Initiative funds the Center for Pediatric CRISPR Cures at the IGI to do this for eight more children, and to write the process down so that other centers can repeat it.</p>
+          </div>
+        </li>
+      </ol>
+      <p class="timeline-note">Sources: Musunuru <em>et al.</em>, <cite>N Engl J Med</cite> 2025, <a href="https://doi.org/10.1056/NEJMoa2504747">doi:10.1056/NEJMoa2504747</a>; <a href="https://news.berkeley.edu/2025/05/15/infant-born-with-deadly-disease-now-thriving-thanks-to-customized-crispr-treatment-six-months-after-birth/">UC Berkeley News</a>; <a href="https://www.chop.edu/news/worlds-first-patient-treated-personalized-crispr-gene-editing-therapy-childrens-hospital-philadelphia">Children's Hospital of Philadelphia</a>.</p>
     </div>
   </div>
 </section>
@@ -722,19 +819,28 @@ footer a{color:var(--muted)}
   <div class="wrap">
     <p class="partners-label">Partners and supporters</p>
     <ul class="partner-logos">
-      <li style="--h:40px"><img src="logos/igi.svg" alt="Innovative Genomics Institute" width="178" height="77" loading="lazy"></li>
-      <li style="--h:30px"><img src="logos/uc-berkeley.svg" alt="UC Berkeley" width="225" height="42" loading="lazy"></li>
-      <li style="--h:38px"><img src="logos/ucsf.svg" alt="UCSF" width="80" height="39" loading="lazy"></li>
-      <li style="--h:44px"><img src="logos/czi.svg" alt="Chan Zuckerberg Initiative" width="112" height="62" loading="lazy"></li>
-      <li style="--h:26px"><img src="logos/danaher.svg" alt="Danaher" width="298" height="45" loading="lazy"></li>
-      <li style="--h:34px"><img src="logos/chop.png" alt="Children's Hospital of Philadelphia" width="620" height="130" loading="lazy"></li>
-      <li style="--h:30px"><img src="logos/penn-medicine.svg" alt="Penn Medicine" width="500" height="80" loading="lazy"></li>
+      <li style="--h:40px"><img src="logos/igi.svg" alt="Innovative Genomics Institute" width="178" height="77"></li>
+      <li style="--h:30px"><img src="logos/uc-berkeley.svg" alt="UC Berkeley" width="225" height="42"></li>
+      <li style="--h:38px"><img src="logos/ucsf.svg" alt="UCSF" width="80" height="39"></li>
+      <li style="--h:44px"><img src="logos/czi.svg" alt="Chan Zuckerberg Initiative" width="112" height="62"></li>
+      <li style="--h:26px"><img src="logos/danaher.svg" alt="Danaher" width="298" height="45"></li>
+      <li style="--h:34px"><img src="logos/chop.png" alt="Children's Hospital of Philadelphia" width="620" height="130"></li>
+      <li style="--h:30px"><img src="logos/penn-medicine.svg" alt="Penn Medicine" width="500" height="80"></li>
     </ul>
   </div>
 </section>
 
 <section class="section band" id="join">
-  <div class="wrap two-col">
+  <div class="wrap">
+    <!-- Plain language for the people most likely to arrive here after a diagnosis. It says
+         what the center is and is not, and what a first message should contain. The wording,
+         and the address it points to, are for Fyodor and the UCSF clinical team to confirm. -->
+    <div class="families" id="families">
+      <h2>For families and clinicians</h2>
+      <p>Most of the children this work is for have a disease so rare that no company will ever develop a drug for it. If that is your child, or your patient, here is what we can and cannot do. The Center for Pediatric CRISPR Cures is a research program, not a clinic. Children are treated at UCSF under research protocols, and the first programs are for severe inborn errors of immunity and severe metabolic diseases. We cannot promise a treatment for any one child, and we cannot say whether a child is a candidate without the full clinical picture.</p>
+      <p>The most useful first message comes from the child's own specialist: the diagnosis, the gene and the exact variant, and how urgent the situation is. Write to <a href="mailto:lab@example.edu">lab@example.edu</a>. For the wider picture of which CRISPR medicines exist today, the IGI keeps <a href="https://innovativegenomics.org/news/crispr-clinical-trials-2026/">a yearly review of clinical trials</a>.</p>
+    </div>
+    <div class="two-col">
     <div>
       <h2>Join us</h2>
       <p>We hire bench scientists, computational biologists, clinicians, and program staff who want their work to reach a patient. Openings are posted through the Innovative Genomics Institute and UC Berkeley.</p>
@@ -750,6 +856,7 @@ footer a{color:var(--muted)}
         <a href="mailto:lab@example.edu">lab@example.edu</a>
       </address>
       <p style="margin-top:14px;font-size:15px">For press and media, contact IGI communications.</p>
+    </div>
     </div>
   </div>
 </section>
@@ -998,6 +1105,17 @@ footer a{color:var(--muted)}
   (function(){
     var grid = document.getElementById('videos');
     if (!grid) return;
+    /* YouTube has no full-size poster for some videos and answers with a 404 or a tiny grey
+       placeholder. Fall back to the size every video has. */
+    [].forEach.call(grid.querySelectorAll('.video-poster img'), function(img){
+      function fallback(){
+        if (img.src.indexOf('maxresdefault') === -1) return;
+        img.src = img.src.replace('maxresdefault', 'hqdefault');
+      }
+      img.addEventListener('error', fallback);
+      img.addEventListener('load', function(){ if (img.naturalWidth <= 120) fallback(); });
+      if (img.complete && img.naturalWidth <= 120) fallback();
+    });
     var playing = null;
     /* Swapping the poster out takes the focused element with it, so put focus somewhere deliberate */
     function stop(restoreFocus){

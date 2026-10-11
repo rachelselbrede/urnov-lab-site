@@ -15,6 +15,7 @@ A single static page (`index.html`) served by GitHub Pages from `main`. No build
 - Keep the writing style of the page and README: plain sentences, no em dashes.
 - Keep the look plain and editorial so it never reads as generated: real photos lead, no
   scroll gimmicks, glows, tickers or monospace decoration, one small corner radius (`--radius`).
-- The lab owns `urlab.bio` through Squarespace. "Moving to www.urlab.bio" in the README is the
-  switch. Keep the github.io URLs in the files until the repo's Pages settings show
-  `www.urlab.bio` as the custom domain (a `CNAME` file appears on `main`), then swap them.
+- The lab owns `urlab.bio` through Squarespace. The switch is the "Switch to www.urlab.bio"
+  workflow (`.github/workflows/go-live.yml`), run once the DNS records listed under "Moving to
+  www.urlab.bio" in the README are in place. It writes the `CNAME` file and swaps the site
+  URLs itself. Until a `CNAME` file exists on `main`, keep the github.io URLs in the files.

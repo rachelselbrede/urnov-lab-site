@@ -1,0 +1,73 @@
+# Moves the site to www.urlab.bio. Run it once, from the Actions tab, after the DNS records
+# are in place at Squarespace: "Moving to www.urlab.bio" in the README has the records.
+#
+# What it does: checks that the domain really points at GitHub Pages (so the site is never
+# switched to an address that goes nowhere), writes the CNAME file GitHub Pages reads the
+# domain from, changes every absolute URL in the site to the new address, and commits all
+# of that to main. GitHub Pages redeploys on its own within a minute or two. Running it a
+# second time is harmless: it finds nothing to change and stops.
+name: Switch to www.urlab.bio
+
+on:
+  workflow_dispatch:
+    inputs:
+      skip_dns_check:
+        description: "Switch anyway, even if the DNS check fails (the site will be unreachable until the records are right)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+# Shares the news workflow's lock, so the two never push to main at the same moment
+concurrency:
+  group: refresh-news
+
+env:
+  DOMAIN: www.urlab.bio
+  OLD_URL: https://rachelselbrede.github.io/urnov-lab-site
+
+jobs:
+  switch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Check that the domain points at GitHub Pages
+        if: ${{ !inputs.skip_dns_check }}
+        run: node scripts/check-domain.mjs
+
+      - name: Write CNAME and change the site's address
+        run: |
+          echo "$DOMAIN" > CNAME
+          sed -i "s#${OLD_URL}#https://${DOMAIN}#g" index.html 404.html robots.txt sitemap.xml
+          echo "Lines that now carry the new address:"
+          grep -n "https://${DOMAIN}" index.html 404.html robots.txt sitemap.xml || true
+
+      - name: Commit to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CNAME index.html 404.html robots.txt sitemap.xml
+          if git diff --cached --quiet; then
+            echo "Nothing to change: the site is already on $DOMAIN."
+            exit 0
+          fi
+          git commit -m "Move the site to $DOMAIN"
+          git push
+
+      - name: What happens next
+        run: |
+          {
+            echo "## The site is moving to https://$DOMAIN"
+            echo
+            echo "GitHub Pages redeploys on its own within a minute or two. Then:"
+            echo
+            echo "1. Open the repo's **Settings**, then **Pages**. \"Custom domain\" now reads \`$DOMAIN\` and a DNS check runs under it."
+            echo "2. When that check is green, tick **Enforce HTTPS**. The box stays greyed out until GitHub has issued the certificate, which can take a few minutes to an hour; come back and tick it then."
+            echo "3. Open https://$DOMAIN and https://${DOMAIN#www.} in a browser. Both should show the site, the second one by redirecting to the first."
+            echo
+            echo "The old address, $OLD_URL/, now redirects to the new one, so nothing that linked to it breaks."
+          } >> "$GITHUB_STEP_SUMMARY"
