@@ -1,4 +1,4 @@
-Photos for the site. Nothing here is committed yet except this note.
+Photos for the site. fyodor-urnov.jpg is in; the rest are still to come.
 
   lab-group.jpg       the lab group photo. Landscape, at least 2400 px wide.
                       It is the first thing on the page: a full-width band under
@@ -26,7 +26,7 @@ The PI portrait on the UC Berkeley VC for Research faculty page is:
 
   https://vcresearch.berkeley.edu/sites/default/files/styles/faculty_photo_large/public/2024-08/Fyodor%20Urnov.7_0.jpg
 
-Save it as fyodor-urnov.jpg.
+It is saved here as fyodor-urnov.jpg, recompressed to about 90 KB.
 
 That photo is landscape, about 2:1, and he stands right of centre. The portrait
 frame is 4:5, so it keeps a tall slice and throws the sides away. Left to itself
