@@ -166,16 +166,13 @@ button{font:inherit;color:inherit}
   .nav-links a[aria-current]::after{display:none}   /* stacked rows already read top to bottom */
 }
 
-/* Hero: the mission in one line, then the lab itself. The group photo runs the full width of
+/* Hero: the lab's name, then the lab itself. The group photo runs the full width of
    the window. Until photos/lab-group.jpg exists the frame shows a drawn group of silhouettes,
    the same placeholder idea as the headshots, so the space is held and the page still looks
    finished. */
 .hero{padding:clamp(44px,6.5vw,88px) 0 0}
-.hero-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,5vw,72px);align-items:end;margin-bottom:clamp(30px,4vw,52px)}
-.hero h1{font-size:clamp(40px,5.2vw,68px);line-height:1.03;letter-spacing:-.012em;max-width:14ch;text-wrap:balance}
-.hero .lead{margin:0 0 24px;max-width:46ch}
-@media (max-width:860px){.hero-head{grid-template-columns:1fr;gap:18px}}
-.actions{display:flex;flex-wrap:wrap;gap:12px}
+.hero-head{margin-bottom:clamp(30px,4vw,52px)}
+.hero h1{font-size:clamp(64px,10vw,132px);line-height:.95;letter-spacing:-.02em}
 .btn{display:inline-block;padding:12px 20px;border-radius:var(--radius);font-weight:600;text-decoration:none;font-size:16px;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
 .btn.primary{background:var(--ink);color:#fff}
 .btn:hover{border-color:var(--link)}
@@ -427,14 +424,7 @@ footer a{color:var(--muted)}
 <main id="main">
 <section class="hero" id="top">
   <div class="wrap hero-head">
-    <h1>CRISPR cures for children, on demand.</h1>
-    <div>
-      <p class="lead">We design and safety-test personalized genome-editing therapies for children with severe genetic diseases, then make each cure repeatable for the next child.</p>
-      <div class="actions">
-        <a class="btn primary" href="#how">See how we make a cure</a>
-        <a class="btn" href="#people">Meet the lab</a>
-      </div>
-    </div>
+    <h1>Urnov Lab</h1>
   </div>
   <!-- The lab group photo. Save it as photos/lab-group.jpg (landscape, at least 2000 px wide)
        and it fades in over the placeholder on its own. Requesting the file is how the page
