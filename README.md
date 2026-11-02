@@ -36,7 +36,6 @@ To put it on the lab's own address, see "Moving to www.urlab.bio" below.
 - Lab email. The page has none for now: the Contact section shows only the postal address. Once there is a real address, add it under Contact (and to the structured data if wanted).
 - The PI portrait is in place: `photos/fyodor-urnov.jpg`, from the UC Berkeley VC for Research faculty page. Confirm its reuse with IGI communications before launch.
 - Lab group photo. It is the first thing a visitor sees: a full-width band right under the headline. Save it as `photos/lab-group.jpg` (landscape, JPEG, at least 2400 px wide) and commit, and it fades in on its own. Until then the band shows a drawn group of grey silhouettes, the same idea as the headshot placeholders, so the space is held and the page still looks finished. The page finds out whether the photo exists by asking for it, so a 404 for that file is expected until it is added. See "The group photo" below for how it is cropped.
-- Team names, roles, and photos. Twenty placeholder cards are waiting, each a silhouette over "Team member" and a guessed role; see "Adding people" below. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
 - Confirm the mailing address and zip. It appears twice: in the Contact section and in the JSON-LD block in the `<head>`. Both have to change together.
 - The research section lists only programs already public in IGI, CZI, and Danaher announcements. Add or remove programs with Fyodor.
 - Partner logos. The "Partners and supporters" strip uses files in `logos/`, pulled from each organization's own website (IGI, UC Berkeley, UCSF, CZI) or from public-domain vector copies of the official marks on Wikimedia Commons (Danaher, Penn Medicine), plus CHOP's own PNG. Logos are trademarks of their owners: confirm usage with each organization's communications office before a public launch, and prune the list to the partners the lab wants named. To change a logo, replace the file and adjust the `--h` height on its `<li>` so it sits at a similar visual weight.
@@ -56,19 +55,7 @@ The PI card sits on its own above the roster, because it carries a bio and a wid
 
 Copy it, change the two lines of text, done. Until a photo is named, the frame shows a silhouette placeholder drawn by the CSS, so a card without its headshot yet still looks deliberate. Add a `<p class="bio">` if someone needs a paragraph, the way the PI card has one. The order on the page is the order of the `<li>` elements.
 
-Twenty placeholder cards are laid out below the PI, each one a silhouette over "Team member" and a guessed role:
-
-```html
-<li class="person">
-  <div class="portrait"></div>
-  <h3 class="name">Team member</h3>
-  <p class="role">Staff scientist</p>
-</li>
-```
-
-Filling a slot is overwriting those two lines with the real name and role. Nothing else marks a card as a placeholder, so there is no flag to remember to take out.
-
-There is nothing special about twenty. The grid keeps adding rows as you add `<li>` elements, so take it well past twenty or cut it back without touching any CSS. The roles on the slots are a guess at the shape of the lab and are meant to be overwritten.
+The grid keeps adding rows as you add `<li>` elements, so add or remove people without touching any CSS.
 
 The grid runs five across on a wide screen, four from 1000px, three from 760px and two from 480px, so cards stay between about 130px and 215px wide at every size. To split the roster into groups, close the `<ul>`, add an `<h3>` heading, and open another one; the CSS does not care how many lists there are.
 
@@ -86,7 +73,7 @@ Portraits are cropped to fill a 4:5 frame, the PI's included, so an upright head
 <li class="person" data-photo="photos/jane-doe.jpg" data-focus="69% 40%">
 ```
 
-Raise the first percentage to move the crop right, lower it to move left; the second does the same vertically. Leave `data-focus` off and the crop comes from dead centre, which is right for most headshots. Twenty headshots is a real amount of weight on the page, so they are lazy-loaded and only fetched as the section comes into view. Still save them around 600 px wide rather than straight off the camera.
+Raise the first percentage to move the crop right, lower it to move left; the second does the same vertically. Leave `data-focus` off and the crop comes from dead centre, which is right for most headshots. A full roster of headshots is a real amount of weight on the page, so they are lazy-loaded and only fetched as the section comes into view. Still save them around 600 px wide rather than straight off the camera.
 
 The `alt` on these photos is set to empty on purpose. The person's name is on the very next line, and a screen reader announcing it twice in a row helps nobody.
 

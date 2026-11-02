@@ -1,4 +1,4 @@
-Photos for the site. fyodor-urnov.jpg is in; the rest are still to come.
+Photos for the site. Fyodor and eight team headshots are in; lab-group.jpg is still to come.
 
   lab-group.jpg       the lab group photo. Landscape, at least 2400 px wide.
                       It is the first thing on the page: a full-width band under
