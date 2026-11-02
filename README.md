@@ -33,8 +33,8 @@ To put it on the lab's own address, see "Moving to www.urlab.bio" below.
 
 ## Fill in before you show it
 
-- Lab email, in "For families and clinicians" (currently `lab@example.edu`). The Contact section shows only the postal address. The email is deliberately left out of the structured data until it is real.
-- The "For families and clinicians" paragraphs, in the same band as Join us. They say what the center is and is not, who its first programs are for, and what a first message from a family or a referring doctor should contain. Have Fyodor and the UCSF clinical team confirm that wording, and the address it points to, before launch.
+- Lab email. The page has none for now: the Contact section shows only the postal address. Once there is a real address, add it under Contact (and to the structured data if wanted).
+- The "For families and clinicians" paragraph, in the same band as Join us. It says what the center is and is not, and who its first programs are for. Have Fyodor and the UCSF clinical team confirm that wording before launch.
 - The PI portrait. `index.html` already points at `photos/fyodor-urnov.jpg`, so saving the file under that name is the whole job. `photos/README.txt` has the URL of the portrait on the UC Berkeley VC for Research faculty page and a note to clear its reuse with IGI communications.
 - Lab group photo. It is the first thing a visitor sees: a full-width band right under the headline. Save it as `photos/lab-group.jpg` (landscape, JPEG, at least 2400 px wide) and commit, and it fades in on its own. Until then the band shows a drawn group of grey silhouettes, the same idea as the headshot placeholders, so the space is held and the page still looks finished. The page finds out whether the photo exists by asking for it, so a 404 for that file is expected until it is added. See "The group photo" below for how it is cropped.
 - Team names, roles, and photos. Twenty placeholder cards are waiting, each a silhouette over "Team member" and a guessed role; see "Adding people" below. Shoot everyone the same way (same wall, same light, same crop) and the grid will look professional on its own.
