@@ -366,13 +366,23 @@ button{font:inherit;color:inherit}
 /* The page-wide focus ring disappears against the black player */
 .video-close:focus-visible{outline:3px solid #fff;outline-offset:2px}
 
-/* Partners: one still row of marks. --h on each <li> sets that mark to a similar visual weight
-   as the others; the row shows them a little under that size so all seven fit across. */
-.partners{padding:clamp(40px,5vw,64px) 0 clamp(44px,5vw,72px);border-top:1px solid var(--rule)}
-.partners-label{font-size:15px;font-weight:600;color:var(--ink-2);margin:0 0 26px}
-.partner-logos{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:24px 40px}
-.partner-logos img{display:block;height:calc(var(--h,36px) * .84);width:auto}
-@media (min-width:1100px){.partner-logos{justify-content:space-between;gap:24px 28px}}
+/* Partners: a slow seamless loop of marks. --h on each <li> sets that mark to a similar visual
+   weight as the others, and --logo-scale sizes the whole row up from there. */
+.partners{--logo-scale:1.25;padding:clamp(40px,5vw,64px) 0 clamp(44px,5vw,72px);border-top:1px solid var(--rule)}
+@media (min-width:760px){.partners{--logo-scale:1.6}}
+.partners-label{font-size:15px;font-weight:600;color:var(--ink-2);margin:0 0 30px}
+.marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marquee-track{display:flex;width:max-content;animation:marquee var(--marquee-duration,40s) linear infinite;will-change:transform}
+.marquee:hover .marquee-track,.marquee:focus-within .marquee-track{animation-play-state:paused}
+.partner-logos{display:flex;align-items:center;gap:clamp(56px,7vw,112px);padding:0 clamp(56px,7vw,112px) 0 0;list-style:none;margin:0}
+.partner-logos img{display:block;height:calc(var(--h,36px) * var(--logo-scale));width:auto;max-width:none}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){
+  .marquee{-webkit-mask-image:none;mask-image:none}
+  .marquee-track{animation:none;width:auto}
+  .partner-logos{flex-wrap:wrap;justify-content:center;gap:24px 48px;padding:0 20px}
+  .partner-logos[data-clone]{display:none}
+}
 
 /* For families: a full-width block of plain prose above Join and Contact, in the same band */
 .families{max-width:66ch;margin-bottom:clamp(40px,5vw,64px);padding-bottom:clamp(36px,4vw,56px);border-bottom:1px solid var(--rule)}
@@ -818,6 +828,9 @@ footer a{color:var(--muted)}
 <section class="partners" id="partners" aria-label="Partners and supporters">
   <div class="wrap">
     <p class="partners-label">Partners and supporters</p>
+  </div>
+  <div class="marquee">
+    <div class="marquee-track">
     <ul class="partner-logos">
       <li style="--h:40px"><img src="logos/igi.svg" alt="Innovative Genomics Institute" width="178" height="77"></li>
       <li style="--h:30px"><img src="logos/uc-berkeley.svg" alt="UC Berkeley" width="225" height="42"></li>
@@ -827,6 +840,7 @@ footer a{color:var(--muted)}
       <li style="--h:34px"><img src="logos/chop.png" alt="Children's Hospital of Philadelphia" width="620" height="130"></li>
       <li style="--h:30px"><img src="logos/penn-medicine.svg" alt="Penn Medicine" width="500" height="80"></li>
     </ul>
+    </div>
   </div>
 </section>
 
@@ -1151,6 +1165,21 @@ footer a{color:var(--muted)}
     document.addEventListener('keydown', function(e){
       if (e.key === 'Escape' && playing) stop(true);
     });
+  })();
+
+  /* Partners strip: clone the set for a seamless loop and pace the scroll by its width */
+  (function(){
+    var track = document.querySelector('.marquee-track');
+    if (!track) return;
+    var set = track.querySelector('.partner-logos');
+    var clone = set.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    clone.setAttribute('data-clone', '');
+    track.appendChild(clone);
+    function pace(){ track.style.setProperty('--marquee-duration', Math.max(24, Math.round(set.scrollWidth / 45)) + 's'); }
+    pace();
+    window.addEventListener('resize', pace);
+    window.addEventListener('load', pace);
   })();
 
   /* Publications, live from Europe PMC, with a cached copy so an outage never blanks the section */

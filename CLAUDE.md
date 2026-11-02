@@ -15,6 +15,8 @@ A single static page (`index.html`) served by GitHub Pages from `main`. No build
 - Keep the writing style of the page and README: plain sentences, no em dashes.
 - Keep the look plain and editorial so it never reads as generated: real photos lead, no
   scroll gimmicks, glows, tickers or monospace decoration, one small corner radius (`--radius`).
+  The one exception the owner asked for: the "Partners and supporters" logos scroll in a slow
+  loop. Keep it, and keep it still for visitors who ask for reduced motion.
 - The lab owns `urlab.bio` through Squarespace. The switch is the "Switch to www.urlab.bio"
   workflow (`.github/workflows/go-live.yml`), run once the DNS records listed under "Moving to
   www.urlab.bio" in the README are in place. It writes the `CNAME` file and swaps the site
