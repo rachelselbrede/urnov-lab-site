@@ -113,7 +113,7 @@
   --gutter:clamp(20px,4vw,48px);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:64px}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{
   margin:0;
@@ -143,54 +143,63 @@ button{font:inherit;color:inherit}
 .lead{font-size:clamp(18px,1.6vw,21px);line-height:1.55;color:var(--ink-2)}
 .measure{max-width:64ch}
 
-/* Nav */
-.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
-.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
-.brand-group{display:flex;align-items:center;gap:16px}
-.brand{font-family:var(--font-display);font-weight:700;font-size:22px;line-height:1;color:var(--ink);text-decoration:none}
-.affiliation{display:flex;align-items:center;padding-left:16px;border-left:1px solid var(--rule);height:30px}
-.affiliation img{display:block;height:40px;width:auto}
-@media (max-width:480px){.affiliation{display:none}}
+/* Nav: links split either side of the IGI mark in the middle. While it sits over the group
+   photo it is see-through with white type; past the photo it turns solid. The script adds
+   .over-photo, so without scripting the bar is simply solid. */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);transition:background .25s,border-color .25s}
+.nav-bar{position:relative;display:flex;align-items:center;justify-content:space-between;height:72px}
+.nav-menu{display:flex;justify-content:space-between;align-items:center;width:100%}
+.nav-logo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;line-height:0}
+.nav-logo img{display:block;height:46px;width:auto;transition:filter .25s}
 .nav-links{display:flex;gap:26px;list-style:none;margin:0;padding:0}
-.nav-links a{position:relative;color:var(--ink);text-decoration:none;font-size:15px;font-weight:500}
+.nav-links a{position:relative;color:var(--ink);text-decoration:none;font-size:15px;font-weight:500;transition:color .25s}
 .nav-links a:hover{color:var(--link)}
 /* Marks the section you are reading. Drawn rather than bolded so nothing shifts as you scroll. */
 .nav-links a[aria-current]{color:var(--link)}
 .nav-links a[aria-current]::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;border-radius:1px;background:var(--base-c)}
-.nav-toggle{display:none;background:none;border:1px solid var(--rule);border-radius:var(--radius);padding:8px 12px;font-size:14px;cursor:pointer}
-@media (max-width:860px){
+.nav-toggle{display:none;background:none;border:1px solid var(--rule);border-radius:var(--radius);padding:8px 12px;font-size:14px;color:var(--ink);cursor:pointer}
+.nav.over-photo{background:transparent;border-bottom-color:transparent;backdrop-filter:none}
+.nav.over-photo .nav-logo img{filter:brightness(0) invert(1)}
+.nav.over-photo .nav-toggle{color:#fff;border-color:rgba(255,255,255,.6)}
+@media (min-width:1001px){
+  .nav.over-photo .nav-links a{color:#fff}
+  .nav.over-photo .nav-links a:hover{color:rgba(255,255,255,.75)}
+}
+@media (max-width:1180px) and (min-width:1001px){.nav-links{gap:18px}.nav-links a{font-size:14.5px}}
+@media (max-width:1000px){
+  .nav-bar{justify-content:flex-end}
   .nav-toggle{display:inline-block}
-  .nav-links{display:none;position:absolute;left:0;right:0;top:64px;background:var(--paper);border-bottom:1px solid var(--rule);flex-direction:column;gap:0;padding:8px var(--gutter) 16px}
-  .nav-links.open{display:flex}
+  .nav-menu{display:none;position:absolute;left:0;right:0;top:72px;width:auto;background:var(--paper);border-bottom:1px solid var(--rule);flex-direction:column;align-items:stretch;padding:8px var(--gutter) 16px}
+  .nav-menu.open{display:flex}
+  .nav-links{flex-direction:column;gap:0}
   .nav-links a{display:block;padding:12px 0;border-top:1px solid var(--rule)}
   .nav-links a[aria-current]::after{display:none}   /* stacked rows already read top to bottom */
 }
 
-/* Hero: the lab's name, then the lab itself. The group photo runs the full width of
-   the window. Until photos/lab-group.jpg exists the frame shows a drawn group of silhouettes,
-   the same placeholder idea as the headshots, so the space is held and the page still looks
-   finished. */
-.hero{padding:clamp(44px,6.5vw,88px) 0 0}
-.hero-head{margin-bottom:clamp(30px,4vw,52px)}
-.hero h1{font-size:clamp(64px,10vw,132px);line-height:.95;letter-spacing:-.02em}
+/* Hero: the group photo fills the top of the window, running up under the see-through nav,
+   with the lab's name set over its lower left. Until photos/lab-group.jpg exists the frame
+   shows a drawn group of silhouettes on a dark ground, so the white title still reads. */
+.hero{position:relative;margin-top:-73px}
+.hero-title{position:absolute;left:0;right:0;bottom:0;z-index:2;padding-bottom:clamp(36px,6vw,80px);pointer-events:none}
+.hero h1{color:#fff;font-size:clamp(60px,9vw,124px);line-height:.95;letter-spacing:-.02em;text-shadow:0 2px 24px rgba(0,0,0,.25)}
 .btn{display:inline-block;padding:12px 20px;border-radius:var(--radius);font-weight:600;text-decoration:none;font-size:16px;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
 .btn.primary{background:var(--ink);color:#fff}
 .btn:hover{border-color:var(--link)}
 .btn.primary:hover{background:var(--ink-2);border-color:var(--ink-2)}
 
 .group-photo{margin:0}
-.group-frame{position:relative;width:100%;aspect-ratio:12/5;max-height:calc(100vh - 150px);min-height:230px;overflow:hidden;
-  background:#EEEFF1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 640 200'%3E%3Cdefs%3E%3Cg id='p'%3E%3Ccircle cx='50' cy='36' r='17'/%3E%3Cpath d='M13 160V100c0-23 16-37 37-37s37 14 37 37v60z'/%3E%3C/g%3E%3C/defs%3E%3Cg fill='%23DCDEE2'%3E%3Cuse xlink:href='%23p' x='37' y='38'/%3E%3Cuse xlink:href='%23p' x='115' y='30'/%3E%3Cuse xlink:href='%23p' x='193' y='36'/%3E%3Cuse xlink:href='%23p' x='271' y='28'/%3E%3Cuse xlink:href='%23p' x='349' y='34'/%3E%3Cuse xlink:href='%23p' x='427' y='29'/%3E%3Cuse xlink:href='%23p' x='505' y='37'/%3E%3C/g%3E%3Cg fill='%23CDD0D6'%3E%3Cuse xlink:href='%23p' transform='translate(70 62) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(152 70) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(234 64) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(316 71) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(398 63) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(480 69) scale(1.12)'/%3E%3C/g%3E%3C/svg%3E") center bottom/auto 56% no-repeat}
+.group-frame{position:relative;width:100%;height:100vh;height:100svh;min-height:520px;max-height:1100px;overflow:hidden;
+  background:#2E323D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 640 200'%3E%3Cdefs%3E%3Cg id='p'%3E%3Ccircle cx='50' cy='36' r='17'/%3E%3Cpath d='M13 160V100c0-23 16-37 37-37s37 14 37 37v60z'/%3E%3C/g%3E%3C/defs%3E%3Cg fill='%23434957'%3E%3Cuse xlink:href='%23p' x='37' y='38'/%3E%3Cuse xlink:href='%23p' x='115' y='30'/%3E%3Cuse xlink:href='%23p' x='193' y='36'/%3E%3Cuse xlink:href='%23p' x='271' y='28'/%3E%3Cuse xlink:href='%23p' x='349' y='34'/%3E%3Cuse xlink:href='%23p' x='427' y='29'/%3E%3Cuse xlink:href='%23p' x='505' y='37'/%3E%3C/g%3E%3Cg fill='%2350576A'%3E%3Cuse xlink:href='%23p' transform='translate(70 62) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(152 70) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(234 64) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(316 71) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(398 63) scale(1.12)'/%3E%3Cuse xlink:href='%23p' transform='translate(480 69) scale(1.12)'/%3E%3C/g%3E%3C/svg%3E") center bottom/auto 56% no-repeat}
+/* Darkens the top for the nav and the bottom for the title, so both read on any photo */
+.group-frame::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(17,19,26,.58) 0,rgba(17,19,26,0) 26%,rgba(17,19,26,0) 50%,rgba(17,19,26,.6) 100%)}
 .group-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .5s ease}
 .group-photo.has-photo .group-frame{background-image:none}
 .group-photo.has-photo .group-frame img{opacity:1}
 .group-photo figcaption{padding-top:12px;padding-bottom:18px;font-size:14px;color:var(--muted)}
-/* On a phone a wide crop would cut off whoever stands at either end, so the real photo is
-   shown whole there, at its own shape. The placeholder keeps a 3:2 frame. */
+/* On a phone a full-height frame would cut a group photo down to the middle few people, so the
+   frame there is 4:5 and the crop keeps the middle of the group. */
 @media (max-width:640px){
-  .group-frame{aspect-ratio:3/2;background-size:92% auto}
-  .group-photo.has-photo .group-frame{aspect-ratio:auto;min-height:0}
-  .group-photo.has-photo .group-frame img{position:static;height:auto}
+  .group-frame{height:auto;min-height:0;aspect-ratio:4/5;background-size:150% auto}
 }
 
 /* The base-editor figure. The render carries its own transparency, so it sits
@@ -403,29 +412,27 @@ footer a{color:var(--muted)}
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="nav">
-  <div class="wrap">
-    <div class="brand-group">
-      <a class="brand" href="#top" aria-label="Urnov Lab home">Urnov Lab</a>
-      <a class="affiliation" href="https://innovativegenomics.org/"><img src="logos/igi.svg" alt="Innovative Genomics Institute" width="178" height="77"></a>
-    </div>
+  <div class="wrap nav-bar">
+    <nav class="nav-menu" id="navlinks" aria-label="Sections">
+      <ul class="nav-links">
+        <li><a href="#research">Research</a></li>
+        <li><a href="#how">How we make a cure</a></li>
+        <li><a href="#people">People</a></li>
+      </ul>
+      <ul class="nav-links">
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#join">Join us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="nav-logo" href="https://innovativegenomics.org/"><img src="logos/igi.svg" alt="Innovative Genomics Institute" width="178" height="77"></a>
     <button class="nav-toggle" aria-expanded="false" aria-controls="navlinks">Menu</button>
-    <ul class="nav-links" id="navlinks">
-      <li><a href="#research">Research</a></li>
-      <li><a href="#how">How we make a cure</a></li>
-      <li><a href="#people">People</a></li>
-      <li><a href="#publications">Publications</a></li>
-      <li><a href="#news">News</a></li>
-      <li><a href="#join">Join us</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
   </div>
 </header>
 
 <main id="main">
 <section class="hero" id="top">
-  <div class="wrap hero-head">
-    <h1>Urnov Lab</h1>
-  </div>
   <!-- The lab group photo. Save it as photos/lab-group.jpg (landscape, at least 2000 px wide)
        and it fades in over the placeholder on its own. Requesting the file is how the page
        finds out whether it exists, so a 404 for it is expected until someone adds it.
@@ -434,6 +441,9 @@ footer a{color:var(--muted)}
   <figure class="group-photo" data-focus="50% 40%">
     <div class="group-frame">
       <img src="photos/lab-group.jpg" alt="The Urnov Lab group at the Innovative Genomics Institute" width="2400" height="1000" decoding="async" fetchpriority="high">
+      <div class="wrap hero-title">
+        <h1>Urnov Lab</h1>
+      </div>
     </div>
     <figcaption class="wrap">The Urnov Lab at the Innovative Genomics Institute, Berkeley.</figcaption>
   </figure>
@@ -821,6 +831,27 @@ footer a{color:var(--muted)}
     toggle.focus();          /* without this, focus is left inside a menu that is now display:none */
   });
 
+  /* Nav over the group photo: see-through with white type until the photo has scrolled up
+     under it, solid after that. An open phone menu always gets the solid bar. */
+  (function(){
+    var bar = document.querySelector('.nav');
+    var frame = document.querySelector('.group-frame');
+    if (!bar || !frame) return;
+    var ticking = false;
+    function update(){
+      ticking = false;
+      var over = frame.getBoundingClientRect().bottom > bar.offsetHeight && !links.classList.contains('open');
+      bar.classList.toggle('over-photo', over);
+    }
+    function queue(){ if (!ticking){ ticking = true; requestAnimationFrame(update); } }
+    window.addEventListener('scroll', queue, { passive: true });
+    window.addEventListener('resize', queue);
+    toggle.addEventListener('click', queue);
+    links.addEventListener('click', queue);
+    document.addEventListener('keydown', queue);   /* Escape closes the menu */
+    update();
+  })();
+
   /* Group photo: the frame and its drawn placeholder are always there, so the space is held from
      the first visit. The photo fades in over the placeholder once photos/lab-group.jpg has really
      loaded. Until someone adds the file the request 404s and the placeholder stays, which is the
@@ -839,7 +870,7 @@ footer a{color:var(--muted)}
 
   /* Nav scroll-spy: mark whichever section is currently under the header */
   (function(){
-    var nav = document.querySelector('.nav-links');
+    var nav = document.querySelector('.nav-menu');
     if (!nav) return;
     var items = [].slice.call(nav.querySelectorAll('a[href^="#"]')).map(function(a){
       return { link: a, el: document.getElementById(a.getAttribute('href').slice(1)) };
