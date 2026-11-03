@@ -88,7 +88,7 @@ For the photo itself: daylight or soft, even light, everyone's face visible, a r
 
 ## The first-cure timeline
 
-Under the six steps in "How we make a cure" is a dated account of the first personalized CRISPR therapy, for KJ, from August 2024 to July 2025. Every date and role in it comes from the NEJM report (Musunuru et al. 2025), UC Berkeley News and the Children's Hospital of Philadelphia, and the sources are linked under the list. The IGI's part was the safety and efficacy testing, and the entry says exactly that. It is the one place on the page where the lab's claims are checkable to the month, so change an entry only with a source in hand.
+Under the six steps in "How we make a cure" is a dated account of the first personalized CRISPR therapy, from August 2024 to July 2025. Every date and role in it comes from the NEJM report (Musunuru et al. 2025), UC Berkeley News and the Children's Hospital of Philadelphia, and the sources are linked under the list. The IGI's part was the safety and efficacy testing, and the entry says exactly that. It is the one place on the page where the lab's claims are checkable to the month, so change an entry only with a source in hand.
 
 ## The link preview card
 

@@ -102,6 +102,7 @@
   --paper:#FFFFFF;
   --mist:#F4F4F4;       /* IGI light grey */
   --rule:#D8D8D8;       /* IGI Slate Grey */
+  --rule-strong:#86898F; /* borders that mark a button, dark enough to clear 3:1 on white and on the tint */
   --muted:#696C73;      /* Deep Blue tint */
   --seq:#AAABAF;        /* Deep Blue tint, secondary text on dark panels */
   --base-c:#5857FF;     /* IGI Blue, links and focus rings */
@@ -136,6 +137,8 @@ p{margin:0 0 1em}
 a{color:var(--link);text-decoration-thickness:1px;text-underline-offset:3px}
 a:hover{text-decoration-thickness:2px}
 :focus-visible{outline:3px solid var(--base-c);outline-offset:3px;border-radius:2px}
+/* IGI Blue falls under 3:1 on the dark areas, so the focus ring turns white there */
+.nav.over-photo :focus-visible,.hero :focus-visible,#watch :focus-visible,footer :focus-visible{outline-color:#fff}
 button{font:inherit;color:inherit}
 .skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:#fff;padding:8px 12px;z-index:100}
 .skip:focus{left:8px}
@@ -217,7 +220,7 @@ button{font:inherit;color:inherit}
 .editor-figure picture{display:block;background:var(--ink);border-radius:var(--radius);padding:14px;max-width:760px;margin:0 auto}
 .editor-figure img{display:block;width:100%;height:auto}
 .editor-figure figcaption{max-width:760px;margin:0 auto;width:100%}
-.editor-key{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;color:var(--ink-2)}
+.editor-key{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--ink-2)}
 .editor-key li{display:flex;align-items:center;gap:8px}
 .editor-key .sw{width:12px;height:12px;border-radius:3px;background:var(--sw);box-shadow:inset 0 0 0 1px rgba(41,45,57,.22);flex:none}
 .editor-cite{margin:0;font-size:13px;color:var(--muted)}
@@ -259,10 +262,12 @@ button{font:inherit;color:inherit}
 @media (max-width:900px){.pipe{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:560px){.pipe{grid-template-columns:1fr 1fr}}
 .pipe button{
-  width:100%;text-align:left;background:var(--paper);border:1.5px solid var(--rule);border-radius:var(--radius);
+  width:100%;text-align:left;background:var(--paper);border:1.5px solid var(--rule-strong);border-radius:var(--radius);
   padding:16px 16px 14px;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-height:112px;
   transition:border-color .15s,background .15s
 }
+/* On a phone the steps sit two to a row, so shorter boxes keep the description in view */
+@media (max-width:560px){.pipe button{min-height:0;padding:12px 14px;gap:4px}}
 .pipe button:hover{border-color:var(--ink-2)}
 .pipe button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 .pipe .num{font-size:13px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
@@ -283,8 +288,8 @@ button{font:inherit;color:inherit}
 .first-cure{margin-top:clamp(48px,6vw,80px);padding-top:clamp(32px,4vw,48px);border-top:1px solid var(--rule)}
 .first-cure .section-head{margin-bottom:clamp(24px,3vw,36px)}
 .first-cure h3{font-size:clamp(24px,2.6vw,30px)}
-.flow{--gap:clamp(28px,3vw,44px);list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--gap)}
-.flow li{position:relative;background:var(--paper);border:1.5px solid var(--rule);border-top:4px solid var(--base-c);border-radius:var(--radius);padding:16px 16px 18px}
+.flow{--gap:clamp(18px,1.8vw,24px);list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--gap)}
+.flow li{position:relative;background:var(--paper);border:1.5px solid var(--rule);border-top:4px solid var(--base-c);border-radius:var(--radius);padding:14px 14px 16px}
 .flow li:last-child{border-top-color:var(--gold)}
 /* The arrow into the next step: a short line with a head, sitting in the gap */
 .flow li:not(:last-child)::after{content:"";position:absolute;top:50%;right:calc(var(--gap) * -1 + 6px);width:calc(var(--gap) - 12px);height:2px;background:var(--base-c)}
@@ -293,7 +298,7 @@ button{font:inherit;color:inherit}
 .flow h4{font-family:var(--font-display);font-size:18px;font-weight:600;line-height:1.25;margin:0 0 6px}
 .flow p{font-size:14.5px;line-height:1.5;color:var(--ink-2);margin:0}
 @media (max-width:900px){
-  .flow{grid-template-columns:1fr;max-width:520px}
+  .flow{--gap:28px;grid-template-columns:1fr;max-width:520px}
   .flow li:not(:last-child)::after{top:auto;bottom:calc(var(--gap) * -1 + 6px);right:auto;left:28px;width:2px;height:calc(var(--gap) - 12px)}
   .flow li:not(:last-child)::before{top:auto;bottom:calc(var(--gap) * -1 + 4px);right:auto;left:23px;border-width:8px 6px 0 6px;border-color:var(--base-c) transparent transparent transparent}
 }
@@ -358,7 +363,7 @@ button{font:inherit;color:inherit}
 @media (max-width:860px){.news-grid{grid-template-columns:1fr}}
 .news-grid article{border-top:1px solid var(--rule);padding-top:18px}
 .news-grid time{font-size:14px;font-weight:500;color:var(--muted);display:block;margin-bottom:8px}
-.news-grid h3{font-size:19px;margin-bottom:8px}
+.news-grid h3{font-size:18px;line-height:1.3;margin-bottom:10px}
 .news-grid h3 a{color:var(--ink);text-decoration:none}
 .news-grid h3 a:hover{color:var(--link);text-decoration:underline}
 .news-grid p{font-size:15.5px;color:var(--ink-2);margin:0}
@@ -391,7 +396,13 @@ button{font:inherit;color:inherit}
    weight as the others, and --logo-scale sizes the whole row up from there. */
 .partners{--logo-scale:1.25;padding:clamp(40px,5vw,64px) 0 clamp(44px,5vw,72px);border-top:1px solid var(--rule)}
 @media (min-width:760px){.partners{--logo-scale:1.6}}
-.partners-label{font-size:15px;font-weight:600;color:var(--ink-2);margin:0 0 30px}
+.partners-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:30px}
+.partners-label{font-size:15px;font-weight:600;color:var(--ink-2);margin:0}
+/* The strip moves for longer than five seconds, so it needs a pause that works without a mouse.
+   The script adds this button; with scripting off the strip still scrolls and pauses on hover. */
+.marquee-toggle{background:none;border:1px solid var(--rule-strong);border-radius:var(--radius);padding:6px 12px;font-size:14px;font-weight:500;color:var(--ink-2);cursor:pointer;min-height:32px}
+.marquee-toggle:hover{border-color:var(--ink);color:var(--ink)}
+.marquee.paused .marquee-track{animation-play-state:paused}
 .marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .marquee-track{display:flex;width:max-content;animation:marquee var(--marquee-duration,40s) linear infinite;will-change:transform}
 .marquee:hover .marquee-track,.marquee:focus-within .marquee-track{animation-play-state:paused}
@@ -403,6 +414,7 @@ button{font:inherit;color:inherit}
   .marquee-track{animation:none;width:auto}
   .partner-logos{flex-wrap:wrap;justify-content:center;gap:24px 48px;padding:0 20px}
   .partner-logos[data-clone]{display:none}
+  .marquee-toggle{display:none}            /* nothing moves, so there is nothing to pause */
 }
 
 /* Join and contact */
@@ -411,6 +423,7 @@ button{font:inherit;color:inherit}
 .two-col h2{margin-bottom:16px}
 .two-col p{color:var(--ink-2)}
 address{font-style:normal;color:var(--ink-2);line-height:1.7}
+.map-link{margin:14px 0 0}
 
 /* Footer */
 footer{border-top:1px solid var(--rule);padding:32px 0 40px;font-size:14px;color:var(--muted)}
@@ -746,12 +759,12 @@ footer a{color:#fff}
         <p>Fyodor Urnov at TEDxBerkeley</p>
       </article>
       <article class="video">
-        <button type="button" class="video-poster" data-id="mUQWWLErLaY" data-title="A Breakthrough in Medicine: Personalized Gene Editing to Save KJ" aria-label="Play: A Breakthrough in Medicine: Personalized Gene Editing to Save KJ">
+        <button type="button" class="video-poster" data-id="mUQWWLErLaY" data-title="The first personalized CRISPR therapy, Children's Hospital of Philadelphia" aria-label="Play: The first personalized CRISPR therapy, Children's Hospital of Philadelphia">
           <img src="https://i.ytimg.com/vi/mUQWWLErLaY/maxresdefault.jpg" alt="" loading="lazy" width="1280" height="720">
           <span class="play" aria-hidden="true"></span>
           <span class="duration" aria-hidden="true">8 min</span>
         </button>
-        <h3>Personalized gene editing to save KJ</h3>
+        <h3>The first personalized CRISPR therapy</h3>
         <p>Children's Hospital of Philadelphia</p>
       </article>
       <article class="video">
@@ -777,7 +790,7 @@ footer a{color:#fff}
 </section>
 
 <section class="partners" id="partners" aria-label="Partners and supporters">
-  <div class="wrap">
+  <div class="wrap partners-head">
     <p class="partners-label">Partners and supporters</p>
   </div>
   <div class="marquee">
@@ -813,6 +826,7 @@ footer a{color:#fff}
         2151 Berkeley Way<br>
         Berkeley, CA 94720
       </address>
+      <p class="map-link"><a href="https://www.google.com/maps/search/?api=1&amp;query=2151+Berkeley+Way%2C+Berkeley%2C+CA+94720">Open in Google Maps</a></p>
     </div>
     </div>
   </div>
@@ -1130,6 +1144,22 @@ footer a{color:#fff}
     clone.setAttribute('aria-hidden', 'true');
     clone.setAttribute('data-clone', '');
     track.appendChild(clone);
+    /* A pause that works by tap and keyboard as well as by hover */
+    var strip = track.parentNode;
+    var head = document.querySelector('.partners-head');
+    if (head){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'marquee-toggle';
+      btn.textContent = 'Pause';
+      btn.setAttribute('aria-label', 'Pause the partner logos');
+      btn.addEventListener('click', function(){
+        var paused = strip.classList.toggle('paused');
+        btn.textContent = paused ? 'Play' : 'Pause';
+        btn.setAttribute('aria-label', (paused ? 'Play' : 'Pause') + ' the partner logos');
+      });
+      head.appendChild(btn);
+    }
     function pace(){ track.style.setProperty('--marquee-duration', Math.max(24, Math.round(set.scrollWidth / 45)) + 's'); }
     pace();
     window.addEventListener('resize', pace);
