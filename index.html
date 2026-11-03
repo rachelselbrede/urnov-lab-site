@@ -106,6 +106,10 @@
   --seq:#AAABAF;        /* Deep Blue tint, secondary text on dark panels */
   --base-c:#5857FF;     /* IGI Blue, links and focus rings */
   --link:#5857FF;
+  --gold:#FFAC0F;       /* IGI Genome Gold, fills and rules only: it is too light for text on white */
+  --teal:#00A5A8;       /* outside the IGI palette, a third accent for the research cards */
+  --blue-deep:#3634C9;  /* IGI Blue darkened, the far end of the Join gradient */
+  --tint:#F5F5FF;       /* IGI Blue tint for the banded sections, light enough to keep IGI Blue links at AA */
   --font-display:'Source Serif 4',Georgia,'Times New Roman',serif;
   --font-body:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
   --radius:4px;         /* one small radius for every frame and button, so nothing reads as an app card */
@@ -137,7 +141,7 @@ button{font:inherit;color:inherit}
 .skip:focus{left:8px}
 .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
 .section{padding:clamp(64px,9vw,120px) 0}
-.section.band{background:var(--mist)}
+.section.band{background:var(--tint)}
 .section-head{max-width:64ch;margin-bottom:clamp(32px,4vw,56px)}
 .section-head p{font-size:19px;color:var(--ink-2);margin-top:18px}
 .lead{font-size:clamp(18px,1.6vw,21px);line-height:1.55;color:var(--ink-2)}
@@ -438,6 +442,40 @@ footer a{color:var(--muted)}
   .pipe button,.group-frame img{transition:none}
   .video-poster img,.video-poster .play,.video-close{transition:none}
 }
+
+/* Colour. Kept together so the page's accents can be read and changed in one place: a short
+   IGI Blue bar over each section heading, coloured rules on the cards, IGI Blue for the strip
+   under the photo and for Join, and Deep Blue for Watch and the footer. Text on IGI Blue is
+   white, the only shade that clears AA on it. */
+.section-head h2::before,.two-col h2::before{content:"";display:block;width:44px;height:4px;border-radius:2px;background:var(--base-c);margin-bottom:18px}
+.facts{background:var(--base-c);border:0}
+.facts p,.facts strong{color:#fff}
+.facts p+p{border-left-color:rgba(255,255,255,.28)}
+@media (max-width:780px){.facts p+p{border-top-color:rgba(255,255,255,.28)}}
+.research-grid article{border-top:4px solid var(--gold)}
+.research-grid article:nth-child(2){border-top-color:var(--base-c)}
+.research-grid article:nth-child(3){border-top-color:var(--teal)}
+.news-grid article{border-top:3px solid var(--base-c)}
+.pubs .year,.news-grid time,.timeline .when{color:var(--link)}
+.pipe button[aria-selected="true"]{background:var(--base-c);border-color:var(--base-c)}
+.pipe button[aria-selected="true"] .num{color:#fff}
+.portrait{background-color:var(--tint)}
+#watch{background:var(--ink);color:#fff}
+#watch h2,#watch .video h3{color:#fff}
+#watch .section-head p,#watch .video p{color:#B9BBC4}
+#watch .video-poster .play{background:var(--gold)}
+#watch .video-poster .play::after{border-left-color:var(--ink)}
+#watch .video-poster:hover .play{background:#fff}
+#join{background:linear-gradient(135deg,var(--base-c) 0%,var(--blue-deep) 100%);color:#fff}
+#join h2{color:#fff}
+#join h2::before{background:var(--gold)}
+#join p,#join address{color:#fff}
+#join a{color:#fff}
+#join .btn{border-color:#fff;background:#fff;color:var(--blue-deep)}
+#join .btn:hover{background:transparent;color:#fff}
+#join :focus-visible{outline-color:#fff}
+footer{background:var(--ink);border-top:0;color:#B9BBC4}
+footer a{color:#fff}
 </style>
 </head>
 <body>
