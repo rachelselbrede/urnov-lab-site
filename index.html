@@ -189,12 +189,13 @@ button{font:inherit;color:inherit}
 .hero{position:relative;margin-top:-73px}
 .hero-title{--title:clamp(60px,9vw,124px);position:absolute;left:0;right:0;bottom:0;z-index:2;padding-bottom:clamp(36px,6vw,80px);pointer-events:none}
 .hero h1{color:#fff;font-size:var(--title);line-height:.95;letter-spacing:-.02em;text-shadow:0 2px 24px rgba(0,0,0,.25)}
-/* The UC Berkeley logo under the name, in its own Berkeley Blue on a white panel so it reads on
-   the photo. Everything is sized from --title, so the panel keeps the same proportions to the
-   name at every width, and --u-inset moves it right by the gap the serif U leaves before its
-   first stroke, so the panel's edge lines up with the ink of the U rather than the text box. */
-.hero-uni{--u-inset:calc(var(--title) * .034);display:inline-block;margin:calc(var(--title) * .22) 0 0 var(--u-inset);padding:calc(var(--title) * .1) calc(var(--title) * .13);background:#fff;border-radius:var(--radius);pointer-events:auto;line-height:0;box-shadow:0 2px 18px rgba(0,0,0,.18)}
-.hero-uni img{display:block;height:calc(var(--title) * .4);width:auto}
+/* The UC Berkeley logo under the name, reversed to white straight on the photo like the name
+   and the IGI mark above it (Berkeley's brand allows the lockup in white on dark grounds). It is
+   sized from --title, so it keeps the same proportion to the name at every width, and --u-inset
+   moves it right by the gap the serif U leaves before its first stroke, so the B lines up with
+   the ink of the U rather than the text box. The soft shadow matches the one on the name. */
+.hero-uni{--u-inset:calc(var(--title) * .012);display:inline-block;margin:calc(var(--title) * .2) 0 0 var(--u-inset);pointer-events:auto;line-height:0}
+.hero-uni img{display:block;height:calc(var(--title) * .46);width:auto;filter:brightness(0) invert(1) drop-shadow(0 2px 14px rgba(0,0,0,.3))}
 .btn{display:inline-block;padding:12px 20px;border-radius:var(--radius);font-weight:600;text-decoration:none;font-size:16px;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
 .btn.primary{background:var(--ink);color:#fff}
 .btn:hover{border-color:var(--link)}

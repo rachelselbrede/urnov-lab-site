@@ -82,7 +82,7 @@ With scripting turned off the names, roles, portrait frames and silhouettes all 
 
 On a laptop or desktop the photo fills the window, so its shape follows the screen: a normal 3:2 photo loses a little at the sides on most screens and some top and bottom on very wide ones. Keep the faces out of the bottom fifth, where the title sits, and leave some room above the heads. If it does cut someone, steer it with `data-focus` on the `<figure class="group-photo">` near the top of `index.html`, the same way as on a headshot: the second percentage moves the crop up (lower) or down (higher). On a phone the frame is 4:5, which keeps the middle of the group, so stand the people the lab most wants seen near the centre.
 
-The photo has no caption; the lab's name and the UC Berkeley logo sit over its lower left instead. The logo is the official Berkeley lockup in Berkeley Blue (`logos/berkeley-lockup.svg`) on a white panel, and its left edge is set to line up with the first stroke of the U in "Urnov Lab" at every screen size.
+The photo has no caption; the lab's name and the UC Berkeley logo sit over its lower left instead. The logo is the official Berkeley lockup (`logos/berkeley-lockup.svg`), shown reversed to white straight on the photo like the name above it, and its B is set to line up with the first stroke of the U in "Urnov Lab" at every screen size.
 
 For the photo itself: daylight or soft, even light, everyone's face visible, a real place (the lab, the IGI atrium, the courtyard) rather than a plain wall, and no wide-angle lens close in, which stretches the people at the edges. A photo of the lab at work, taken by someone who knows the space, beats a posed lineup if nobody can get everyone together.
 
