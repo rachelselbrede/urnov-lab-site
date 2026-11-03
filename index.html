@@ -397,13 +397,7 @@ button{font:inherit;color:inherit}
    weight as the others, and --logo-scale sizes the whole row up from there. */
 .partners{--logo-scale:1.25;padding:clamp(40px,5vw,64px) 0 clamp(44px,5vw,72px);border-top:1px solid var(--rule)}
 @media (min-width:760px){.partners{--logo-scale:1.6}}
-.partners-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:30px}
-.partners-label{font-size:15px;font-weight:600;color:var(--ink-2);margin:0}
-/* The strip moves for longer than five seconds, so it needs a pause that works without a mouse.
-   The script adds this button; with scripting off the strip still scrolls and pauses on hover. */
-.marquee-toggle{background:none;border:1px solid var(--rule-strong);border-radius:var(--radius);padding:6px 12px;font-size:14px;font-weight:500;color:var(--ink-2);cursor:pointer;min-height:32px}
-.marquee-toggle:hover{border-color:var(--ink);color:var(--ink)}
-.marquee.paused .marquee-track{animation-play-state:paused}
+.partners-label{font-size:15px;font-weight:600;color:var(--ink-2);margin:0 0 30px}
 .marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .marquee-track{display:flex;width:max-content;animation:marquee var(--marquee-duration,40s) linear infinite;will-change:transform}
 .marquee:hover .marquee-track,.marquee:focus-within .marquee-track{animation-play-state:paused}
@@ -414,9 +408,7 @@ button{font:inherit;color:inherit}
   .marquee{-webkit-mask-image:none;mask-image:none}
   .marquee-track{animation:none;width:auto}
   .partner-logos{flex-wrap:wrap;justify-content:center;gap:24px 48px;padding:0 20px}
-  .partner-logos[data-clone]{display:none}
-  .marquee-toggle{display:none}            /* nothing moves, so there is nothing to pause */
-}
+  .partner-logos[data-clone]{display:none}}
 
 /* Join and contact */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px)}
@@ -791,7 +783,7 @@ footer a{color:#fff}
 </section>
 
 <section class="partners" id="partners" aria-label="Partners and supporters">
-  <div class="wrap partners-head">
+  <div class="wrap">
     <p class="partners-label">Partners and supporters</p>
   </div>
   <div class="marquee">
@@ -1145,22 +1137,6 @@ footer a{color:#fff}
     clone.setAttribute('aria-hidden', 'true');
     clone.setAttribute('data-clone', '');
     track.appendChild(clone);
-    /* A pause that works by tap and keyboard as well as by hover */
-    var strip = track.parentNode;
-    var head = document.querySelector('.partners-head');
-    if (head){
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'marquee-toggle';
-      btn.textContent = 'Pause';
-      btn.setAttribute('aria-label', 'Pause the partner logos');
-      btn.addEventListener('click', function(){
-        var paused = strip.classList.toggle('paused');
-        btn.textContent = paused ? 'Play' : 'Pause';
-        btn.setAttribute('aria-label', (paused ? 'Play' : 'Pause') + ' the partner logos');
-      });
-      head.appendChild(btn);
-    }
     function pace(){ track.style.setProperty('--marquee-duration', Math.max(24, Math.round(set.scrollWidth / 45)) + 's'); }
     pace();
     window.addEventListener('resize', pace);
