@@ -103,9 +103,9 @@ Check the result is exactly 1200x630. Some headless builds report a shorter view
 
 The card is entirely type, with no IGI or partner marks on it, so it does not need a logo usage sign-off the way the partners strip does.
 
-## The base-edit example
+## The Our Mission illustration
 
-Beside "Our Mission" is a small worked example of a base edit, built from plain HTML and CSS: two strands of DNA with one wrong letter, and three buttons (Find, Edit, Check) that walk a visitor through how an adenine base editor puts it right. The sequence is made up for illustration and the caption says so. The step text lives in the `<script>` block at the bottom of `index.html`; the colours and layout are under "Research" in the `<style>` block.
+`images/crispr-cas9-igi.jpg`, beside "Our Mission", is from the IGI's downloadable photos and illustrations. IGI asks that its images carry the attribution given with the download, or "Innovative Genomics Institute, UC Berkeley" when none is given, so the caption under it ends with that credit. Keep the credit if the image is swapped for another IGI one.
 
 ## What updates itself
 
@@ -180,4 +180,4 @@ grep -rl 'https://rachelselbrede.github.io/urnov-lab-site' --exclude-dir=.git . 
 - Move the repo to a GitHub organization owned by the lab so it does not depend on one person's account.
 - Switch the address to `www.urlab.bio`, following "Moving to www.urlab.bio" above.
 - The palette follows the IGI brand guidelines (innovativegenomics.org/resources/member-resources/brand-guidelines/): IGI Deep Blue for text, the dark figure panels, Watch and the footer; IGI Blue for links, focus rings, the bars over section headings, the strip under the photo and the Join section; Genome Gold, IGI Blue and one teal from outside the palette as rules on the cards; a light IGI Blue tint for the banded sections. Text on IGI Blue is always white, and gold is never used for text on white, because both would fail contrast. The colour accents are gathered in one block at the end of the CSS, headed "Colour". Fonts are Source Serif 4 and Inter, the pairing UC Berkeley's own site uses. All tokens are at the top of the CSS in `:root`. Ask IGI comms for headshots and to confirm logo and color usage before launch.
-- Check accessibility once real content is in (UC expects WCAG AA). The page has a skip link, visible focus states that hold up on both light and dark backgrounds, reduced-motion support, readable contrast, and keyboard support for every control: the pipeline is a tab set with arrow-key navigation, the base-edit example is driven by ordinary buttons that announce each step to screen readers, videos can be closed with Escape and return focus to the card they came from, and the mobile menu closes with Escape.
+- Check accessibility once real content is in (UC expects WCAG AA). The page has a skip link, visible focus states that hold up on both light and dark backgrounds, reduced-motion support, readable contrast, and keyboard support for every control: the pipeline is a tab set with arrow-key navigation, the Our Mission illustration has alt text and a credited caption, videos can be closed with Escape and return focus to the card they came from, and the mobile menu closes with Escape.
