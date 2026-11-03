@@ -9,7 +9,7 @@ social/           the link preview card (PNG) and the HTML it is rendered from
 logos/            partner wordmarks
 photos/           the group photo and the headshots (empty until the lab sends them)
 news.json         the latest IGI stories about the lab, written by the news workflow
-models/           the Cas9 structure shown beside "What we work on", as a compressed glTF, and its poster image
+models/           the Cas9 structure shown beside "Our Mission", as a compressed glTF, and its poster image
 vendor/           the 3D viewer and the Draco decoder, copied from npm so the site depends on no CDN
 icons/            the browser tab and home screen icons: the site's U, drawn as a path
 scripts/          fetch-news.mjs, which finds those stories; build-cas9-model.py, which makes the model;
@@ -108,7 +108,7 @@ The card is entirely type, with no IGI or partner marks on it, so it does not ne
 
 ## The Cas9 model
 
-The molecule beside "What we work on" is the real thing: Protein Data Bank entry 4OO8 (Nishimasu et al., Cell 2014), Streptococcus pyogenes Cas9 with its guide RNA and the target DNA strand. The enzyme is white, the guide RNA Genome Gold, the DNA IGI Blue. Visitors can drag it to turn it, and it turns on its own unless they have asked their system for reduced motion. It is rendered by model-viewer 4.3.1, copied from npm into `vendor/` along with the Draco decoder from three.js 0.186, so nothing loads from a third-party CDN. `models/cas9.glb` is about 270 KB and `models/cas9-poster.png` shows while it loads.
+The molecule beside "Our Mission" is the real thing: Protein Data Bank entry 4OO8 (Nishimasu et al., Cell 2014), Streptococcus pyogenes Cas9 with its guide RNA and the target DNA strand. The enzyme is white, the guide RNA Genome Gold, the DNA IGI Blue. Visitors can drag it to turn it, and it turns on its own unless they have asked their system for reduced motion. It is rendered by model-viewer 4.3.1, copied from npm into `vendor/` along with the Draco decoder from three.js 0.186, so nothing loads from a third-party CDN. `models/cas9.glb` is about 270 KB and `models/cas9-poster.png` shows while it loads.
 
 To rebuild the model, download a structure from the Protein Data Bank and run the script:
 
