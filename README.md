@@ -9,11 +9,8 @@ social/           the link preview card (PNG) and the HTML it is rendered from
 logos/            partner wordmarks
 photos/           the group photo and the headshots (empty until the lab sends them)
 news.json         the latest IGI stories about the lab, written by the news workflow
-models/           the Cas9 structure shown beside "Our Mission", as a compressed glTF, and its poster image
-vendor/           the 3D viewer and the Draco decoder, copied from npm so the site depends on no CDN
 icons/            the browser tab and home screen icons: the site's U, drawn as a path
-scripts/          fetch-news.mjs, which finds those stories; build-cas9-model.py, which makes the model;
-                  check-domain.mjs, which checks the lab's domain before the site moves to it
+scripts/          fetch-news.mjs, which finds those stories, and check-domain.mjs, which checks the lab's domain before the site moves to it
 .github/          two workflows: the news refresh, once a day, and the one-time switch to www.urlab.bio
 robots.txt        points crawlers at the sitemap
 sitemap.xml       the one page
@@ -106,18 +103,9 @@ Check the result is exactly 1200x630. Some headless builds report a shorter view
 
 The card is entirely type, with no IGI or partner marks on it, so it does not need a logo usage sign-off the way the partners strip does.
 
-## The Cas9 model
+## The base-edit example
 
-The molecule beside "Our Mission" is the real thing: Protein Data Bank entry 4OO8 (Nishimasu et al., Cell 2014), Streptococcus pyogenes Cas9 with its guide RNA and the target DNA strand. The enzyme is white, the guide RNA Genome Gold, the DNA IGI Blue. Visitors can drag it to turn it, and it turns on its own unless they have asked their system for reduced motion. It is rendered by model-viewer 4.3.1, copied from npm into `vendor/` along with the Draco decoder from three.js 0.186, so nothing loads from a third-party CDN. `models/cas9.glb` is about 270 KB and `models/cas9-poster.png` shows while it loads.
-
-To rebuild the model, download a structure from the Protein Data Bank and run the script:
-
-```
-python3 scripts/build-cas9-model.py 4oo8.pdb models/cas9.glb
-npx gltf-pipeline -i models/cas9.glb -o models/cas9.glb -d --draco.compressionLevel 7
-```
-
-The script turns each chain into a smooth molecular surface and needs `pip install numpy scipy scikit-image trimesh fast-simplification`. To show the DNA double helix reaching out of the enzyme, the way the printed models do, use entry 5F9R (Jiang et al., Science 2016) with `--chains A B CD`; the `--help` text explains the chain letters. PDB data is free to reuse; cite the entry if the model appears in print.
+Beside "Our Mission" is a small worked example of a base edit, built from plain HTML and CSS: two strands of DNA with one wrong letter, and three buttons (Find, Edit, Check) that walk a visitor through how an adenine base editor puts it right. The sequence is made up for illustration and the caption says so. The step text lives in the `<script>` block at the bottom of `index.html`; the colours and layout are under "Research" in the `<style>` block.
 
 ## What updates itself
 
@@ -192,4 +180,4 @@ grep -rl 'https://rachelselbrede.github.io/urnov-lab-site' --exclude-dir=.git . 
 - Move the repo to a GitHub organization owned by the lab so it does not depend on one person's account.
 - Switch the address to `www.urlab.bio`, following "Moving to www.urlab.bio" above.
 - The palette follows the IGI brand guidelines (innovativegenomics.org/resources/member-resources/brand-guidelines/): IGI Deep Blue for text and the dark figure panels, IGI Blue for links and focus rings, Slate Grey for rules and the photo placeholders, Genome Gold and IGI Blue in the molecular figures. Official tints are used where the true colors would fail contrast on dark panels. Fonts are Source Serif 4 and Inter, the pairing UC Berkeley's own site uses. All tokens are at the top of the CSS in `:root`. Ask IGI comms for headshots and to confirm logo and color usage before launch.
-- Check accessibility once real content is in (UC expects WCAG AA). The page has a skip link, visible focus states that hold up on both light and dark backgrounds, reduced-motion support, readable contrast, and keyboard support for every control: the pipeline is a tab set with arrow-key navigation, the Cas9 model has alt text and a caption, turns on its own only when motion is allowed, and can be turned with a drag or with the arrow keys once it has focus, videos can be closed with Escape and return focus to the card they came from, and the mobile menu closes with Escape.
+- Check accessibility once real content is in (UC expects WCAG AA). The page has a skip link, visible focus states that hold up on both light and dark backgrounds, reduced-motion support, readable contrast, and keyboard support for every control: the pipeline is a tab set with arrow-key navigation, the base-edit example is driven by ordinary buttons that announce each step to screen readers, videos can be closed with Escape and return focus to the card they came from, and the mobile menu closes with Escape.

@@ -231,19 +231,48 @@ button{font:inherit;color:inherit}
   .facts p+p{border-left:0;padding-left:0;border-top:1px solid var(--rule)}
 }
 
-/* Research. The intro shares its row with the Cas9 model, rendered from its Protein Data Bank
-   structure by model-viewer (vendor/model-viewer.min.js, loaded at the end of the page). */
-.research-intro{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,72px);align-items:center;margin-bottom:clamp(40px,5vw,64px)}
+/* Research. The intro shares its row with a small worked example of a base edit: a stretch of
+   DNA with one wrong letter, and three steps a visitor clicks through to find it, change it and
+   check it. The sequence is illustrative, not a patient's. The figure's data-step drives
+   everything visual here; the script only sets it and swaps the caption. */
+.research-intro{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,72px);align-items:center;margin-bottom:clamp(40px,5vw,64px)}
 .research-intro .section-head{margin-bottom:0}
-.molecule{margin:0}
-.molecule .stage{background:var(--ink);border-radius:var(--radius);overflow:hidden}
-.molecule model-viewer{display:block;width:100%;height:auto;aspect-ratio:1;max-height:440px;background:transparent;--poster-color:transparent;cursor:grab}
-.molecule model-viewer:active{cursor:grabbing}
-.molecule figcaption{margin:10px 0 0;font-size:13.5px;line-height:1.45;color:var(--muted)}
-@media (max-width:860px){
-  .research-intro{grid-template-columns:1fr}
-  .molecule{max-width:440px}
-}
+@media (max-width:860px){.research-intro{grid-template-columns:1fr}}
+.edit-demo{margin:0;--gold:#F2C14E;--variant:#FF8A7A;--fixed:#7EE0A8}
+.edit-demo .stage{background:var(--ink);border-radius:var(--radius);padding:clamp(18px,3vw,30px) clamp(14px,2.4vw,26px) clamp(16px,2.6vw,24px);color:#fff}
+.dna{--n:23;display:grid;grid-template-columns:auto repeat(var(--n),minmax(0,1fr)) auto;column-gap:clamp(1px,.3vw,3px);row-gap:6px;align-items:center;font-size:clamp(11px,1.45vw,17px);font-weight:600;font-variant-numeric:tabular-nums}
+.dna .end{font-size:.72em;font-weight:500;color:var(--seq);padding:0 4px}
+.dna .b{text-align:center;line-height:1;padding:7px 0;border-radius:2px;color:#E6E7EA;position:relative;transition:color .35s,background-color .35s}
+.dna .bottom .b,.dna .b.bot{color:var(--seq)}
+.dna .t{color:var(--variant);background:rgba(255,138,122,.16)}
+.dna .b .now{display:none}
+.dna .tag{grid-column:2 / span 20;height:22px;border-radius:2px;font-size:11.5px;font-weight:600;line-height:22px;padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;transition:opacity .35s}
+.dna .tag.guide{background:var(--gold);color:var(--ink)}
+.dna .tag.editor{grid-column:2 / span 23;background:rgba(88,87,255,.85);color:#fff}
+.dna .tag.done{grid-column:2 / span 23;background:transparent;color:var(--fixed);border:1px solid var(--fixed);padding:0 7px;line-height:20px}
+.dna .tag{grid-row:1}
+.dna .top>*{grid-row:2}
+.dna .bottom>*{grid-row:3}
+.dna .pam{box-shadow:inset 0 -2px 0 rgba(255,255,255,0)}
+/* 1 Find: the guide lines up over its 20 letters, next to the PAM it needs */
+.edit-demo[data-step="1"] .tag.guide{opacity:1}
+.edit-demo[data-step="1"] .top .g{background:rgba(242,193,78,.16)}
+.edit-demo[data-step="1"] .top .pam{box-shadow:inset 0 -2px 0 var(--gold)}
+/* 2 Edit: the editor sits on the DNA and the pair changes */
+.edit-demo[data-step="2"] .tag.editor{opacity:1}
+.edit-demo[data-step="2"] .t,.edit-demo[data-step="3"] .t{color:var(--ink);background:var(--fixed)}
+.edit-demo[data-step="2"] .t .was,.edit-demo[data-step="3"] .t .was{display:none}
+.edit-demo[data-step="2"] .t .now,.edit-demo[data-step="3"] .t .now{display:inline}
+/* 3 Check: confirmed by sequencing */
+.edit-demo[data-step="3"] .tag.done{opacity:1}
+.edit-steps{display:flex;gap:8px;margin:22px 0 0;padding:0;list-style:none}
+.edit-steps button{flex:1;font:inherit;font-size:14px;font-weight:600;padding:10px 8px;border-radius:var(--radius);border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;cursor:pointer;transition:background-color .2s,border-color .2s,color .2s}
+.edit-steps button:hover{border-color:#fff}
+.edit-steps button[aria-pressed="true"]{background:#fff;border-color:#fff;color:var(--ink)}
+.edit-steps button:focus-visible{outline-color:#fff}
+.edit-say{margin:16px 0 0;min-height:4.5em;font-size:15px;line-height:1.55;color:#D9DADD}
+.edit-demo figcaption{margin:10px 0 0;font-size:13.5px;line-height:1.45;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.dna .b,.dna .tag,.edit-steps button{transition:none}}
 .research-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,40px)}
 @media (max-width:860px){.research-grid{grid-template-columns:1fr}}
 .research-grid article{border-top:2px solid var(--ink);padding-top:20px}
@@ -462,13 +491,29 @@ footer a{color:var(--muted)}
     <div class="research-intro">
       <div class="section-head">
         <h2>Our Mission</h2>
-        <p>Most children with a rare genetic disease will never have a drug developed for them. Their conditions are too rare for the usual model. We are building a different one, where the tools, the tests, and the regulatory path are ready before the next patient arrives.</p>
+        <p>There are thousands of rare genetic diseases, and most affect too few children for a company to develop a treatment. Our lab designs CRISPR therapies for these children one at a time, and builds the shared tools, safety tests and regulatory groundwork so that each new therapy can be made faster than the last.</p>
       </div>
-      <figure class="molecule">
+      <figure class="edit-demo" data-step="0" aria-labelledby="edit-cap">
         <div class="stage">
-          <model-viewer src="models/cas9.glb" poster="models/cas9-poster.png" alt="The Cas9 enzyme, in white, holding its guide RNA, in gold, and the target DNA strand, in blue. Protein Data Bank structure 4OO8." camera-controls disable-zoom disable-pan touch-action="pan-y" interaction-prompt="none" rotation-per-second="6deg" camera-orbit="20deg 75deg 104%" field-of-view="28deg" exposure="1.05" shadow-intensity="0" loading="lazy"></model-viewer>
+          <div class="dna" aria-hidden="true">
+          <span class="tag guide">Guide RNA: matches these 20 letters</span>
+          <span class="tag editor">Base editor</span>
+          <span class="tag done">Corrected, confirmed by sequencing</span>
+          <div class="top" style="display:contents">
+          <span class="end">5′</span><span class="b g">G</span><span class="b g">A</span><span class="b g">C</span><span class="b g">C</span><span class="b g">T</span><span class="b g t"><span class="was">A</span><span class="now">G</span></span><span class="b g">C</span><span class="b g">G</span><span class="b g">G</span><span class="b g">T</span><span class="b g">C</span><span class="b g">C</span><span class="b g">A</span><span class="b g">A</span><span class="b g">T</span><span class="b g">G</span><span class="b g">G</span><span class="b g">C</span><span class="b g">A</span><span class="b g">G</span><span class="b pam">A</span><span class="b pam">G</span><span class="b pam">G</span><span class="end">3′</span>
+          </div>
+          <div class="bottom" style="display:contents">
+          <span class="end">3′</span><span class="b bot">C</span><span class="b bot">T</span><span class="b bot">G</span><span class="b bot">G</span><span class="b bot">A</span><span class="b bot t"><span class="was">T</span><span class="now">C</span></span><span class="b bot">G</span><span class="b bot">C</span><span class="b bot">C</span><span class="b bot">A</span><span class="b bot">G</span><span class="b bot">G</span><span class="b bot">T</span><span class="b bot">T</span><span class="b bot">A</span><span class="b bot">C</span><span class="b bot">C</span><span class="b bot">G</span><span class="b bot">T</span><span class="b bot">C</span><span class="b pam bot">T</span><span class="b pam bot">C</span><span class="b pam bot">C</span><span class="end">5′</span>
+          </div>
+          </div>
+          <ul class="edit-steps">
+            <li style="display:contents"><button type="button" data-step="1" aria-pressed="false">1 Find</button></li>
+            <li style="display:contents"><button type="button" data-step="2" aria-pressed="false">2 Edit</button></li>
+            <li style="display:contents"><button type="button" data-step="3" aria-pressed="false">3 Check</button></li>
+          </ul>
+          <p class="edit-say" aria-live="polite">One wrong letter in a child's DNA can be enough to cause a severe disease. Here an A·T pair, in red, sits where a G·C pair belongs. Step through how a base editor puts it right.</p>
         </div>
-        <figcaption>Cas9 with its guide RNA (gold) and target DNA (blue), from PDB 4OO8. Drag to turn it.</figcaption>
+        <figcaption id="edit-cap">How a base edit works, step by step. The sequence is an illustration, not a patient's.</figcaption>
       </figure>
     </div>
     <div class="research-grid">
@@ -806,10 +851,6 @@ footer a{color:var(--muted)}
   </div>
 </footer>
 
-<!-- The 3D viewer: copied from npm into vendor/ so the site depends on no CDN. The Draco
-     decoder unpacks the compressed model; its location has to be set before the viewer loads. -->
-<script>self.ModelViewerElement = self.ModelViewerElement || {}; self.ModelViewerElement.dracoDecoderLocation = 'vendor/draco/';</script>
-<script type="module" src="vendor/model-viewer.min.js"></script>
 <script>
 (function(){
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -911,11 +952,31 @@ footer a{color:var(--muted)}
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   })();
 
-  /* The Cas9 model turns on its own unless the visitor prefers reduced motion. Dragging it
-     works either way; the viewer itself stops rendering while it is off screen. */
+  /* The base-edit example: each button sets the figure's step, the CSS draws it, and the
+     caption below the DNA says what is happening. Pressing the current step again goes back
+     to the start, so the example can be replayed. */
   (function(){
-    var mv = document.querySelector('.molecule model-viewer');
-    if (mv && !reduce) mv.setAttribute('auto-rotate', '');
+    var demo = document.querySelector('.edit-demo');
+    if (!demo) return;
+    var say = demo.querySelector('.edit-say');
+    var buttons = [].slice.call(demo.querySelectorAll('.edit-steps button'));
+    var text = [
+      say.textContent,
+      'A guide RNA is designed to match the 20 letters around the variant. It leads the editor to this one spot among the genome\'s three billion letters, next to a short landing sequence (underlined) that the editor needs.',
+      'An adenine base editor chemically turns the A into a G, without cutting through the DNA. The cell then fixes the opposite strand to match, so the A·T pair becomes G·C.',
+      'Sequencing confirms the change at the target. Before any therapy reaches a patient, genome-wide tests also look for edits anywhere else.'
+    ];
+    function go(n){
+      demo.setAttribute('data-step', n);
+      buttons.forEach(function(b){ b.setAttribute('aria-pressed', String(Number(b.getAttribute('data-step')) === n)); });
+      say.textContent = text[n];
+    }
+    buttons.forEach(function(b){
+      b.addEventListener('click', function(){
+        var n = Number(b.getAttribute('data-step'));
+        go(Number(demo.getAttribute('data-step')) === n ? 0 : n);
+      });
+    });
   })();
 
   /* Pipeline */
