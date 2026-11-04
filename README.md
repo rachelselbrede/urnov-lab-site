@@ -30,6 +30,7 @@ To put it on the lab's own address, see "Moving to www.urlab.bio" below.
 
 ## Fill in before you show it
 
+- Search engines. Until launch, `index.html` carries `<meta name="robots" content="noindex">`, which asks Google and others not to list the site. Anyone with the address can still open it. On launch day, delete that line (and the comment above it) and push.
 - Lab email. The page has none for now: the Contact section shows only the postal address. Once there is a real address, add it under Contact (and to the structured data if wanted).
 - The PI portrait is in place: `photos/fyodor-urnov.jpg`, from the UC Berkeley VC for Research faculty page. Confirm its reuse with IGI communications before launch.
 - Lab group photo. It is the first thing a visitor sees: it fills the top of the window, under a see-through menu with the IGI mark in the middle, with "Urnov Lab" set in white over its lower left. Save it as `photos/lab-group.jpg` (landscape, JPEG, at least 2400 px wide) and commit, and it fades in on its own. Until then the frame shows a drawn group of silhouettes on a dark ground, the same idea as the headshot placeholders, so the space is held and the page still looks finished. The page finds out whether the photo exists by asking for it, so a 404 for that file is expected until it is added. See "The group photo" below for how it is cropped.

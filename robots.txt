@@ -1,4 +1,5 @@
-# The site is meant to be found. Nothing here is private.
+# Crawlers may read the site; until launch, the noindex tag in index.html asks them not to list it.
+# Blocking them here would stop them seeing that tag, so the address could still be listed.
 User-agent: *
 Allow: /
 
